@@ -6,3 +6,4 @@ const handler = {
 	auth,
 };
 
+export default handler;
