@@ -18,31 +18,107 @@ functions:
   authorizer:
     handler: handler.auth
     memorySize: 128
-  decrypt:
-    handler: handler.decrypt
+  cardpayment:
+    handler: handler.cardPayment
     memorySize: 128
     events:
       -
         http:
-          path: decrypt
+          path: cardPayment
           method: post
           authorizer: aws_iam
           cors: true
           documentation:
-            summary: "Decrypt Token"
-            description: "Decrypt Token"
+            summary: "Create card payment"
+            description: "Create card payment transaction and return payment URL"
             requestBody:
               description: "None"
             requestModels:
-              application/json: "DecryptRequest"
+              application/json: "CardPaymentRequest"
             methodResponses:
               - statusCode: 200
                 responseBody:
-                  description: "Message of successful Notification sent"
-                responseModels:
-                  application/json: "DecryptResponse"
+                  description: "Body containing Transaction ID and payment URL"
               - statusCode: 400
                 responseBody:
-                  description: "Error message detailing why the token could not be decrypted"
+                  description: "Error message detailing why the transaction could not be created"
                 responseModels:
                   application/json: "ErrorResponse"
+    cardPaymentNotPresesnt:
+      handler: handler.cardPaymentNotPresent
+      memorySize: 128
+      events:
+        -
+          http:
+            path: cardPaymentNotPresent
+            method: post
+            authorizer: aws_iam
+            cors: true
+            documentation:
+              summary: "Create Card Holder Not Present Payment"
+              description: "Create card holder not present payment transaction and return payment URL"
+              requestBody:
+                description: "None"
+              requestModels:
+                application/json: "CardPaymentRequest"
+              methodResponses:
+                - statusCode: 200
+                  responseBody:
+                    description: "Body containing TransactionID and payment URL"
+                - statusCode: 400
+                  responseBody:
+                    description: "Error message detailing why the transaction could not be created"
+                  responseModels:
+                    application/json: "ErrorResponse"
+    cashPayment:
+      handler: handler.cashPayment
+      memorySize: 128
+      events:
+        -
+          http:
+            path: cashPayment
+            method: post
+            authorizer: aws_iam
+            cors: true
+            documentation:
+              summary: "Create Cash Payment"
+              description: "Create cash payment transaction and return status"
+              requestBody:
+                description: "None"
+              requestModels:
+                application/json: "cardPaymentRequest"
+              methodResponses:
+                - statusCode: 200
+                  responseBody:
+                    description: "Body containing TransactionID and payment status"
+                - statusCode: 400
+                  responseBody:
+                    description: "Error message detailing why the transaction could not be completed"
+                  responseModels:
+                    application/json: "ErrorResponse"
+    chequePayment:
+      handler: handler.chequePayment
+      memorySize: 128
+      events:
+        -
+          http:
+            path: chequePayment
+            method: post
+            authorizer: aws_iam
+            cors: true
+            documentation:
+              summary: "Create Cheque Payment"
+              description: "Create cheque payment transaction and return status"
+              requestBody:
+                description: "None"
+              requestModels:
+                application/json: "cardPaymentRequest"
+              methodResponse:
+                - statusCode: 200
+                  responseBody:
+                    description: "Body containing TransactionID and payment status"
+                - statusCode: 400
+                  responseBody:
+                    description: "Error message detailing why the transaction could not be completed"
+                  responseModels:
+                    application/json: "ErrorResponse"

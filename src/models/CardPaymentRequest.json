@@ -1,0 +1,14 @@
+{
+	"type": "object",
+	"required": [
+		"Amount"
+	],
+	"properties": {
+		"Amount": {
+			"type": "integer"
+		}
+	},
+	"example": {
+		"Amount": 300.00
+	}
+}
