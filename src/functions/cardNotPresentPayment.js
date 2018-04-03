@@ -7,5 +7,5 @@ export default (event, context, callback) => {
 		paymentObject = JSON.parse(event.body);
 	}
 
-	PaymentService.chequePayment(paymentObject, callback);
+	PaymentService.cardNotPresentPayment(paymentObject, callback);
 };

@@ -1,0 +1,43 @@
+{
+	"type": "object",
+	"required": [
+		"penalty_reference",
+		"penalty_type",
+		"penalty_amount",
+		"slip_number",
+		"batch_number",
+		"receipt_date",
+		"postal_order_number"
+	],
+	"properties": {
+		"penalty_reference": {
+			"type": "string"
+		},
+		"penalty_type": {
+			"type": "string"
+		},
+		"penalty_amount": {
+			"type": "integer"
+		},
+		"slip_number": {
+			"type": "integer"
+		},
+		"batch_number": {
+			"type": "integer"
+		},
+		"receipt_date": {
+			"type": "string"
+		},
+		"postal_order_number": {
+			"type": "integer"
+		}
+	},
+	"example": {
+		"penalty_reference": "112233445566",
+		"penalty_type": "FPN",
+		"penalty_amount": 300.00,
+		"slip_number": 1,
+		"batch_number": 1,
+		"receipt_date": "2018-01-13"
+	}
+}

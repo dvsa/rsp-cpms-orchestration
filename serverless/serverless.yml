@@ -6,7 +6,6 @@ custom:
     version: '1'
     title: 'RSP CPMS Orchestration API'
     description: 'Api to handle and orchestrate calls to CPMS from RSP'
-
 plugins:
   - serverless-offline
   - serverless-openapi-documentation
@@ -18,7 +17,7 @@ functions:
   authorizer:
     handler: handler.auth
     memorySize: 128
-  cardpayment:
+  cardPayment:
     handler: handler.cardPayment
     memorySize: 128
     events:
@@ -26,7 +25,7 @@ functions:
         http:
           path: cardPayment
           method: post
-          authorizer: aws_iam
+          authorizer: authorizer
           cors: true
           documentation:
             summary: "Create card payment"
@@ -39,86 +38,144 @@ functions:
               - statusCode: 200
                 responseBody:
                   description: "Body containing Transaction ID and payment URL"
+                  application/json: "PaymentResponse"
+              - statusCode: 400
+                responseBody:
+                  description: "Error message detailing why the transaction could not be created"
+                  responseModels:
+                  application/json: "ErrorResponse"
+  cardNotPresentPayment:
+    handler: handler.cardNotPresentPayment
+    memorySize: 128
+    events:
+      -
+        http:
+          path: cardNotPresentPayment
+          method: post
+          authorizer: authorizer
+          cors: true
+          documentation:
+            summary: "Create Card Holder Not Present Payment"
+            description: "Create card holder not present payment transaction and return payment URL"
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "CardPaymentRequest"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Body containing TransactionID and payment URL"
+                  application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
                   description: "Error message detailing why the transaction could not be created"
                 responseModels:
                   application/json: "ErrorResponse"
-    cardPaymentNotPresesnt:
-      handler: handler.cardPaymentNotPresent
-      memorySize: 128
-      events:
-        -
-          http:
-            path: cardPaymentNotPresent
-            method: post
-            authorizer: aws_iam
-            cors: true
-            documentation:
-              summary: "Create Card Holder Not Present Payment"
-              description: "Create card holder not present payment transaction and return payment URL"
-              requestBody:
-                description: "None"
-              requestModels:
-                application/json: "CardPaymentRequest"
-              methodResponses:
-                - statusCode: 200
-                  responseBody:
-                    description: "Body containing TransactionID and payment URL"
-                - statusCode: 400
-                  responseBody:
-                    description: "Error message detailing why the transaction could not be created"
-                  responseModels:
-                    application/json: "ErrorResponse"
-    cashPayment:
-      handler: handler.cashPayment
-      memorySize: 128
-      events:
-        -
-          http:
-            path: cashPayment
-            method: post
-            authorizer: aws_iam
-            cors: true
-            documentation:
-              summary: "Create Cash Payment"
-              description: "Create cash payment transaction and return status"
-              requestBody:
-                description: "None"
-              requestModels:
-                application/json: "cardPaymentRequest"
-              methodResponses:
-                - statusCode: 200
-                  responseBody:
-                    description: "Body containing TransactionID and payment status"
-                - statusCode: 400
-                  responseBody:
-                    description: "Error message detailing why the transaction could not be completed"
-                  responseModels:
-                    application/json: "ErrorResponse"
-    chequePayment:
-      handler: handler.chequePayment
-      memorySize: 128
-      events:
-        -
-          http:
-            path: chequePayment
-            method: post
-            authorizer: aws_iam
-            cors: true
-            documentation:
-              summary: "Create Cheque Payment"
-              description: "Create cheque payment transaction and return status"
-              requestBody:
-                description: "None"
-              requestModels:
-                application/json: "cardPaymentRequest"
-              methodResponse:
-                - statusCode: 200
-                  responseBody:
-                    description: "Body containing TransactionID and payment status"
-                - statusCode: 400
-                  responseBody:
-                    description: "Error message detailing why the transaction could not be completed"
-                  responseModels:
-                    application/json: "ErrorResponse"
+  cashPayment:
+    handler: handler.cashPayment
+    memorySize: 128
+    events:
+      -
+        http:
+          path: cashPayment
+          method: post
+          authorizer: authorizer
+          cors: true
+          documentation:
+            summary: "Create Cash Payment"
+            description: "Create cash payment transaction and return status"
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "CashPaymentRequest"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Body containing TransactionID and payment status"
+                  application/json: "PaymentResponse"
+              - statusCode: 400
+                responseBody:
+                  description: "Error message detailing why the transaction could not be completed"
+                responseModels:
+                  application/json: "ErrorResponse"
+  chequePayment:
+    handler: handler.chequePayment
+    memorySize: 128
+    events:
+      -
+        http:
+          path: chequePayment
+          method: post
+          authorizer: authorizer
+          cors: true
+          documentation:
+            summary: "Create Cheque Payment"
+            description: "Create cheque payment transaction and return status"
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "ChequePaymentRequest"
+            methodResponse:
+              - statusCode: 200
+                responseBody:
+                  description: "Body containing TransactionID and payment status"
+                  application/json: "PaymentResponse"
+              - statusCode: 400
+                responseBody:
+                  description: "Error message detailing why the transaction could not be completed"
+                responseModels:
+                  application/json: "ErrorResponse"
+  postalOrderPayment:
+    handler: handler.postalOrderPayment
+    memorySize: 128
+    events:
+      -
+        http:
+          path: postalOrderPayment
+          method: post
+          authorizer: authorizer
+          cors: true
+          documentation:
+            summary: "Create postal order payment"
+            description: "Create postal order payment transaction and return status"
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "PostalOrderPaymentRequest"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Body containing TransactionID and payment URL"
+                  application/json: "PaymentResponse"
+              - statusCode: 400
+                responseBody:
+                  description: "Error message detailing why the transaction could not be created"
+                responseModels:
+                  application/json: "ErrorResponse"
+  confirm:
+    handler: handler.confirmPayment
+    memorySize: 128
+    events:
+      -
+        http:
+          path: confirm
+          method: post
+          authorizer: authorizer
+          cors: true
+          documentation:
+            summary: "Confirm a card payment"
+            description: "Query CPMS and return the status of a card payment"
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "ConfirmRequest"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Body containing the payment status"
+                  application/json: "PaymentResponse"
+              - statusCode: 400
+                responseBody:
+                  description: "Error message detailing why the status could not be obtained"
+                responseModels:
+                  application/json: "ErrorResponse"

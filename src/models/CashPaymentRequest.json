@@ -3,7 +3,10 @@
 	"required": [
 		"penalty_reference",
 		"penalty_type",
-		"penalty_amount"
+		"penalty_amount",
+		"slip_number",
+		"batch_number",
+		"receipt_date"
 	],
 	"properties": {
 		"penalty_reference": {
@@ -14,11 +17,23 @@
 		},
 		"penalty_amount": {
 			"type": "integer"
+		},
+		"slip_number": {
+			"type": "integer"
+		},
+		"batch_number": {
+			"type": "integer"
+		},
+		"receipt_date": {
+			"type": "string"
 		}
 	},
 	"example": {
 		"penalty_reference": "112233445566",
 		"penalty_type": "FPN",
-		"penalty_amount": 300.00
+		"penalty_amount": 300.00,
+		"slip_number": 1,
+		"batch_number": 1,
+		"receipt_date": "2018-01-13"
 	}
 }

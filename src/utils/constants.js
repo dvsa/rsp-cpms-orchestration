@@ -25,6 +25,12 @@ const constants = {
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
+	postalOrderAuthBody: {
+		client_secret: process.env.SECRET,
+		scope: 'POSTAL_ORDER',
+		grant_type: 'client_credentials',
+		user_id: process.env.USERID,
+	},
 	fixedPenaltyClientId: process.env.FIXED_PENALTY_SCHEME,
 	immobilisationClientId: process.env.IMMOBILISATION_SCHEME,
 	courtDepositClientId: process.env.COURT_DEPOSIT_SCHEME,
@@ -55,7 +61,7 @@ const constants = {
 		city: process.env.RECEIVER_ADDRESS_CITY,
 		postcode: process.env.RECEIVER_ADDRESS_POSTCODE,
 	},
-	userId: process.env.USER_ID,
+	userId: process.env.USERID,
 };
 
 export default constants;

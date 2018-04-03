@@ -1,34 +1,14 @@
-import axios from 'axios';
+import PaymentService from '../services/paymentService';
 
-import createResponse from '../utils/createResponse';
-import Constants from '../utils/constants';
+export default (event, context, callback) => {
+	console.log(JSON.stringify(event, null, 2));
+	let paymentObject = event.body;
+	if (typeof paymentObject.penalty_type === 'undefined') {
+		paymentObject = JSON.parse(event.body);
+	}
 
-export default () => {
+	console.log(paymentObject);
 
-	const tokenClient = axios.create({
-		baseURL: Constants.cpmsBaseUrl,
-		timeout: 6000,
-		headers: {
-			Accept: 'application/json',
-		},
-	});
-	console.log('created http client');
-	const cardHolderPresentAuthBody = {
-		client_id: Constants.fixedPenaltyClientId,
-		client_secret: Constants.cardHolderPresentAuthBody.client_secret,
-		scope: Constants.cardHolderPresentAuthBody.scope,
-		grant_type: Constants.cardHolderPresentAuthBody.grant_type,
-		user_id: Constants.cardHolderPresentAuthBody.user_id,
-	};
-
-	tokenClient.post('token', cardHolderPresentAuthBody)
-		.then((response) => {
-			console.log(response);
-			createResponse({ body: response, statusCode: 200 });
-		})
-		.catch((error) => {
-			console.log('caught an error');
-			console.log(error);
-			createResponse({ body: error, statusCode: 400 });
-		});
+	// extract needed info from penalty doc
+	PaymentService.cardPayment(paymentObject, callback);
 };
