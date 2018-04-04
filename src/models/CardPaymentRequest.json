@@ -1,0 +1,24 @@
+{
+	"type": "object",
+	"required": [
+		"penalty_reference",
+		"penalty_type",
+		"penalty_amount"
+	],
+	"properties": {
+		"penalty_reference": {
+			"type": "string"
+		},
+		"penalty_type": {
+			"type": "string"
+		},
+		"penalty_amount": {
+			"type": "integer"
+		}
+	},
+	"example": {
+		"penalty_reference": "112233445566",
+		"penalty_type": "FPN",
+		"penalty_amount": 300.00
+	}
+}
