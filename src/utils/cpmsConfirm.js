@@ -22,7 +22,7 @@ export default (receiptReference, auth) => {
 			.then((response) => {
 				console.log(response);
 				if (typeof response.data === 'undefined') {
-					reject(new Error('No auth token returned from CPMS'));
+					reject(new Error('No confirmation data returned from CPMS'));
 				}
 				resolve(response.data);
 			})

@@ -179,3 +179,13 @@ functions:
                   description: "Error message detailing why the status could not be obtained"
                 responseModels:
                   application/json: "ErrorResponse"
+  listReports:
+    handler: handler.listReports
+    memorySize: 128
+    events:
+      -
+        http:
+          path: listReports
+          method: get
+          authorizer: authorizer
+          cors: true
