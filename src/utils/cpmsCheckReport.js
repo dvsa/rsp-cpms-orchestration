@@ -2,23 +2,22 @@ import axios from 'axios';
 
 import Constants from '../utils/constants';
 
-export default (authToken) => {
+export default (reportObj) => {
 	return new Promise((resolve, reject) => {
 		const reportClient = axios.create({
 			baseURL: Constants.cpmsBaseUrl,
 			timeout: 6000,
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
-				Authorization: `Bearer ${authToken.access_token}`,
+				Authorization: `Bearer ${reportObj.authToken.access_token}`,
 			},
 		});
-		console.log('created report client');
 
-		reportClient.get('report')
+		reportClient.get(`report/${reportObj.report_ref}/status`)
 			.then((response) => {
 				console.log(response);
 				if (typeof response.data === 'undefined') {
-					reject(new Error('No report data returned from CPMS'));
+					reject(new Error('No report status returned from CPMS'));
 				}
 				resolve(response.data);
 			})

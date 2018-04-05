@@ -8,5 +8,5 @@ export default (event, context, callback) => {
 	}
 
 	console.log(reportObject);
-	ReportService.listReports(reportObject, callback);
+	ReportService.checkReportStatus(reportObject, callback);
 };
