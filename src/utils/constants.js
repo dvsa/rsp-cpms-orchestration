@@ -31,6 +31,12 @@ const constants = {
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
+	reportingAuthBody: {
+		client_secret: process.env.SECRET,
+		scope: 'REPORT',
+		grant_type: 'client_credentials',
+		user_id: process.env.USERID,
+	},
 	fixedPenaltyClientId: process.env.FIXED_PENALTY_SCHEME,
 	immobilisationClientId: process.env.IMMOBILISATION_SCHEME,
 	courtDepositClientId: process.env.COURT_DEPOSIT_SCHEME,
