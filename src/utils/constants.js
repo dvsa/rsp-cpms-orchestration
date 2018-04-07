@@ -37,6 +37,18 @@ const constants = {
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
+	chargebackAuthBody: {
+		client_secret: process.env.SECRET,
+		scope: 'CHARGE_BACK',
+		grant_type: 'client_credentials',
+		user_id: process.env.USERID,
+	},
+	reversalAuthBody: {
+		client_secret: process.env.SECRET,
+		scope: 'CHEQUE_RD',
+		grant_type: 'client_credentials',
+		user_id: process.env.USERID,
+	},
 	fixedPenaltyClientId: process.env.FIXED_PENALTY_SCHEME,
 	immobilisationClientId: process.env.IMMOBILISATION_SCHEME,
 	courtDepositClientId: process.env.COURT_DEPOSIT_SCHEME,
