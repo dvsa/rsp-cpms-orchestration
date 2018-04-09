@@ -3,6 +3,8 @@ import createResponse from '../utils/createResponse';
 import cpmsAuth from '../utils/cpmsAuth';
 import cpmsPayment from '../utils/cpmsPayment';
 import cpmsConfirm from '../utils/cpmsConfirm';
+import cpmsChargeback from '../utils/cpmsChargeback';
+import cpmsReversal from '../utils/cpmsReversal';
 import Constants from '../utils/constants';
 
 const cardPayment = async (paymentObject, callback) => {
@@ -144,6 +146,57 @@ const confirmPayment = async (confirmObject, callback) => {
 	}
 };
 
+const reverseCard = async (reverseCardObject, callback) => {
+	try {
+		const authToken = await cpmsAuth(
+			reverseCardObject.penalty_type,
+			Constants.chargebackAuthBody,
+		);
+		if (authToken === false) {
+			console.log('Error authenticating with cpms');
+			callback(new Error('Error authenticating with CPMS'), createResponse({ body: 'Error authenticating', statusCode: 400 }));
+		}
+		console.log(authToken);
+
+		const chargebackResponse = await cpmsChargeback({
+			receipt_reference: reverseCardObject.receipt_ref,
+			customer_reference: reverseCardObject.payment_ref,
+			auth: authToken,
+		});
+		console.log(chargebackResponse);
+
+		callback(null, createResponse({ body: chargebackResponse, statusCode: 200 }));
+	} catch (err) {
+		console.log(err);
+		callback(createResponse(err, { body: err, statusCode: 400 }));
+	}
+};
+
+const reverseCheque = async (reverseChequeObject, callback) => {
+	try {
+		const authToken = await cpmsAuth(
+			reverseChequeObject.penalty_type,
+			Constants.reversalAuthBody,
+		);
+		if (authToken === false) {
+			console.log('Error authenticating with cpms');
+			callback(new Error('Error authenticating with CPMS'), createResponse({ body: 'Error authenticating', statusCode: 400 }));
+		}
+		console.log(authToken);
+
+		const reversalResponse = await cpmsReversal({
+			receipt_reference: reverseChequeObject.receipt_ref,
+			customer_reference: reverseChequeObject.payment_ref,
+			auth: authToken,
+		});
+		console.log(reversalResponse);
+
+		callback(null, createResponse({ body: reversalResponse, statusCode: 200 }));
+	} catch (err) {
+		callback(createResponse(err, { body: err, statusCode: 400 }));
+	}
+};
+
 export default ({
 	cardPayment,
 	cardNotPresentPayment,
@@ -151,4 +204,6 @@ export default ({
 	chequePayment,
 	postalOrderPayment,
 	confirmPayment,
+	reverseCard,
+	reverseCheque,
 });

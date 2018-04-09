@@ -209,3 +209,23 @@ functions:
           method: post
           authorizer: authorizer
           cors: true
+  reverseCard:
+    handler: handler.reverseCard
+    memorySize: 128
+    events:
+      -
+        http:
+          path: reverseCard
+          method: post
+          authorizer: authorizer
+          cors: true
+  reverseCheque:
+    handler: handler.reverseCheque
+    memorySize: 128
+    events:
+      -
+        http:
+          path: reverseCheque
+          method: post
+          authorizer: authorizer
+          cors: true
