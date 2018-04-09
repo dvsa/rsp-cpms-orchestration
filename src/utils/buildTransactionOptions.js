@@ -18,6 +18,11 @@ export default (transactionData) => {
 		break;
 	}
 
+	let vehicleReg = transactionData.paymentObject.vehicle_reg;
+	if (transactionData.paymentObject.vehicle_reg === false) {
+		vehicleReg = 'OFFLINE';
+	}
+
 	switch (transactionData.auth.scope) {
 	case 'CARD':
 		return {
@@ -37,7 +42,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.vehicle_reg,
+				sales_reference: vehicleReg,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -68,7 +73,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.vehicle_reg,
+				sales_reference: vehicleReg,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -102,7 +107,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.vehicle_reg,
+				sales_reference: vehicleReg,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -139,7 +144,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.vehicle_reg,
+				sales_reference: vehicleReg,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -174,7 +179,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.vehicle_reg,
+				sales_reference: vehicleReg,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
