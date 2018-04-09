@@ -175,7 +175,7 @@ const reverseCard = async (reverseCardObject, callback) => {
 const reverseCheque = async (reverseChequeObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
-			reverseCheque.penalty_type,
+			reverseChequeObject.penalty_type,
 			Constants.reversalAuthBody,
 		);
 		if (authToken === false) {
