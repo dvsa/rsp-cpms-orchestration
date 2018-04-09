@@ -159,13 +159,15 @@ const reverseCard = async (reverseCardObject, callback) => {
 		console.log(authToken);
 
 		const chargebackResponse = await cpmsChargeback({
+			receipt_reference: reverseCardObject.receipt_ref,
 			customer_reference: reverseCardObject.payment_ref,
-			authToken,
+			auth: authToken,
 		});
 		console.log(chargebackResponse);
 
 		callback(null, createResponse({ body: chargebackResponse, statusCode: 200 }));
 	} catch (err) {
+		console.log(err);
 		callback(createResponse(err, { body: err, statusCode: 400 }));
 	}
 };
@@ -183,8 +185,9 @@ const reverseCheque = async (reverseChequeObject, callback) => {
 		console.log(authToken);
 
 		const reversalResponse = await cpmsReversal({
+			receipt_reference: reverseChequeObject.receipt_ref,
 			customer_reference: reverseChequeObject.payment_ref,
-			authToken,
+			auth: authToken,
 		});
 		console.log(reversalResponse);
 

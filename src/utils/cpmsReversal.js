@@ -16,7 +16,7 @@ export default (reversalObj) => {
 		console.log('created reversal client');
 
 		const reversalOptions = {
-			customer_reference: reversalObj.customer_Reference,
+			customer_reference: reversalObj.customer_reference,
 			scope: 'CHEQUE_RD',
 			cost_centre: '',
 		};
