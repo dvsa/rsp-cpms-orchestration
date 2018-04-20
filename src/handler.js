@@ -11,6 +11,7 @@ import generateReport from './functions/generateReport';
 import checkReportStatus from './functions/checkReportStatus';
 import reverseCard from './functions/reverseCard';
 import reverseCheque from './functions/reverseCheque';
+import downloadReport from './functions/downloadReport';
 
 require('dotenv').config();
 
@@ -27,6 +28,7 @@ const handler = {
 	checkReportStatus,
 	reverseCard,
 	reverseCheque,
+	downloadReport,
 };
 
 export default handler;

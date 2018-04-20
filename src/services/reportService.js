@@ -4,6 +4,7 @@ import cpmsAuth from '../utils/cpmsAuth';
 import cpmsListReport from '../utils/cpmsListReport';
 import cpmsGenerateReport from '../utils/cpmsGenerateReport';
 import cpmsCheckReport from '../utils/cpmsCheckReport';
+import cpmsDownloadReport from '../utils/downloadReport';
 
 import Constants from '../utils/constants';
 
@@ -67,8 +68,27 @@ const checkReportStatus = async (reportObject, callback) => {
 	}
 };
 
+const downloadReport = async (reportObject, callback) => {
+	try {
+		const authToken = await cpmsAuth(
+			reportObject.penalty_type,
+			Constants.reportingAuthBody,
+		);
+
+		const reportStatus = await cpmsDownloadReport({
+			report_ref: reportObject.report_ref,
+			authToken,
+		});
+		callback(null, createResponse({ body: reportStatus, statusCode: 200 }));
+	} catch (err) {
+		console.log(err);
+		callback({ message: 'Error calling CPMS' }, null);
+	}
+};
+
 export default ({
 	listReports,
 	generateReport,
 	checkReportStatus,
+	downloadReport,
 });
