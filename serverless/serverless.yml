@@ -25,7 +25,7 @@ functions:
         http:
           path: cardPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create card payment"
@@ -52,7 +52,7 @@ functions:
         http:
           path: cardNotPresentPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create Card Holder Not Present Payment"
@@ -79,7 +79,7 @@ functions:
         http:
           path: cashPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create Cash Payment"
@@ -106,7 +106,7 @@ functions:
         http:
           path: chequePayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create Cheque Payment"
@@ -133,7 +133,7 @@ functions:
         http:
           path: postalOrderPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create postal order payment"
@@ -160,7 +160,7 @@ functions:
         http:
           path: confirm
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Confirm a card payment"
@@ -187,7 +187,7 @@ functions:
         http:
           path: listReports
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   generateReport:
     handler: handler.generateReport
@@ -197,7 +197,7 @@ functions:
         http:
           path: generateReport
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   checkReportStatus:
     handler: handler.checkReportStatus
@@ -207,7 +207,7 @@ functions:
         http:
           path: checkReportStatus
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   reverseCard:
     handler: handler.reverseCard
@@ -217,7 +217,7 @@ functions:
         http:
           path: reverseCard
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   reverseCheque:
     handler: handler.reverseCheque
@@ -227,5 +227,5 @@ functions:
         http:
           path: reverseCheque
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
