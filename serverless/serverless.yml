@@ -14,9 +14,6 @@ provider:
   runtime: nodejs6.10
   region: eu-west-1
 functions:
-  authorizer:
-    handler: handler.auth
-    memorySize: 128
   cardPayment:
     handler: handler.cardPayment
     memorySize: 128
