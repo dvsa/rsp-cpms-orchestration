@@ -1,10 +1,12 @@
 import createResponse from '../utils/createResponse';
 
 import cpmsAuth from '../utils/cpmsAuth';
-import cpmsPayment from '../utils/cpmsPayment';
+import cpmsGroupPayment from '../utils/cpmsGroupPayment';
 import Constants from '../utils/constants';
 
 const cardGroupPayment = async (paymentObject, callback) => {
+	console.log('######PAYMENT OBJECT ############');
+	console.log(paymentObject);
 	try {
 		const authToken = await cpmsAuth(
 			paymentObject.penalty_type,
@@ -16,7 +18,7 @@ const cardGroupPayment = async (paymentObject, callback) => {
 		}
 		console.log(authToken);
 
-		const transactionData = await cpmsPayment({
+		const transactionData = await cpmsGroupPayment({
 			endpoint: '/payment/card',
 			redirectUrl: paymentObject.redirect_url,
 			paymentObject,
