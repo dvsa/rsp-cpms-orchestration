@@ -1,0 +1,18 @@
+{ 
+  "TotalAmount": 150,
+  "VehicleRegistration": "XXXXXXX",
+  "PenaltyType": "FPN",
+  "RedirectUrl": "<URL to redirect the user back to when payment is done>",
+  "Penalties": [ 
+     { 
+        "PenaltyReference": "820500000877",
+        "PenaltyAmount": 50,
+        "VehicleRegistration": "XXXXXXX"
+     },
+     { 
+        "PenaltyReference": "820500000873",
+        "PenaltyAmount": 100,
+        "VehicleRegistration": "XXXXXXX"
+     }
+  ]
+}
