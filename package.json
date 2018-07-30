@@ -14,7 +14,7 @@
     "copy-models": "./node_modules/.bin/copyfiles -f src/models/*.json build/models",
     "copy-package": "./node_modules/.bin/copyfiles package.json build/",
     "copy-openapi": "./node_modules/.bin/copyfiles openapiReplace.js build/",
-    "prepush": "npm test && npm run lint && npm run check-security",
+    "prepush": "npm test && npm run lint && npm run check-security && npm check-security-log",
     "check-security": "git secrets --scan",
     "check-security-log": "git log -p | scanrepo",
     "deploy-AWS": "npm run copy-package && npm run copy-sls && cd ./build && npm install --production && sls deploy",
