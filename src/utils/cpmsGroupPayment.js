@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-import BuildTransactionOptions from '../utils/buildTransactionOptions';
+import buildGroupTransactionOptions from '../utils/buildGroupTransactionOptions';
 import Constants from '../utils/constants';
 
-export default (transactionData) => {
+export default (groupTransactionData) => {
 	return new Promise((resolve, reject) => {
 
 		const transactionClient = axios.create({
@@ -11,14 +11,14 @@ export default (transactionData) => {
 			timeout: 6000,
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
-				Authorization: `Bearer ${transactionData.auth.access_token}`,
+				Authorization: `Bearer ${groupTransactionData.auth.access_token}`,
 			},
 		});
 		console.log('created transaction client');
 
-		const transactionOptions = BuildTransactionOptions(transactionData);
+		const transactionOptions = buildGroupTransactionOptions(groupTransactionData);
 		console.log(transactionOptions);
-		transactionClient.post(transactionData.endpoint, transactionOptions)
+		transactionClient.post(groupTransactionData.endpoint, transactionOptions)
 			.then((transactionResponse) => {
 				console.log('transaction response');
 				console.log(transactionResponse);

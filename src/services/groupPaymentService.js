@@ -9,7 +9,7 @@ const cardGroupPayment = async (paymentObject, callback) => {
 	console.log(paymentObject);
 	try {
 		const authToken = await cpmsAuth(
-			paymentObject.penalty_type,
+			paymentObject.PenaltyType,
 			Constants.cardHolderPresentAuthBody,
 		);
 		if (authToken === false) {
@@ -20,7 +20,7 @@ const cardGroupPayment = async (paymentObject, callback) => {
 
 		const transactionData = await cpmsGroupPayment({
 			endpoint: '/payment/card',
-			redirectUrl: paymentObject.redirect_url,
+			redirectUrl: paymentObject.RedirectUrl,
 			paymentObject,
 			auth: authToken,
 		});
