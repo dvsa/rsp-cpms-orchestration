@@ -15,7 +15,7 @@ const cardGroupPayment = async (paymentObject, callback) => {
 			callback(createResponse({ body: 'Error authenticating', statusCode: 400 }));
 		}
 		console.log(authToken);
-		
+
 		const transactionData = await cpmsGroupPayment({
 			endpoint: '/payment/card',
 			redirectUrl: paymentObject.RedirectUrl,
