@@ -5,8 +5,6 @@ import cpmsGroupPayment from '../utils/cpmsGroupPayment';
 import Constants from '../utils/constants';
 
 const cardGroupPayment = async (paymentObject, callback) => {
-	console.log('######PAYMENT OBJECT ############');
-	console.log(paymentObject);
 	try {
 		const authToken = await cpmsAuth(
 			paymentObject.PenaltyType,
@@ -17,7 +15,7 @@ const cardGroupPayment = async (paymentObject, callback) => {
 			callback(createResponse({ body: 'Error authenticating', statusCode: 400 }));
 		}
 		console.log(authToken);
-
+		
 		const transactionData = await cpmsGroupPayment({
 			endpoint: '/payment/card',
 			redirectUrl: paymentObject.RedirectUrl,

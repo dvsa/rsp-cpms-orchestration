@@ -2,13 +2,13 @@ import Constants from './constants';
 import generatePaymentItems from './generatePaymentItems';
 
 export default (groupTransactionData) => {
-
 	const {
 		RedirectUrl,
 		TotalAmount,
 		PenaltyType,
 		PenaltyGroupId,
-	} = groupTransactionData;
+		Penalties,
+	} = groupTransactionData.paymentObject;
 
 	switch (groupTransactionData.auth.scope) {
 	case 'CARD':
@@ -21,7 +21,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(groupTransactionData.Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'CNP':
 		return {
@@ -33,7 +33,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(groupTransactionData.Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'CASH':
 		return {
@@ -48,7 +48,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(groupTransactionData.Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'CHEQUE':
 		return {
@@ -66,7 +66,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(groupTransactionData.Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'POSTAL_ORDER':
 		return {
@@ -82,7 +82,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(groupTransactionData.Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	default:
 		return null;
