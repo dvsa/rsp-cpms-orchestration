@@ -42,12 +42,12 @@ functions:
                   responseModels:
                   application/json: "ErrorResponse"
   cardGroupPayment:
-    handler: handler.cardGroupPayment
+    handler: handler.groupCardPayment
     memorySize: 128
     events:
       -
         http:
-          path: cardGroupPayment
+          path: groupCardPayment
           method: post
           authorizer: aws_iam
           cors: true
@@ -58,7 +58,7 @@ functions:
             requestBody:
               description: "None"
             requestModels:
-              application/json: "CardGroupPaymentRequest"
+              application/json: "GroupCardPaymentRequest"
             methodResponses:
               - statusCode: 200
                 responseBody:

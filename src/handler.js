@@ -9,7 +9,7 @@ import generateReport from './functions/generateReport';
 import checkReportStatus from './functions/checkReportStatus';
 import reverseCard from './functions/reverseCard';
 import reverseCheque from './functions/reverseCheque';
-import cardGroupPayment from './functions/cardGroupPayment';
+import groupCardPayment from './functions/groupCardPayment';
 
 require('dotenv').config();
 
@@ -25,7 +25,7 @@ const handler = {
 	checkReportStatus,
 	reverseCard,
 	reverseCheque,
-	cardGroupPayment,
+	groupCardPayment,
 };
 
 export default handler;
