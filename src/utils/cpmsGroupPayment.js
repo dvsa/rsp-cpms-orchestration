@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Validation from 'rsp-validation';
 
 import buildGroupTransactionOptions from '../utils/buildGroupTransactionOptions';
 import Constants from '../utils/constants';
@@ -17,6 +18,13 @@ export default (groupTransactionData) => {
 		console.log('created transaction client');
 
 		const transactionOptions = buildGroupTransactionOptions(groupTransactionData);
+		const validationResult = Validation.cpmsTransactionValidation(transactionOptions);
+		if (!validationResult.valid) {
+			const errMsg = validationResult.error.message;
+			console.log('custom rsp validation error');
+			console.log(errMsg);
+			reject(errMsg);
+		}
 		console.log(transactionOptions);
 		transactionClient.post(groupTransactionData.endpoint, transactionOptions)
 			.then((transactionResponse) => {
