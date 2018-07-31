@@ -8,7 +8,7 @@ export default (penalties, penaltyType, constants) => {
 			allocated_amount: penalty.PenaltyAmount.toFixed(2),
 			tax_code: 'O',
 			tax_rate: '0',
-			sales_reference: penalty.VehicleRegistration,
+			sales_reference: `${penalty.PenaltyReference}_${penalty.VehicleRegistration}`,
 			product_reference: 'RoadSidePayments',
 			product_description: penaltyType,
 			invoice_date: new Date(Date.now()).toISOString().split('T')[0],
