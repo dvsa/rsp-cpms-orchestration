@@ -41,6 +41,34 @@ functions:
                   description: "Error message detailing why the transaction could not be created"
                   responseModels:
                   application/json: "ErrorResponse"
+  cardGroupPayment:
+    handler: handler.groupCardPayment
+    memorySize: 128
+    events:
+      -
+        http:
+          path: groupCardPayment
+          method: post
+          authorizer: aws_iam
+          cors: true
+          # TODO: Update this
+          documentation:
+            summary: "Create card group payment"
+            description: "Create card group payment transaction and return payment URL"
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "GroupCardPaymentRequest"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Body containing Transaction ID and payment URL"
+                  application/json: "PaymentResponse"
+              - statusCode: 400
+                responseBody:
+                  description: "Error message detailing why the transaction could not be created"
+                  responseModels:
+                  application/json: "ErrorResponse"
   cardNotPresentPayment:
     handler: handler.cardNotPresentPayment
     memorySize: 128
