@@ -4,7 +4,7 @@ import cpmsAuth from '../utils/cpmsAuth';
 import cpmsGroupPayment from '../utils/cpmsGroupPayment';
 import Constants from '../utils/constants';
 
-const cardGroupPayment = async (paymentObject, callback) => {
+const groupCardPayment = async (paymentObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			paymentObject.PenaltyType,
@@ -31,5 +31,5 @@ const cardGroupPayment = async (paymentObject, callback) => {
 };
 
 export default ({
-	cardGroupPayment,
+	groupCardPayment,
 });
