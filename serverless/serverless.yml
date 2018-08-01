@@ -41,7 +41,7 @@ functions:
                   description: "Error message detailing why the transaction could not be created"
                   responseModels:
                   application/json: "ErrorResponse"
-  cardGroupPayment:
+  groupCardPayment:
     handler: handler.groupCardPayment
     memorySize: 128
     events:
