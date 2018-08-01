@@ -21,9 +21,8 @@ export default (groupTransactionData) => {
 		const validationResult = Validation.cpmsTransactionValidation(transactionOptions);
 		if (!validationResult.valid) {
 			const errMsg = validationResult.error.message;
-			console.log('custom rsp validation error');
-			console.log(errMsg);
 			reject(errMsg);
+			return;
 		}
 		console.log(transactionOptions);
 		transactionClient.post(groupTransactionData.endpoint, transactionOptions)
