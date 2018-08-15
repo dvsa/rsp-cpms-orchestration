@@ -15,3 +15,5 @@ npm-debug.log
 *.tar
 *.zip
 .env
+serverless
+serverless.yml
