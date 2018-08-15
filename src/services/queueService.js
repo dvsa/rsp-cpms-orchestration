@@ -5,7 +5,7 @@ export default class QueueService {
 		this.sqsQueueUrl = sqsQueueUrl;
 	}
 
-	sendMessage(receiptReference, paymentCode, regNum) {
+	async sendMessage(receiptReference, paymentCode, regNum) {
 		const params = {
 			DelaySeconds: 0,
 			MessageAttributes: {
@@ -25,6 +25,10 @@ export default class QueueService {
 			MessageBody: 'Information about a launched payment to CPMS from the Roadside Payments service.',
 			QueueUrl: this.sqsQueueUrl,
 		};
-		return this.sqs.sendMessage(params).promise();
+		try {
+			await this.sqs.sendMessage(params).promise();
+		} catch (err) {
+			console.log(err);
+		}
 	}
 }
