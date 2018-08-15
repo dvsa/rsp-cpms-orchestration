@@ -35,7 +35,12 @@ const groupCardPayment = async (paymentObject, callback) => {
 		const receiptReference = transactionData.receipt_reference;
 		const { PenaltyGroupId, VehicleRegistration } = paymentObject;
 		// Send a message to the CPMS checking queue
-		queueService.sendMessage(receiptReference, PenaltyGroupId, VehicleRegistration);
+		const messageData = await queueService.sendMessage(
+			receiptReference,
+			PenaltyGroupId,
+			VehicleRegistration,
+		);
+		console.log('send message to queue success', messageData);
 
 		callback(null, createResponse({ body: transactionData, statusCode: 200 }));
 	} catch (err) {

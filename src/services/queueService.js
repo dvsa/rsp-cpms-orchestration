@@ -5,7 +5,7 @@ export default class QueueService {
 		this.sqsQueueUrl = sqsQueueUrl;
 	}
 
-	async sendMessage(receiptReference, paymentCode, regNum) {
+	sendMessage(receiptReference, paymentCode, regNum) {
 		const params = {
 			DelaySeconds: 0,
 			MessageAttributes: {
@@ -27,11 +27,10 @@ export default class QueueService {
 		};
 		console.log('sqs sendMessage params');
 		console.log(params);
-		try {
-			await this.sqs.sendMessage(params).promise();
-		} catch (err) {
-			console.log('sqs sendMessage err');
-			console.log(err);
-		}
+		return new Promise((resolve, reject) => {
+			this.sqs.sendMessage(params).promise()
+				.then(data => resolve(data))
+				.catch(err => reject(err));
+		});
 	}
 }
