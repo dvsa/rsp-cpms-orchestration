@@ -1,3 +1,5 @@
+import { SQS, config } from 'aws-sdk';
+
 import createResponse from '../utils/createResponse';
 
 import cpmsAuth from '../utils/cpmsAuth';
@@ -6,6 +8,12 @@ import cpmsConfirm from '../utils/cpmsConfirm';
 import cpmsChargeback from '../utils/cpmsChargeback';
 import cpmsReversal from '../utils/cpmsReversal';
 import Constants from '../utils/constants';
+import QueueService from './queueService';
+
+config.update({ region: 'eu-west-1' });
+const sqs = new SQS({ apiVersion: '2012-11-05' });
+
+const queueService = new QueueService(sqs);
 
 const cardPayment = async (paymentObject, callback) => {
 	try {
@@ -26,6 +34,13 @@ const cardPayment = async (paymentObject, callback) => {
 			auth: authToken,
 		});
 		console.log('outside of async');
+
+		const receiptReference = transactionData.receipt_reference;
+		const penaltyReference = paymentObject.penalty_reference;
+		const vehicleReg = paymentObject.vehicle_reg;
+		// Send a message to the CPMS checking queue
+		queueService.sendMessage(receiptReference, penaltyReference, vehicleReg);
+
 		callback(null, createResponse({ body: transactionData, statusCode: 200 }));
 	} catch (err) {
 		console.log(err);
