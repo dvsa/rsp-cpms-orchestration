@@ -25,9 +25,12 @@ export default class QueueService {
 			MessageBody: 'Information about a launched payment to CPMS from the Roadside Payments service.',
 			QueueUrl: this.sqsQueueUrl,
 		};
+		console.log('sqs sendMessage params');
+		console.log(params);
 		try {
 			await this.sqs.sendMessage(params).promise();
 		} catch (err) {
+			console.log('sqs sendMessage err');
 			console.log(err);
 		}
 	}
