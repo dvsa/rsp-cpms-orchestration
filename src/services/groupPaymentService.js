@@ -10,7 +10,7 @@ import QueueService from './queueService';
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
 
-const queueService = new QueueService(sqs);
+const queueService = new QueueService(sqs, process.env.SQS_URL);
 
 const groupCardPayment = async (paymentObject, callback) => {
 	try {
