@@ -4,11 +4,22 @@ import cpmsAuth from '../utils/cpmsAuth';
 import cpmsGroupPayment from '../utils/cpmsGroupPayment';
 import Constants from '../utils/constants';
 
+const paymentTypeIntegrationMap = {
+	CARD: { authBody: Constants.cardHolderPresentAuthBody, endpoint: '/payment/card' },
+	CNP: { authBody: Constants.cardHolderNotPresentAuthBody, endpoint: '/payment/cardholder-not-present' },
+};
+
 const groupCardPayment = async (paymentObject, callback) => {
 	try {
+		const paymentMethod = paymentObject.PaymentMethod || 'CARD';
+		const paymentTypeIntegrationConfig = paymentTypeIntegrationMap[paymentMethod];
+		if (paymentTypeIntegrationConfig === undefined) {
+			return callback(null, createResponse({ body: `Bad PaymentMethod ${paymentMethod}`, statusCode: 400 }));
+		}
+
 		const authToken = await cpmsAuth(
 			paymentObject.PenaltyType,
-			Constants.cardHolderPresentAuthBody,
+			paymentTypeIntegrationConfig.authBody,
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
@@ -17,7 +28,7 @@ const groupCardPayment = async (paymentObject, callback) => {
 		console.log(authToken);
 
 		const transactionData = await cpmsGroupPayment({
-			endpoint: '/payment/card',
+			endpoint: paymentTypeIntegrationConfig.endpoint,
 			redirectUrl: paymentObject.RedirectUrl,
 			paymentObject,
 			auth: authToken,
@@ -25,7 +36,6 @@ const groupCardPayment = async (paymentObject, callback) => {
 		console.log('outside of async');
 		callback(null, createResponse({ body: transactionData, statusCode: 200 }));
 	} catch (err) {
-		console.log(err);
 		callback(err, createResponse({ body: err, statusCode: 400 }));
 	}
 };
