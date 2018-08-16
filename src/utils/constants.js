@@ -1,8 +1,6 @@
 
 const constants = {
 	cpmsBaseUrl: process.env.URL,
-	cpmsCheckingBaseUrl: process.env.CPMS_CHECKING_URL,
-	aws_region: process.env.aws_region,
 	statemachine_arn: process.env.statemachine_arn,
 	cardHolderPresentAuthBody: {
 		client_secret: process.env.SECRET,

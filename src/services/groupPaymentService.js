@@ -32,6 +32,7 @@ const groupCardPayment = async (paymentObject, callback) => {
 			ReceiptReference: receiptReference,
 			PaymentCode: PenaltyGroupId,
 			VehicleRegistration,
+			IsGroupPayment: true,
 		});
 
 		callback(null, createResponse({ body: transactionData, statusCode: 200 }));
