@@ -31,11 +31,13 @@ const cardPayment = async (paymentObject, callback) => {
 		const receiptReference = transactionData.receipt_reference;
 		const penaltyReference = paymentObject.penalty_reference;
 		const vehicleReg = paymentObject.vehicle_reg;
+		const PenaltyType = paymentObject.penalty_type;
 		// Start execution of CPMS checking step function
 		await startCpmsCheckingExecution({
 			ReceiptReference: receiptReference,
-			PaymentCode: penaltyReference,
+			PenaltyId: penaltyReference,
 			VehicleRegistration: vehicleReg,
+			PenaltyType,
 			IsGroupPayment: false,
 		});
 
