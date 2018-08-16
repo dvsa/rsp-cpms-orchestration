@@ -1,18 +1,27 @@
 service: rsp-cpms-orchestration
 
 frameworkVersion: ">=1.1.0 <2.0.0"
+
 custom:
   documentation:
     version: '1'
     title: 'RSP CPMS Orchestration API'
     description: 'Api to handle and orchestrate calls to CPMS from RSP'
+
 plugins:
   - serverless-offline
   - serverless-openapi-documentation
+  
 provider:
   name: aws
   runtime: nodejs6.10
   region: eu-west-1
+  iamRoleStatements:
+    - Effect: "Allow"
+    Action:
+      - "states:StartExecution"
+    Resource: "*"
+
 functions:
   cardPayment:
     handler: handler.cardPayment
