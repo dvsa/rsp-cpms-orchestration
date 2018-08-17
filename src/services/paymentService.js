@@ -1,3 +1,5 @@
+import { SQS, config } from 'aws-sdk';
+
 import createResponse from '../utils/createResponse';
 
 import cpmsAuth from '../utils/cpmsAuth';
@@ -6,7 +8,12 @@ import cpmsConfirm from '../utils/cpmsConfirm';
 import cpmsChargeback from '../utils/cpmsChargeback';
 import cpmsReversal from '../utils/cpmsReversal';
 import Constants from '../utils/constants';
-import startCpmsCheckingExecution from '../utils/startCpmsChecking';
+import QueueService from './queueService';
+
+config.update({ region: 'eu-west-1' });
+const sqs = new SQS({ apiVersion: '2012-11-05' });
+
+const queueService = new QueueService(sqs, process.env.SQS_URL);
 
 const cardPayment = async (paymentObject, callback) => {
 	try {
@@ -31,12 +38,13 @@ const cardPayment = async (paymentObject, callback) => {
 		const receiptReference = transactionData.receipt_reference;
 		const penaltyReference = paymentObject.penalty_reference;
 		const vehicleReg = paymentObject.vehicle_reg;
-		// Start execution of CPMS checking step function
-		await startCpmsCheckingExecution({
-			ReceiptReference: receiptReference,
-			PaymentCode: penaltyReference,
-			VehicleRegistration: vehicleReg,
-		});
+		// Send a message to the CPMS checking queue
+		const messageData = await queueService.sendMessage(
+			receiptReference,
+			penaltyReference,
+			vehicleReg,
+		);
+		console.log('send message to queue success', messageData);
 
 		callback(null, createResponse({ body: transactionData, statusCode: 200 }));
 	} catch (err) {
