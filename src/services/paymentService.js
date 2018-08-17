@@ -36,7 +36,6 @@ const cardPayment = async (paymentObject, callback) => {
 			ReceiptReference: receiptReference,
 			PaymentCode: penaltyReference,
 			VehicleRegistration: vehicleReg,
-			IsGroupPayment: true,
 		});
 
 		callback(null, createResponse({ body: transactionData, statusCode: 200 }));
