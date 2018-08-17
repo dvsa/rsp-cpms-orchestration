@@ -26,13 +26,12 @@ const groupCardPayment = async (paymentObject, callback) => {
 		console.log('outside of async');
 
 		const receiptReference = transactionData.receipt_reference;
-		const { PenaltyGroupId, VehicleRegistration, PenaltyType } = paymentObject;
+		const { PenaltyGroupId, VehicleRegistration } = paymentObject;
 		// Start execution of CPMS checking step function
 		await startCpmsCheckingExecution({
 			ReceiptReference: receiptReference,
-			PenaltyId: PenaltyGroupId,
+			PaymentCode: PenaltyGroupId,
 			VehicleRegistration,
-			PenaltyType,
 			IsGroupPayment: true,
 		});
 
