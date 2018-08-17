@@ -262,3 +262,22 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+  checkForOrphanedPayments:
+    handler: handler.checkForOrphanedPayments
+    events:
+      - sqs:
+          arn: arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:LaunchedPayments
+
+resources:
+  Resources:
+    LaunchedPayments:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: "LaunchedPayments"
+        RedrivePolicy:
+          deadLetterTargetArn: arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:DeadLetterLaunchedPayments
+          maxReceiveCount: 4
+    DeadLetterLaunchedPayments:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: "DeadLetterLaunchedPayments"
