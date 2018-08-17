@@ -5,21 +5,36 @@ export default class QueueService {
 		this.sqsQueueUrl = sqsQueueUrl;
 	}
 
-	sendMessage(receiptReference, paymentCode, regNum) {
+	sendMessage(options) {
+		const {
+			ReceiptReference,
+			PenaltyType,
+			PenaltyId,
+			VehicleRegistration,
+			IsGroupPayment,
+		} = options;
 		const params = {
 			DelaySeconds: 0,
 			MessageAttributes: {
 				ReceiptReference: {
 					DataType: 'String',
-					StringValue: receiptReference,
+					StringValue: ReceiptReference,
 				},
 				PaymentCode: {
 					DataType: 'String',
-					StringValue: paymentCode,
+					StringValue: PenaltyId,
 				},
 				RegistrationNumber: {
 					DataType: 'String',
-					StringValue: regNum,
+					StringValue: VehicleRegistration,
+				},
+				IsGroupPayment: {
+					DataType: 'String',
+					StringValue: IsGroupPayment.toString(),
+				},
+				PenaltyType: {
+					DataType: 'String',
+					StringValue: PenaltyType,
 				},
 			},
 			MessageBody: 'Information about a launched payment to CPMS from the Roadside Payments service.',
