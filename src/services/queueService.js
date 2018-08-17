@@ -20,7 +20,7 @@ export default class QueueService {
 					DataType: 'String',
 					StringValue: ReceiptReference,
 				},
-				PaymentCode: {
+				PenaltyId: {
 					DataType: 'String',
 					StringValue: PenaltyId,
 				},
