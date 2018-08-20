@@ -14,7 +14,6 @@ export default class QueueService {
 			IsGroupPayment,
 		} = options;
 		const params = {
-			DelaySeconds: 0,
 			MessageAttributes: {
 				ReceiptReference: {
 					DataType: 'String',
