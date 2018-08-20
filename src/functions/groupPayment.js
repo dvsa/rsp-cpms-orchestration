@@ -10,5 +10,5 @@ export default (event, context, callback) => {
 	console.log(paymentObject);
 
 	// extract needed info from penalty doc
-	GroupPaymentService.groupCardPayment(paymentObject, callback);
+	GroupPaymentService.groupPayment(paymentObject, callback);
 };

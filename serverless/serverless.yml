@@ -41,8 +41,8 @@ functions:
                   description: "Error message detailing why the transaction could not be created"
                   responseModels:
                   application/json: "ErrorResponse"
-  groupCardPayment:
-    handler: handler.groupCardPayment
+  groupPayment:
+    handler: handler.groupPayment
     memorySize: 128
     events:
       -
@@ -53,8 +53,8 @@ functions:
           cors: true
           # TODO: Update this
           documentation:
-            summary: "Create card group payment"
-            description: "Create card group payment transaction and return payment URL"
+            summary: "Create group payment"
+            description: "Create group payment transaction and return payment URL"
             requestBody:
               description: "None"
             requestModels:
