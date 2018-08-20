@@ -55,7 +55,7 @@ functions:
     events:
       -
         http:
-          path: groupCardPayment
+          path: groupPayment
           method: post
           authorizer: aws_iam
           cors: true

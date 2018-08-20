@@ -37,9 +37,9 @@ export default (groupTransactionData) => {
 		};
 	case 'CASH':
 		return {
-			slip_number: groupTransactionData.paymentObject.slip_number,
-			batch_number: groupTransactionData.paymentObject.batch_number,
-			receipt_date: groupTransactionData.paymentObject.receipt_date,
+			slip_number: groupTransactionData.paymentObject.SlipNumber,
+			batch_number: groupTransactionData.paymentObject.BatchNumber,
+			receipt_date: groupTransactionData.paymentObject.ReceiptDate,
 			redirect_uri: RedirectUrl,
 			total_amount: TotalAmount.toFixed(2),
 			customer_reference: `${PenaltyGroupId}_${PenaltyType}`,
@@ -52,9 +52,9 @@ export default (groupTransactionData) => {
 		};
 	case 'CHEQUE':
 		return {
-			slip_number: groupTransactionData.paymentObject.slip_number,
-			batch_number: groupTransactionData.paymentObject.batch_number,
-			receipt_date: groupTransactionData.paymentObject.receipt_date,
+			slip_number: groupTransactionData.paymentObject.SlipNumber,
+			batch_number: groupTransactionData.paymentObject.BatchNumber,
+			receipt_date: groupTransactionData.paymentObject.ReceiptDate,
 			cheque_date: groupTransactionData.paymentObject.cheque_date,
 			cheque_number: groupTransactionData.paymentObject.cheque_number,
 			name_on_cheque: groupTransactionData.paymentObject.name_on_cheque,
@@ -70,9 +70,9 @@ export default (groupTransactionData) => {
 		};
 	case 'POSTAL_ORDER':
 		return {
-			slip_number: groupTransactionData.paymentObject.slip_number,
-			batch_number: groupTransactionData.paymentObject.batch_number,
-			receipt_date: groupTransactionData.paymentObject.receipt_date,
+			slip_number: groupTransactionData.paymentObject.SlipNumber,
+			batch_number: groupTransactionData.paymentObject.BatchNumber,
+			receipt_date: groupTransactionData.paymentObject.ReceiptDate,
 			postal_order_number: groupTransactionData.paymentObject.postal_order_number,
 			redirect_uri: RedirectUrl,
 			total_amount: TotalAmount.toFixed(2),
