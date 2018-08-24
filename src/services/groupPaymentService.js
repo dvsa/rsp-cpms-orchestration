@@ -8,6 +8,8 @@ const paymentTypeIntegrationMap = {
 	CARD: { authBody: Constants.cardHolderPresentAuthBody, endpoint: '/payment/card' },
 	CNP: { authBody: Constants.cardHolderNotPresentAuthBody, endpoint: '/payment/cardholder-not-present' },
 	CASH: { authBody: Constants.cashPaymentAuthBody, endpoint: '/payment/cash' },
+	CHEQUE: { authBody: Constants.chequePaymentAuthBody, endpoint: '/payment/cheque' },
+	POSTAL_ORDER: { authBody: Constants.postalOrderAuthBody, endpoint: '/payment/postal-order' },
 };
 
 const groupPayment = async (paymentObject, callback) => {
