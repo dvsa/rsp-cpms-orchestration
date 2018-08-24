@@ -18,14 +18,12 @@ export default (groupTransactionData) => {
 		console.log('created transaction client');
 
 		const transactionOptions = buildGroupTransactionOptions(groupTransactionData);
-		if (process.env.VALIDATE_CPMS_TRANSACTIONS) {
-			const validationResult = Validation.cpmsTransactionValidation(transactionOptions);
-			if (!validationResult.valid) {
-				const errMsg = validationResult.error.message;
-				console.log(errMsg);
-				reject(errMsg);
-				return;
-			}
+		const validationResult = Validation.cpmsTransactionValidation(transactionOptions);
+		if (!validationResult.valid) {
+			const errMsg = validationResult.error.message;
+			console.log(errMsg);
+			reject(errMsg);
+			return;
 		}
 		console.log(transactionOptions);
 		transactionClient.post(groupTransactionData.endpoint, transactionOptions)
