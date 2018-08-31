@@ -13,10 +13,15 @@ provider:
   name: aws
   runtime: nodejs6.10
   region: eu-west-1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: 
+        - "sqs:SendMessage"
+        - "sqs:ReceiveMessage"
+        - "sqs:DeleteMessage"
+        - "sqs:GetQueueAttributes"
+      Resource: arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:CPMS_Launched_Payments
 functions:
-  authorizer:
-    handler: handler.auth
-    memorySize: 128
   cardPayment:
     handler: handler.cardPayment
     memorySize: 128
@@ -25,7 +30,7 @@ functions:
         http:
           path: cardPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create card payment"
@@ -44,6 +49,34 @@ functions:
                   description: "Error message detailing why the transaction could not be created"
                   responseModels:
                   application/json: "ErrorResponse"
+  groupPayment:
+    handler: handler.groupPayment
+    memorySize: 128
+    events:
+      -
+        http:
+          path: groupPayment
+          method: post
+          authorizer: aws_iam
+          cors: true
+          # TODO: Update this
+          documentation:
+            summary: "Create group payment"
+            description: "Create group payment transaction and return payment URL"
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "GroupCardPaymentRequest"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: "Body containing Transaction ID and payment URL"
+                  application/json: "PaymentResponse"
+              - statusCode: 400
+                responseBody:
+                  description: "Error message detailing why the transaction could not be created"
+                  responseModels:
+                  application/json: "ErrorResponse"
   cardNotPresentPayment:
     handler: handler.cardNotPresentPayment
     memorySize: 128
@@ -52,7 +85,7 @@ functions:
         http:
           path: cardNotPresentPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create Card Holder Not Present Payment"
@@ -79,7 +112,7 @@ functions:
         http:
           path: cashPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create Cash Payment"
@@ -106,7 +139,7 @@ functions:
         http:
           path: chequePayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create Cheque Payment"
@@ -133,7 +166,7 @@ functions:
         http:
           path: postalOrderPayment
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Create postal order payment"
@@ -160,7 +193,7 @@ functions:
         http:
           path: confirm
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
           documentation:
             summary: "Confirm a card payment"
@@ -187,7 +220,7 @@ functions:
         http:
           path: listReports
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   generateReport:
     handler: handler.generateReport
@@ -197,7 +230,7 @@ functions:
         http:
           path: generateReport
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   checkReportStatus:
     handler: handler.checkReportStatus
@@ -207,7 +240,7 @@ functions:
         http:
           path: checkReportStatus
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   reverseCard:
     handler: handler.reverseCard
@@ -217,7 +250,7 @@ functions:
         http:
           path: reverseCard
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   reverseCheque:
     handler: handler.reverseCheque

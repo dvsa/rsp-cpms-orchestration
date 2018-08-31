@@ -1,5 +1,3 @@
-import auth from './functions/auth';
-
 import cardPayment from './functions/cardPayment';
 import cardNotPresentPayment from './functions/cardNotPresentPayment';
 import cashPayment from './functions/cashPayment';
@@ -12,11 +10,11 @@ import checkReportStatus from './functions/checkReportStatus';
 import reverseCard from './functions/reverseCard';
 import reverseCheque from './functions/reverseCheque';
 import downloadReport from './functions/downloadReport';
+import groupPayment from './functions/groupPayment';
 
 require('dotenv').config();
 
 const handler = {
-	auth,
 	cardPayment,
 	cardNotPresentPayment,
 	cashPayment,
@@ -29,6 +27,7 @@ const handler = {
 	reverseCard,
 	reverseCheque,
 	downloadReport,
+	groupPayment,
 };
 
 export default handler;
