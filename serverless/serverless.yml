@@ -260,7 +260,7 @@ functions:
         http:
           path: reverseCheque
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   downloadReport:
     handler: handler.downloadReport
@@ -270,6 +270,6 @@ functions:
         http:
           path: downloadReport
           method: post
-          authorizer: authorizer
+          authorizer: aws_iam
           cors: true
   
