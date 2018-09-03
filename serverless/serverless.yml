@@ -262,4 +262,14 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
-          
+  downloadReport:
+    handler: handler.downloadReport
+    memorySize: 128
+    events:
+      -
+        http:
+          path: downloadReport
+          method: post
+          authorizer: aws_iam
+          cors: true
+  
