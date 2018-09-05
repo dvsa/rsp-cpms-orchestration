@@ -2,49 +2,41 @@
 const constants = {
 	cpmsBaseUrl: process.env.URL,
 	cardHolderPresentAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'CARD',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
 	cardHolderNotPresentAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'CNP',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
 	chequePaymentAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'CHEQUE',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
 	cashPaymentAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'CASH',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
 	postalOrderAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'POSTAL_ORDER',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
 	reportingAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'REPORT',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
 	chargebackAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'CHARGE_BACK',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
 	},
 	reversalAuthBody: {
-		client_secret: process.env.SECRET,
 		scope: 'CHEQUE_RD',
 		grant_type: 'client_credentials',
 		user_id: process.env.USERID,
@@ -70,6 +62,9 @@ const constants = {
 	fixedPenaltyClientId: process.env.FIXED_PENALTY_SCHEME,
 	immobilisationClientId: process.env.IMMOBILISATION_SCHEME,
 	courtDepositClientId: process.env.COURT_DEPOSIT_SCHEME,
+	fixedPenaltySecret: process.env.FIXED_PENALTY_SECRET,
+	immobilisationSecret: process.env.IMMOBILISATION_SECRET,
+	courtDepositSecret: process.env.COURT_DEPOSIT_SECRET,
 	userId: process.env.USERID,
 };
 

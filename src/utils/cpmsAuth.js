@@ -14,19 +14,23 @@ export default (penaltyType, authBody) => {
 	console.log('created http client');
 	console.log(penaltyType);
 	let clientId = '';
+	let clientSecret = '';
 	if (penaltyType === 'FPN') {
 		clientId = Constants.fixedPenaltyClientId;
+		clientSecret = Constants.fixedPenaltySecret;
 	} else if (penaltyType === 'IM') {
 		clientId = Constants.immobilisationClientId;
+		clientSecret = Constants.immobilisationSecret;
 	} else if (penaltyType === 'CDN') {
 		clientId = Constants.courtDepositClientId;
+		clientSecret = Constants.courtDepositSecret;
 	} else {
 		return false;
 	}
 
 	const cardHolderPresentAuthBody = {
 		client_id: clientId,
-		client_secret: authBody.client_secret,
+		client_secret: clientSecret,
 		scope: authBody.scope,
 		grant_type: authBody.grant_type,
 		user_id: authBody.user_id,
