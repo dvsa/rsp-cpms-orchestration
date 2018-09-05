@@ -37,12 +37,8 @@ export default (penaltyType, authBody) => {
 	};
 
 	return new Promise((resolve, reject) => {
-		console.log('posting auth body');
-
-		console.log(cardHolderPresentAuthBody);
 		tokenClient.post('token', cardHolderPresentAuthBody)
 			.then((response) => {
-				console.log(response);
 				if (typeof response.data === 'undefined') {
 					reject(new Error('No auth token returned from CPMS'));
 				}
