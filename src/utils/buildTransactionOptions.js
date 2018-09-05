@@ -3,7 +3,7 @@ import Constants from './constants';
 export default (transactionData) => {
 	console.log(transactionData);
 	let productDescription = '';
-	switch (transactionData.paymentObject) {
+	switch (transactionData.paymentObject.penalty_type) {
 	case 'FPN':
 		productDescription = 'Fixed_Penalties';
 		break;
