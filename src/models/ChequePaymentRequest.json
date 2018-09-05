@@ -1,0 +1,54 @@
+{
+	"type": "object",
+	"required": [
+		"penalty_reference",
+		"penalty_type",
+		"penalty_amount",
+		"slip_number",
+		"batch_number",
+		"receipt_date",
+		"cheque_date",
+		"cheque_number",
+		"name_on_cheque"
+	],
+	"properties": {
+		"penalty_reference": {
+			"type": "string"
+		},
+		"penalty_type": {
+			"type": "string"
+		},
+		"penalty_amount": {
+			"type": "integer"
+		},
+		"slip_number": {
+			"type": "integer"
+		},
+		"batch_number": {
+			"type": "integer"
+		},
+		"receipt_date": {
+			"type": "string"
+		},
+		"cheque_date": {
+			"type": "string"
+		},
+		"cheque_number": {
+			"type": "integer"
+		},
+		"name_on_cheque": {
+			"type": "string"
+		}
+	},
+	"example": {
+		"penalty_reference": "112233445566",
+		"penalty_type": "FPN",
+		"penalty_amount": 300.00,
+		"slip_number": 1,
+		"batch_number": 1,
+		"receipt_date": "2018-01-13",
+		"cheque_date": "2018-12-13",
+		"cheque_number": 100,
+		"name_on_cheque": "Mr Test"
+	}
+}

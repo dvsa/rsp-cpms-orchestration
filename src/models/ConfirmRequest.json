@@ -1,0 +1,14 @@
+{
+	"type": "object",
+	"required": [
+		"receipt_reference"
+	],
+	"properties": {
+		"receipt_reference": {
+			"type": "string"
+		}
+	},
+	"example": {
+		"receipt_reference": "RECEIPT_001"
+	}
+}

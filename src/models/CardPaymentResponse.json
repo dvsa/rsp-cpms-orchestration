@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "required": [
+		"payment_url",
+		"receipt_reference"
+  ],
+  "properties": {
+    "payment_url": {
+      "type": "string"
+		},
+		"receipt_reference": {
+			"type": "string"
+		}
+  },
+  "example": 
+    {
+			"payment_url": "www.capita.com",
+			"receipt_reference": "CAP-001"
+    }
+}
