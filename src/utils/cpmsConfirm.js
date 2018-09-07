@@ -6,7 +6,6 @@ export default (receiptReference, auth) => {
 	console.log(receiptReference);
 	const confirmClient = axios.create({
 		baseURL: Constants.cpmsBaseUrl,
-		timeout: 6000,
 		headers: {
 			'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 			Authorization: `Bearer ${auth.access_token}`,
