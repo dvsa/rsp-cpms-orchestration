@@ -7,7 +7,6 @@ export default (chargebackObj) => {
 
 		const chargebackClient = axios.create({
 			baseURL: Constants.cpmsBaseUrl,
-			timeout: 6000,
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 				Authorization: `Bearer ${chargebackObj.auth.access_token}`,
