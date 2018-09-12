@@ -186,7 +186,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   confirm:
-    handler: handler.confirmPayment
+    handler: handler.confirm
     memorySize: 128
     events:
       -

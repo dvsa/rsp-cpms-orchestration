@@ -3,7 +3,7 @@ import cardNotPresentPayment from './functions/cardNotPresentPayment';
 import cashPayment from './functions/cashPayment';
 import chequePayment from './functions/chequePayment';
 import postalOrderPayment from './functions/postalOrderPayment';
-import confirmPayment from './functions/confirm';
+import confirm from './functions/confirm';
 import listReports from './functions/listReports';
 import generateReport from './functions/generateReport';
 import checkReportStatus from './functions/checkReportStatus';
@@ -20,7 +20,7 @@ const handler = {
 	cashPayment,
 	chequePayment,
 	postalOrderPayment,
-	confirmPayment,
+	confirm,
 	listReports,
 	generateReport,
 	checkReportStatus,
