@@ -6,7 +6,6 @@ export default (authToken) => {
 	return new Promise((resolve, reject) => {
 		const reportClient = axios.create({
 			baseURL: Constants.cpmsBaseUrl,
-			timeout: 6000,
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 				Authorization: `Bearer ${authToken.access_token}`,

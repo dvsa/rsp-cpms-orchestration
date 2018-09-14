@@ -6,7 +6,6 @@ export default (penaltyType, authBody) => {
 	console.log(Constants.cpmsBaseUrl);
 	const tokenClient = axios.create({
 		baseURL: Constants.cpmsBaseUrl,
-		timeout: 15000,
 		headers: {
 			Accept: 'application/json',
 		},
