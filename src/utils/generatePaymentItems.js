@@ -1,4 +1,4 @@
-export default (penalties, penaltyType, vehicleReg, constants) => {
+export default (penalties, penaltyType, constants) => {
 	let productDescription = '';
 	switch (penaltyType) {
 	case 'FPN':
@@ -27,7 +27,7 @@ export default (penalties, penaltyType, vehicleReg, constants) => {
 			product_reference: 'RoadSidePayments',
 			product_description: productDescription,
 			invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-			receiver_reference: vehicleReg,
+			receiver_reference: penalty.VehicleRegistration,
 			receiver_name: 'DVSA RSP',
 			receiver_address: constants.receiverAddress,
 			rule_start_date: new Date(Date.now()).toISOString().split('T')[0],

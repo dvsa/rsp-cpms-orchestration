@@ -16,7 +16,7 @@ export default (transactionData) => {
 		console.log('created transaction client');
 
 		const transactionOptions = BuildTransactionOptions(transactionData);
-		console.log(transactionOptions);
+		console.log(JSON.stringify(transactionOptions));
 		transactionClient.post(transactionData.endpoint, transactionOptions)
 			.then((transactionResponse) => {
 				console.log('transaction response');

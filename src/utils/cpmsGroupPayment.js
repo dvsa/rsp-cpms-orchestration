@@ -24,7 +24,7 @@ export default (groupTransactionData) => {
 			reject(errMsg);
 			return;
 		}
-		console.log(transactionOptions);
+		console.log(JSON.stringify(transactionOptions));
 		transactionClient.post(groupTransactionData.endpoint, transactionOptions)
 			.then((transactionResponse) => {
 				console.log('transaction response');
