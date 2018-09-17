@@ -2,13 +2,13 @@ export default (penalties, penaltyType, vehicleReg, constants) => {
 	let productDescription = '';
 	switch (penaltyType) {
 	case 'FPN':
-		productDescription = 'Fixed_Penalties';
+		productDescription = 'Fixed Penalties';
 		break;
 	case 'IM':
 		productDescription = 'Immobilisation';
 		break;
 	case 'CDN':
-		productDescription = 'Court_Deposits';
+		productDescription = 'Court Deposits';
 		break;
 	default:
 		productDescription = '';

@@ -5,13 +5,13 @@ export default (transactionData) => {
 	let productDescription = '';
 	switch (transactionData.paymentObject.penalty_type) {
 	case 'FPN':
-		productDescription = 'Fixed_Penalties';
+		productDescription = 'Fixed Penalties';
 		break;
 	case 'IM':
 		productDescription = 'Immobilisation';
 		break;
 	case 'CDN':
-		productDescription = 'Court_Deposits';
+		productDescription = 'Court Deposits';
 		break;
 	default:
 		productDescription = '';
