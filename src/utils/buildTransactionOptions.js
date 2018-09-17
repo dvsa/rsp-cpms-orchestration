@@ -18,10 +18,10 @@ export default (transactionData) => {
 		break;
 	}
 
-	// let vehicleReg = transactionData.paymentObject.vehicle_reg;
-	// if (transactionData.paymentObject.vehicle_reg === false) {
-	// 	vehicleReg = 'OFFLINE';
-	// }
+	let vehicleReg = transactionData.paymentObject.vehicle_reg;
+	if (transactionData.paymentObject.vehicle_reg === false) {
+		vehicleReg = 'OFFLINE';
+	}
 
 	switch (transactionData.auth.scope) {
 	case 'CARD':
@@ -46,7 +46,7 @@ export default (transactionData) => {
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -77,7 +77,7 @@ export default (transactionData) => {
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -111,7 +111,7 @@ export default (transactionData) => {
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -148,7 +148,7 @@ export default (transactionData) => {
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -183,7 +183,7 @@ export default (transactionData) => {
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],

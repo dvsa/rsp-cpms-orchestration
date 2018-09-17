@@ -8,6 +8,7 @@ export default (groupTransactionData) => {
 		PenaltyType,
 		PenaltyGroupId,
 		Penalties,
+		VehicleRegistration,
 	} = groupTransactionData.paymentObject;
 
 	switch (groupTransactionData.auth.scope) {
@@ -21,7 +22,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, VehicleRegistration, Constants),
 		};
 	case 'CNP':
 		return {
@@ -33,7 +34,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, VehicleRegistration, Constants),
 		};
 	case 'CASH':
 		return {
@@ -47,7 +48,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, VehicleRegistration, Constants),
 		};
 	case 'CHEQUE':
 		return {
@@ -64,7 +65,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, VehicleRegistration, Constants),
 		};
 	case 'POSTAL_ORDER':
 		return {
@@ -79,7 +80,7 @@ export default (groupTransactionData) => {
 			customer_manager_name: Constants.customerManagerName,
 			customer_name: Constants.customerName,
 			customer_address: Constants.customerAddress,
-			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
+			payment_data: generatePaymentItems(Penalties, PenaltyType, VehicleRegistration, Constants),
 		};
 	default:
 		return null;
