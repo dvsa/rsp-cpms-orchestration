@@ -1,14 +1,18 @@
 export default (penalties, penaltyType, constants) => {
 	let productDescription = '';
+	let salesPersonReference = '';
 	switch (penaltyType) {
 	case 'FPN':
-		productDescription = 'Fixed_Penalties';
+		productDescription = 'Fixed Penalties';
+		salesPersonReference = 'Enforcement';
 		break;
 	case 'IM':
 		productDescription = 'Immobilisation';
+		salesPersonReference = 'Impounding';
 		break;
 	case 'CDN':
-		productDescription = 'Court_Deposits';
+		productDescription = 'Court Deposits';
+		salesPersonReference = 'Enforcement';
 		break;
 	default:
 		productDescription = '';
@@ -23,16 +27,16 @@ export default (penalties, penaltyType, constants) => {
 			allocated_amount: penalty.PenaltyAmount.toFixed(2),
 			tax_code: 'O',
 			tax_rate: '0',
-			sales_reference: `${penalty.PenaltyReference}_${penalty.VehicleRegistration}`,
+			sales_reference: penalty.PenaltyReference,
 			product_reference: 'RoadSidePayments',
 			product_description: productDescription,
 			invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-			receiver_reference: `${penalty.PenaltyReference}_${penaltyType}`,
+			receiver_reference: penalty.VehicleRegistration,
 			receiver_name: 'DVSA RSP',
 			receiver_address: constants.receiverAddress,
 			rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 			deferment_period: '1',
-			sales_person_reference: 'DVSA RSP',
+			sales_person_reference: salesPersonReference,
 			user_id: constants.userId,
 		};
 	});
