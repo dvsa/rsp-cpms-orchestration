@@ -1,14 +1,18 @@
 export default (penalties, penaltyType, constants) => {
 	let productDescription = '';
+	let salesPersonReference = '';
 	switch (penaltyType) {
 	case 'FPN':
 		productDescription = 'Fixed Penalties';
+		salesPersonReference = 'Enforcement';
 		break;
 	case 'IM':
 		productDescription = 'Immobilisation';
+		salesPersonReference = 'Impounding';
 		break;
 	case 'CDN':
 		productDescription = 'Court Deposits';
+		salesPersonReference = 'Enforcement';
 		break;
 	default:
 		productDescription = '';
@@ -32,7 +36,7 @@ export default (penalties, penaltyType, constants) => {
 			receiver_address: constants.receiverAddress,
 			rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 			deferment_period: '1',
-			sales_person_reference: 'DVSA RSP',
+			sales_person_reference: salesPersonReference,
 			user_id: constants.userId,
 		};
 	});

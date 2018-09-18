@@ -3,15 +3,19 @@ import Constants from './constants';
 export default (transactionData) => {
 	console.log(transactionData);
 	let productDescription = '';
+	let salesPersonReference = '';
 	switch (transactionData.paymentObject.penalty_type) {
 	case 'FPN':
 		productDescription = 'Fixed Penalties';
+		salesPersonReference = 'Enforcement';
 		break;
 	case 'IM':
 		productDescription = 'Immobilisation';
+		salesPersonReference = 'Impounding';
 		break;
 	case 'CDN':
 		productDescription = 'Court Deposits';
+		salesPersonReference = 'Enforcement';
 		break;
 	default:
 		productDescription = '';
@@ -51,7 +55,7 @@ export default (transactionData) => {
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -82,7 +86,7 @@ export default (transactionData) => {
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -116,7 +120,7 @@ export default (transactionData) => {
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -153,7 +157,7 @@ export default (transactionData) => {
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -188,7 +192,7 @@ export default (transactionData) => {
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
