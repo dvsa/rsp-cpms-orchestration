@@ -3,15 +3,19 @@ import Constants from './constants';
 export default (transactionData) => {
 	console.log(transactionData);
 	let productDescription = '';
+	let salesPersonReference = '';
 	switch (transactionData.paymentObject.penalty_type) {
 	case 'FPN':
-		productDescription = 'Fixed_Penalties';
+		productDescription = 'Fixed Penalties';
+		salesPersonReference = 'Enforcement';
 		break;
 	case 'IM':
 		productDescription = 'Immobilisation';
+		salesPersonReference = 'Impounding';
 		break;
 	case 'CDN':
-		productDescription = 'Court_Deposits';
+		productDescription = 'Court Deposits';
+		salesPersonReference = 'Enforcement';
 		break;
 	default:
 		productDescription = '';
@@ -28,7 +32,7 @@ export default (transactionData) => {
 		return {
 			redirect_uri: transactionData.redirectUrl,
 			total_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
-			customer_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+			customer_reference: transactionData.paymentObject.payment_code,
 			scope: transactionData.auth.scope,
 			country_code: 'GB',
 			customer_manager_name: Constants.customerManagerName,
@@ -42,16 +46,16 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: vehicleReg,
+				sales_reference: transactionData.paymentObject.penalty_reference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -59,7 +63,7 @@ export default (transactionData) => {
 		return {
 			redirect_uri: transactionData.redirectUrl,
 			total_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
-			customer_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+			customer_reference: transactionData.paymentObject.payment_code,
 			scope: transactionData.auth.scope,
 			country_code: 'GB',
 			customer_manager_name: Constants.customerManagerName,
@@ -73,16 +77,16 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: vehicleReg,
+				sales_reference: transactionData.paymentObject.penalty_reference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -93,7 +97,7 @@ export default (transactionData) => {
 			receipt_date: transactionData.paymentObject.receipt_date,
 			redirect_uri: transactionData.redirectUrl,
 			total_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
-			customer_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+			customer_reference: transactionData.paymentObject.payment_code,
 			scope: transactionData.auth.scope,
 			country_code: 'GB',
 			customer_manager_name: Constants.customerManagerName,
@@ -107,16 +111,16 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: vehicleReg,
+				sales_reference: transactionData.paymentObject.penalty_reference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -130,7 +134,7 @@ export default (transactionData) => {
 			name_on_cheque: transactionData.paymentObject.name_on_cheque,
 			redirect_uri: transactionData.redirectUrl,
 			total_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
-			customer_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+			customer_reference: transactionData.paymentObject.payment_code,
 			scope: transactionData.auth.scope,
 			country_code: 'GB',
 			customer_manager_name: Constants.customerManagerName,
@@ -144,16 +148,16 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: vehicleReg,
+				sales_reference: transactionData.paymentObject.penalty_reference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
@@ -165,7 +169,7 @@ export default (transactionData) => {
 			postal_order_number: transactionData.paymentObject.postal_order_number,
 			redirect_uri: transactionData.redirectUrl,
 			total_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
-			customer_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+			customer_reference: transactionData.paymentObject.payment_code,
 			scope: transactionData.auth.scope,
 			country_code: 'GB',
 			customer_manager_name: Constants.customerManagerName,
@@ -179,16 +183,16 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: vehicleReg,
+				sales_reference: transactionData.paymentObject.penalty_reference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
-				receiver_reference: `${transactionData.paymentObject.penalty_reference}_${transactionData.paymentObject.penalty_type}`,
+				receiver_reference: vehicleReg,
 				receiver_name: 'DVSA RSP',
 				receiver_address: Constants.receiverAddress,
 				rule_start_date: new Date(Date.now()).toISOString().split('T')[0],
 				deferment_period: '1',
-				sales_person_reference: 'DVSA RSP',
+				sales_person_reference: salesPersonReference,
 				user_id: Constants.userId,
 			}],
 		};
