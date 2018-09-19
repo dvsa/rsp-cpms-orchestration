@@ -66,6 +66,7 @@ const constants = {
 	immobilisationSecret: process.env.IMMOBILISATION_SECRET,
 	courtDepositSecret: process.env.COURT_DEPOSIT_SECRET,
 	userId: process.env.USERID,
+	cost_centre: process.env.COST_CENTRE,
 };
 
 export default constants;
