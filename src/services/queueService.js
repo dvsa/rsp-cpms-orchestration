@@ -25,7 +25,7 @@ export default class QueueService {
 				},
 				RegistrationNumber: {
 					DataType: 'String',
-					StringValue: VehicleRegistration || '',
+					StringValue: VehicleRegistration || 'OFFLINE',
 				},
 				IsGroupPayment: {
 					DataType: 'String',
