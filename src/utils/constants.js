@@ -17,7 +17,7 @@ const configMetadata = {
 	immobilisationScheme: 'IMMOBILISATION_SCHEME',
 	immobilisationSecret: 'IMMOBILISATION_SECRET',
 	sqsUrl: 'SQS_URL',
-	userid: 'USERID',
+	userId: 'USERID',
 };
 
 let configuration = {};
@@ -50,49 +50,27 @@ const cpmsBaseUrl = () => {
 	return configuration[configMetadata.cpmsBaseUrl];
 };
 
+const userId = () => {
+	return configuration[configMetadata.userId];
+};
+
+const authBodyWithScopeFn = scope => () => ({
+	scope,
+	grant_type: 'client_credentials',
+	user_id: userId(),
+});
+
 const constants = {
 	bootstrap,
 	cpmsBaseUrl,
-	cardHolderPresentAuthBody: {
-		scope: 'CARD',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
-	cardHolderNotPresentAuthBody: {
-		scope: 'CNP',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
-	chequePaymentAuthBody: {
-		scope: 'CHEQUE',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
-	cashPaymentAuthBody: {
-		scope: 'CASH',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
-	postalOrderAuthBody: {
-		scope: 'POSTAL_ORDER',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
-	reportingAuthBody: {
-		scope: 'REPORT',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
-	chargebackAuthBody: {
-		scope: 'CHARGE_BACK',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
-	reversalAuthBody: {
-		scope: 'CHEQUE_RD',
-		grant_type: 'client_credentials',
-		user_id: process.env.USERID,
-	},
+	cardHolderPresentAuthBody: authBodyWithScopeFn('CARD'),
+	cardHolderNotPresentAuthBody: authBodyWithScopeFn('CNP'),
+	chequePaymentAuthBody: authBodyWithScopeFn('CHEQUE'),
+	cashPaymentAuthBody: authBodyWithScopeFn('CASH'),
+	postalOrderAuthBody: authBodyWithScopeFn('POSTAL_ORDER'),
+	reportingAuthBody: authBodyWithScopeFn('REPORT'),
+	chargebackAuthBody: authBodyWithScopeFn('CHARGE_BACK'),
+	reversalAuthBody: authBodyWithScopeFn('CHEQUE_RD'),
 	receiverAddress: {
 		line_1: process.env.ADDRESS_LINE1,
 		line_2: process.env.ADDRESS_LINE2,

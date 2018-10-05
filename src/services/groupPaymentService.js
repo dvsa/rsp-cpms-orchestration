@@ -13,11 +13,11 @@ const sqs = new SQS({ apiVersion: '2012-11-05' });
 const queueService = new QueueService(sqs, process.env.SQS_URL);
 
 const paymentTypeIntegrationMap = {
-	CARD: { authBody: Constants.cardHolderPresentAuthBody, endpoint: '/payment/card' },
-	CNP: { authBody: Constants.cardHolderNotPresentAuthBody, endpoint: '/payment/cardholder-not-present' },
-	CASH: { authBody: Constants.cashPaymentAuthBody, endpoint: '/payment/cash' },
-	CHEQUE: { authBody: Constants.chequePaymentAuthBody, endpoint: '/payment/cheque' },
-	POSTAL_ORDER: { authBody: Constants.postalOrderAuthBody, endpoint: '/payment/postal-order' },
+	CARD: { authBodyFn: Constants.cardHolderPresentAuthBody, endpoint: '/payment/card' },
+	CNP: { authBodyFn: Constants.cardHolderNotPresentAuthBody, endpoint: '/payment/cardholder-not-present' },
+	CASH: { authBodyFn: Constants.cashPaymentAuthBody, endpoint: '/payment/cash' },
+	CHEQUE: { authBodyFn: Constants.chequePaymentAuthBody, endpoint: '/payment/cheque' },
+	POSTAL_ORDER: { authBodyFn: Constants.postalOrderAuthBody, endpoint: '/payment/postal-order' },
 };
 
 const groupPayment = async (paymentObject, callback) => {
@@ -30,7 +30,7 @@ const groupPayment = async (paymentObject, callback) => {
 
 		const authToken = await cpmsAuth(
 			paymentObject.PenaltyType,
-			paymentTypeIntegrationConfig.authBody,
+			paymentTypeIntegrationConfig.authBodyFn(),
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
