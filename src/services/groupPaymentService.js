@@ -10,8 +10,6 @@ import QueueService from './queueService';
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
 
-const queueService = new QueueService(sqs, process.env.SQS_URL);
-
 const paymentTypeIntegrationMap = {
 	CARD: { authBodyFn: Constants.cardHolderPresentAuthBody, endpoint: '/payment/card' },
 	CNP: { authBodyFn: Constants.cardHolderNotPresentAuthBody, endpoint: '/payment/cardholder-not-present' },
@@ -20,6 +18,7 @@ const paymentTypeIntegrationMap = {
 	POSTAL_ORDER: { authBodyFn: Constants.postalOrderAuthBody, endpoint: '/payment/postal-order' },
 };
 
+let queueService;
 const groupPayment = async (paymentObject, callback) => {
 	try {
 		const paymentMethod = paymentObject.PaymentMethod || 'CARD';
@@ -50,6 +49,9 @@ const groupPayment = async (paymentObject, callback) => {
 		const { PenaltyGroupId, VehicleRegistration, PenaltyType } = paymentObject;
 		const PenaltyId = PenaltyGroupId;
 		// Send a message to the CPMS checking queue
+		if (!queueService) {
+			queueService = new QueueService(sqs, Constants.sqsUrl());
+		}
 		const messageData = await queueService.sendMessage({
 			ReceiptReference,
 			PenaltyId,

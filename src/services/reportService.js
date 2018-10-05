@@ -35,7 +35,7 @@ const generateReport = async (reportObject, callback) => {
 
 		const generateResult = await cpmsGenerateReport({
 			generateReportOptions: {
-				cost_centre: Constants.cost_centre,
+				cost_centre: Constants.costCentre(),
 				report_code: reportObject.report_code,
 				filters: {
 					from: reportObject.from_date,

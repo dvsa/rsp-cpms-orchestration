@@ -7,14 +7,15 @@ const configMetadata = {
 	addressLine3: 'ADDRESS_LINE3',
 	addressLine4: 'ADDRESS_LINE4',
 	addressPostcode: 'ADDRESS_POSTCODE',
-	courtDepositScheme: 'COURT_DEPOSIT_SCHEME',
+	costCentre: 'COST_CENTRE',
+	courtDepositClientId: 'COURT_DEPOSIT_SCHEME',
 	courtDepositSecret: 'COURT_DEPOSIT_SECRET',
 	cpmsBaseUrl: 'URL',
 	customerManagerName: 'CUSTOMER_MANAGER_NAME',
 	customerName: 'CUSTOMER_NAME',
-	fixedPenaltyScheme: 'FIXED_PENALTY_SCHEME',
+	fixedPenaltyClientId: 'FIXED_PENALTY_SCHEME',
 	fixedPenaltySecret: 'FIXED_PENALTY_SECRET',
-	immobilisationScheme: 'IMMOBILISATION_SCHEME',
+	immobilisationClientId: 'IMMOBILISATION_SCHEME',
 	immobilisationSecret: 'IMMOBILISATION_SECRET',
 	sqsUrl: 'SQS_URL',
 	userId: 'USERID',
@@ -46,8 +47,66 @@ async function bootstrap() {
 	});
 }
 
+const costCentre = () => {
+	return configuration[configMetadata.costCentre];
+};
+
+const courtDepositClientId = () => {
+	return configuration[configMetadata.courtDepositClientId];
+};
+
+const courtDepositSecret = () => {
+	return configuration[configMetadata.courtDepositSecret];
+};
+
 const cpmsBaseUrl = () => {
 	return configuration[configMetadata.cpmsBaseUrl];
+};
+
+const customerAddress = () => ({
+	line_1: configuration[configMetadata.addressLine1],
+	line_2: configuration[configMetadata.addressLine2],
+	line_3: configuration[configMetadata.addressLine3],
+	line_4: configuration[configMetadata.addressLine4],
+	city: configuration[configMetadata.addressCity],
+	postcode: configuration[configMetadata.addressPostcode],
+});
+
+const customerName = () => {
+	return configuration[configMetadata.customerName];
+};
+
+const customerManagerName = () => {
+	return configuration[configMetadata.customerManagerName];
+};
+
+const fixedPenaltyClientId = () => {
+	return configuration[configMetadata.fixedPenaltyClientId];
+};
+
+const fixedPenaltySecret = () => {
+	return configuration[configMetadata.fixedPenaltySecret];
+};
+
+const immobilisationClientId = () => {
+	return configuration[configMetadata.immobilisationClientId];
+};
+
+const immobilisationSecret = () => {
+	return configuration[configMetadata.immobilisationSecret];
+};
+
+const receiverAddress = () => ({
+	line_1: configuration[configMetadata.addressLine1],
+	line_2: configuration[configMetadata.addressLine2],
+	line_3: configuration[configMetadata.addressLine3],
+	line_4: configuration[configMetadata.addressLine4],
+	city: configuration[configMetadata.addressCity],
+	postcode: configuration[configMetadata.addressPostcode],
+});
+
+const sqsUrl = () => {
+	return configuration[configMetadata.sqsUrl];
 };
 
 const userId = () => {
@@ -71,32 +130,19 @@ const constants = {
 	reportingAuthBody: authBodyWithScopeFn('REPORT'),
 	chargebackAuthBody: authBodyWithScopeFn('CHARGE_BACK'),
 	reversalAuthBody: authBodyWithScopeFn('CHEQUE_RD'),
-	receiverAddress: {
-		line_1: process.env.ADDRESS_LINE1,
-		line_2: process.env.ADDRESS_LINE2,
-		line_3: process.env.ADDRESS_LINE3,
-		line_4: process.env.ADDRESS_LINE4,
-		city: process.env.ADDRESS_CITY,
-		postcode: process.env.ADDRESS_POSTCODE,
-	},
-	customerName: process.env.CUSTOMER_NAME,
-	customerManagerName: process.env.CUSTOMER_MANAGER_NAME,
-	customerAddress: {
-		line_1: process.env.ADDRESS_LINE1,
-		line_2: process.env.ADDRESS_LINE2,
-		line_3: process.env.ADDRESS_LINE3,
-		line_4: process.env.ADDRESS_LINE4,
-		city: process.env.ADDRESS_CITY,
-		postcode: process.env.ADDRESS_POSTCODE,
-	},
-	fixedPenaltyClientId: process.env.FIXED_PENALTY_SCHEME,
-	immobilisationClientId: process.env.IMMOBILISATION_SCHEME,
-	courtDepositClientId: process.env.COURT_DEPOSIT_SCHEME,
-	fixedPenaltySecret: process.env.FIXED_PENALTY_SECRET,
-	immobilisationSecret: process.env.IMMOBILISATION_SECRET,
-	courtDepositSecret: process.env.COURT_DEPOSIT_SECRET,
-	userId: process.env.USERID,
-	cost_centre: process.env.COST_CENTRE,
+	receiverAddress,
+	customerName,
+	customerManagerName,
+	customerAddress,
+	fixedPenaltyClientId,
+	immobilisationClientId,
+	courtDepositClientId,
+	fixedPenaltySecret,
+	immobilisationSecret,
+	courtDepositSecret,
+	userId,
+	costCentre,
+	sqsUrl,
 };
 
 export default constants;

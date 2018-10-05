@@ -15,14 +15,14 @@ export default (penaltyType, authBody) => {
 	let clientId = '';
 	let clientSecret = '';
 	if (penaltyType === 'FPN') {
-		clientId = Constants.fixedPenaltyClientId;
-		clientSecret = Constants.fixedPenaltySecret;
+		clientId = Constants.fixedPenaltyClientId();
+		clientSecret = Constants.fixedPenaltySecret();
 	} else if (penaltyType === 'IM') {
-		clientId = Constants.immobilisationClientId;
-		clientSecret = Constants.immobilisationSecret;
+		clientId = Constants.immobilisationClientId();
+		clientSecret = Constants.immobilisationSecret();
 	} else if (penaltyType === 'CDN') {
-		clientId = Constants.courtDepositClientId;
-		clientSecret = Constants.courtDepositSecret;
+		clientId = Constants.courtDepositClientId();
+		clientSecret = Constants.courtDepositSecret();
 	} else {
 		return false;
 	}

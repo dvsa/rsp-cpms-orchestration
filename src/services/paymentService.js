@@ -13,8 +13,7 @@ import QueueService from './queueService';
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
 
-const queueService = new QueueService(sqs, process.env.SQS_URL);
-
+let queueService;
 const cardPayment = async (paymentObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
@@ -40,6 +39,9 @@ const cardPayment = async (paymentObject, callback) => {
 		const VehicleRegistration = paymentObject.vehicle_reg;
 		const PenaltyType = paymentObject.penalty_type;
 		// Send a message to the CPMS checking queue
+		if (!queueService) {
+			queueService = new QueueService(sqs, Constants.sqsUrl());
+		}
 		const messageData = await queueService.sendMessage({
 			ReceiptReference,
 			PenaltyId: `${PenaltyId}_${PenaltyType}`,
