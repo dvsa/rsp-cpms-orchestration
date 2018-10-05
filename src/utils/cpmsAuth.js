@@ -3,9 +3,9 @@ import axios from 'axios';
 import Constants from '../utils/constants';
 
 export default (penaltyType, authBody) => {
-	console.log(Constants.cpmsBaseUrl);
+	console.log(Constants.cpmsBaseUrl());
 	const tokenClient = axios.create({
-		baseURL: Constants.cpmsBaseUrl,
+		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			Accept: 'application/json',
 		},

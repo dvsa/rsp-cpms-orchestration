@@ -8,7 +8,7 @@ export default (groupTransactionData) => {
 	return new Promise((resolve, reject) => {
 
 		const transactionClient = axios.create({
-			baseURL: Constants.cpmsBaseUrl,
+			baseURL: Constants.cpmsBaseUrl(),
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 				Authorization: `Bearer ${groupTransactionData.auth.access_token}`,
