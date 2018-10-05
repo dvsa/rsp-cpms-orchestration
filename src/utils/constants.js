@@ -47,102 +47,58 @@ async function bootstrap() {
 	});
 }
 
-const costCentre = () => {
-	return configuration[configMetadata.costCentre];
-};
-
-const courtDepositClientId = () => {
-	return configuration[configMetadata.courtDepositClientId];
-};
-
-const courtDepositSecret = () => {
-	return configuration[configMetadata.courtDepositSecret];
-};
-
-const cpmsBaseUrl = () => {
-	return configuration[configMetadata.cpmsBaseUrl];
+const fromConfiguration = configKey => () => {
+	return configuration[configKey];
 };
 
 const customerAddress = () => ({
-	line_1: configuration[configMetadata.addressLine1],
-	line_2: configuration[configMetadata.addressLine2],
-	line_3: configuration[configMetadata.addressLine3],
-	line_4: configuration[configMetadata.addressLine4],
-	city: configuration[configMetadata.addressCity],
-	postcode: configuration[configMetadata.addressPostcode],
+	line_1: fromConfiguration(configMetadata.addressLine1)(),
+	line_2: fromConfiguration(configMetadata.addressLine2)(),
+	line_3: fromConfiguration(configMetadata.addressLine3)(),
+	line_4: fromConfiguration(configMetadata.addressLine4)(),
+	city: fromConfiguration(configMetadata.addressCity)(),
+	postcode: fromConfiguration(configMetadata.addressPostcode)(),
 });
-
-const customerName = () => {
-	return configuration[configMetadata.customerName];
-};
-
-const customerManagerName = () => {
-	return configuration[configMetadata.customerManagerName];
-};
-
-const fixedPenaltyClientId = () => {
-	return configuration[configMetadata.fixedPenaltyClientId];
-};
-
-const fixedPenaltySecret = () => {
-	return configuration[configMetadata.fixedPenaltySecret];
-};
-
-const immobilisationClientId = () => {
-	return configuration[configMetadata.immobilisationClientId];
-};
-
-const immobilisationSecret = () => {
-	return configuration[configMetadata.immobilisationSecret];
-};
 
 const receiverAddress = () => ({
-	line_1: configuration[configMetadata.addressLine1],
-	line_2: configuration[configMetadata.addressLine2],
-	line_3: configuration[configMetadata.addressLine3],
-	line_4: configuration[configMetadata.addressLine4],
-	city: configuration[configMetadata.addressCity],
-	postcode: configuration[configMetadata.addressPostcode],
+	line_1: fromConfiguration(configMetadata.addressLine1)(),
+	line_2: fromConfiguration(configMetadata.addressLine2)(),
+	line_3: fromConfiguration(configMetadata.addressLine3)(),
+	line_4: fromConfiguration(configMetadata.addressLine4)(),
+	city: fromConfiguration(configMetadata.addressCity)(),
+	postcode: fromConfiguration(configMetadata.addressPostcode)(),
 });
-
-const sqsUrl = () => {
-	return configuration[configMetadata.sqsUrl];
-};
-
-const userId = () => {
-	return configuration[configMetadata.userId];
-};
 
 const authBodyWithScopeFn = scope => () => ({
 	scope,
 	grant_type: 'client_credentials',
-	user_id: userId(),
+	user_id: fromConfiguration(configMetadata.userId)(),
 });
 
 const constants = {
 	bootstrap,
-	cpmsBaseUrl,
-	cardHolderPresentAuthBody: authBodyWithScopeFn('CARD'),
 	cardHolderNotPresentAuthBody: authBodyWithScopeFn('CNP'),
-	chequePaymentAuthBody: authBodyWithScopeFn('CHEQUE'),
+	cardHolderPresentAuthBody: authBodyWithScopeFn('CARD'),
 	cashPaymentAuthBody: authBodyWithScopeFn('CASH'),
-	postalOrderAuthBody: authBodyWithScopeFn('POSTAL_ORDER'),
-	reportingAuthBody: authBodyWithScopeFn('REPORT'),
 	chargebackAuthBody: authBodyWithScopeFn('CHARGE_BACK'),
-	reversalAuthBody: authBodyWithScopeFn('CHEQUE_RD'),
-	receiverAddress,
-	customerName,
-	customerManagerName,
+	chequePaymentAuthBody: authBodyWithScopeFn('CHEQUE'),
+	costCentre: fromConfiguration(configMetadata.costCentre),
+	courtDepositClientId: fromConfiguration(configMetadata.courtDepositClientId),
+	courtDepositSecret: fromConfiguration(configMetadata.courtDepositSecret),
+	cpmsBaseUrl: fromConfiguration(configMetadata.cpmsBaseUrl),
 	customerAddress,
-	fixedPenaltyClientId,
-	immobilisationClientId,
-	courtDepositClientId,
-	fixedPenaltySecret,
-	immobilisationSecret,
-	courtDepositSecret,
-	userId,
-	costCentre,
-	sqsUrl,
+	customerManagerName: fromConfiguration(configMetadata.customerManagerName),
+	customerName: fromConfiguration(configMetadata.customerName),
+	fixedPenaltyClientId: fromConfiguration(configMetadata.fixedPenaltyClientId),
+	fixedPenaltySecret: fromConfiguration(configMetadata.fixedPenaltySecret),
+	immobilisationClientId: fromConfiguration(configMetadata.immobilisationClientId),
+	immobilisationSecret: fromConfiguration(configMetadata.immobilisationSecret),
+	postalOrderAuthBody: authBodyWithScopeFn('POSTAL_ORDER'),
+	receiverAddress,
+	reportingAuthBody: authBodyWithScopeFn('REPORT'),
+	reversalAuthBody: authBodyWithScopeFn('CHEQUE_RD'),
+	sqsUrl: fromConfiguration(configMetadata.sqsUrl),
+	userId: fromConfiguration(configMetadata.userId),
 };
 
 export default constants;
