@@ -18,9 +18,9 @@ export default (groupTransactionData) => {
 			customer_reference: PenaltyGroupId,
 			scope: groupTransactionData.auth.scope,
 			country_code: 'GB',
-			customer_manager_name: Constants.customerManagerName,
-			customer_name: Constants.customerName,
-			customer_address: Constants.customerAddress,
+			customer_manager_name: Constants.customerManagerName(),
+			customer_name: Constants.customerName(),
+			customer_address: Constants.customerAddress(),
 			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'CNP':
@@ -30,9 +30,9 @@ export default (groupTransactionData) => {
 			customer_reference: PenaltyGroupId,
 			scope: groupTransactionData.auth.scope,
 			country_code: 'GB',
-			customer_manager_name: Constants.customerManagerName,
-			customer_name: Constants.customerName,
-			customer_address: Constants.customerAddress,
+			customer_manager_name: Constants.customerManagerName(),
+			customer_name: Constants.customerName(),
+			customer_address: Constants.customerAddress(),
 			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'CASH':
@@ -44,9 +44,9 @@ export default (groupTransactionData) => {
 			customer_reference: PenaltyGroupId,
 			scope: groupTransactionData.auth.scope,
 			country_code: 'GB',
-			customer_manager_name: Constants.customerManagerName,
-			customer_name: Constants.customerName,
-			customer_address: Constants.customerAddress,
+			customer_manager_name: Constants.customerManagerName(),
+			customer_name: Constants.customerName(),
+			customer_address: Constants.customerAddress(),
 			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'CHEQUE':
@@ -61,9 +61,9 @@ export default (groupTransactionData) => {
 			customer_reference: PenaltyGroupId,
 			scope: groupTransactionData.auth.scope,
 			country_code: 'GB',
-			customer_manager_name: Constants.customerManagerName,
-			customer_name: Constants.customerName,
-			customer_address: Constants.customerAddress,
+			customer_manager_name: Constants.customerManagerName(),
+			customer_name: Constants.customerName(),
+			customer_address: Constants.customerAddress(),
 			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	case 'POSTAL_ORDER':
@@ -76,9 +76,9 @@ export default (groupTransactionData) => {
 			customer_reference: PenaltyGroupId,
 			scope: groupTransactionData.auth.scope,
 			country_code: 'GB',
-			customer_manager_name: Constants.customerManagerName,
-			customer_name: Constants.customerName,
-			customer_address: Constants.customerAddress,
+			customer_manager_name: Constants.customerManagerName(),
+			customer_name: Constants.customerName(),
+			customer_address: Constants.customerAddress(),
 			payment_data: generatePaymentItems(Penalties, PenaltyType, Constants),
 		};
 	default:

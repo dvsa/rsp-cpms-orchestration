@@ -13,13 +13,12 @@ import QueueService from './queueService';
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
 
-const queueService = new QueueService(sqs, process.env.SQS_URL);
-
+let queueService;
 const cardPayment = async (paymentObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			paymentObject.penalty_type,
-			Constants.cardHolderPresentAuthBody,
+			Constants.cardHolderPresentAuthBody(),
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
@@ -40,6 +39,9 @@ const cardPayment = async (paymentObject, callback) => {
 		const VehicleRegistration = paymentObject.vehicle_reg;
 		const PenaltyType = paymentObject.penalty_type;
 		// Send a message to the CPMS checking queue
+		if (!queueService) {
+			queueService = new QueueService(sqs, Constants.sqsUrl());
+		}
 		const messageData = await queueService.sendMessage({
 			ReceiptReference,
 			PenaltyId: `${PenaltyId}_${PenaltyType}`,
@@ -60,7 +62,7 @@ const cardNotPresentPayment = async (paymentObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			paymentObject.penalty_type,
-			Constants.cardHolderNotPresentAuthBody,
+			Constants.cardHolderNotPresentAuthBody(),
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
@@ -84,7 +86,7 @@ const cardNotPresentPayment = async (paymentObject, callback) => {
 
 const cashPayment = async (paymentObject, callback) => {
 	try {
-		const authToken = await cpmsAuth(paymentObject.penalty_type, Constants.cashPaymentAuthBody);
+		const authToken = await cpmsAuth(paymentObject.penalty_type, Constants.cashPaymentAuthBody());
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
 			callback(createResponse({ body: 'Error authenticating', statusCode: 400 }));
@@ -106,7 +108,7 @@ const cashPayment = async (paymentObject, callback) => {
 
 const chequePayment = async (paymentObject, callback) => {
 	try {
-		const authToken = await cpmsAuth(paymentObject.penalty_type, Constants.chequePaymentAuthBody);
+		const authToken = await cpmsAuth(paymentObject.penalty_type, Constants.chequePaymentAuthBody());
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
 			callback(createResponse({ body: 'Error authenticating', statusCode: 400 }));
@@ -128,7 +130,7 @@ const chequePayment = async (paymentObject, callback) => {
 
 const postalOrderPayment = async (paymentObject, callback) => {
 	try {
-		const authToken = await cpmsAuth(paymentObject.penalty_type, Constants.postalOrderAuthBody);
+		const authToken = await cpmsAuth(paymentObject.penalty_type, Constants.postalOrderAuthBody());
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
 			callback(createResponse({ body: 'Error authenticating', statusCode: 400 }));
@@ -152,7 +154,7 @@ const confirmPayment = async (confirmObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			confirmObject.penalty_type,
-			Constants.cardHolderPresentAuthBody,
+			Constants.cardHolderPresentAuthBody(),
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
@@ -173,7 +175,7 @@ const reverseCard = async (reverseCardObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			reverseCardObject.penalty_type,
-			Constants.chargebackAuthBody,
+			Constants.chargebackAuthBody(),
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
@@ -199,7 +201,7 @@ const reverseCheque = async (reverseChequeObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			reverseChequeObject.penalty_type,
-			Constants.reversalAuthBody,
+			Constants.reversalAuthBody(),
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');

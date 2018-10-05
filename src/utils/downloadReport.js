@@ -4,7 +4,7 @@ import Constants from '../utils/constants';
 
 export default async (reportObj) => {
 	const reportStreamClient = axios.create({
-		baseURL: Constants.cpmsBaseUrl,
+		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 			responseType: 'stream',

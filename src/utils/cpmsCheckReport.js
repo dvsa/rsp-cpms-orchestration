@@ -5,7 +5,7 @@ import Constants from '../utils/constants';
 export default (reportObj) => {
 	return new Promise((resolve, reject) => {
 		const reportClient = axios.create({
-			baseURL: Constants.cpmsBaseUrl,
+			baseURL: Constants.cpmsBaseUrl(),
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 				Authorization: `Bearer ${reportObj.authToken.access_token}`,
