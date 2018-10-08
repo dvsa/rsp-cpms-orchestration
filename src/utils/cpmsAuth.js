@@ -3,9 +3,9 @@ import axios from 'axios';
 import Constants from '../utils/constants';
 
 export default (penaltyType, authBody) => {
-	console.log(Constants.cpmsBaseUrl);
+	console.log(Constants.cpmsBaseUrl());
 	const tokenClient = axios.create({
-		baseURL: Constants.cpmsBaseUrl,
+		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			Accept: 'application/json',
 		},
@@ -15,14 +15,14 @@ export default (penaltyType, authBody) => {
 	let clientId = '';
 	let clientSecret = '';
 	if (penaltyType === 'FPN') {
-		clientId = Constants.fixedPenaltyClientId;
-		clientSecret = Constants.fixedPenaltySecret;
+		clientId = Constants.fixedPenaltyClientId();
+		clientSecret = Constants.fixedPenaltySecret();
 	} else if (penaltyType === 'IM') {
-		clientId = Constants.immobilisationClientId;
-		clientSecret = Constants.immobilisationSecret;
+		clientId = Constants.immobilisationClientId();
+		clientSecret = Constants.immobilisationSecret();
 	} else if (penaltyType === 'CDN') {
-		clientId = Constants.courtDepositClientId;
-		clientSecret = Constants.courtDepositSecret;
+		clientId = Constants.courtDepositClientId();
+		clientSecret = Constants.courtDepositSecret();
 	} else {
 		return false;
 	}

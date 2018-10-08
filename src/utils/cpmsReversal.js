@@ -6,7 +6,7 @@ export default (reversalObj) => {
 	return new Promise((resolve, reject) => {
 
 		const reversalClient = axios.create({
-			baseURL: Constants.cpmsBaseUrl,
+			baseURL: Constants.cpmsBaseUrl(),
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 				Authorization: `Bearer ${reversalObj.auth.access_token}`,

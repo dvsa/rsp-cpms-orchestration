@@ -13,7 +13,7 @@ const listReports = async (reportObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			reportObject.penalty_type,
-			Constants.reportingAuthBody,
+			Constants.reportingAuthBody(),
 		);
 
 		const reportData = await cpmsListReport(authToken);
@@ -30,12 +30,12 @@ const generateReport = async (reportObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			reportObject.penalty_type,
-			Constants.reportingAuthBody,
+			Constants.reportingAuthBody(),
 		);
 
 		const generateResult = await cpmsGenerateReport({
 			generateReportOptions: {
-				cost_centre: Constants.cost_centre,
+				cost_centre: Constants.costCentre(),
 				report_code: reportObject.report_code,
 				filters: {
 					from: reportObject.from_date,
@@ -55,7 +55,7 @@ const checkReportStatus = async (reportObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			reportObject.penalty_type,
-			Constants.reportingAuthBody,
+			Constants.reportingAuthBody(),
 		);
 
 		const reportStatus = await cpmsCheckReport({
@@ -73,7 +73,7 @@ const downloadReport = async (reportObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
 			reportObject.penalty_type,
-			Constants.reportingAuthBody,
+			Constants.reportingAuthBody(),
 		);
 
 		const reportStatus = await cpmsDownloadReport({

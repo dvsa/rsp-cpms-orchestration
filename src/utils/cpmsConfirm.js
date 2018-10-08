@@ -5,7 +5,7 @@ import Constants from '../utils/constants';
 export default (receiptReference, auth) => {
 	console.log(receiptReference);
 	const confirmClient = axios.create({
-		baseURL: Constants.cpmsBaseUrl,
+		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
 			Authorization: `Bearer ${auth.access_token}`,
