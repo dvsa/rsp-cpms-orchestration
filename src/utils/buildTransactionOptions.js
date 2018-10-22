@@ -1,10 +1,12 @@
 import Constants from './constants';
+import generateSuffixedPenaltyReference from '../utils/generateSuffixedPenaltyReference';
 
 export default (transactionData) => {
 	console.log(transactionData);
 	let productDescription = '';
 	let salesPersonReference = '';
-	switch (transactionData.paymentObject.penalty_type) {
+	const penaltyType = transactionData.paymentObject.penalty_type;
+	switch (penaltyType) {
 	case 'FPN':
 		productDescription = 'Fixed Penalties';
 		salesPersonReference = 'Enforcement';
@@ -27,6 +29,11 @@ export default (transactionData) => {
 		vehicleReg = 'OFFLINE';
 	}
 
+	const suffixedPenaltyReference = generateSuffixedPenaltyReference(
+		transactionData.paymentObject.penalty_reference,
+		penaltyType,
+	);
+
 	switch (transactionData.auth.scope) {
 	case 'CARD':
 		return {
@@ -46,7 +53,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.penalty_reference,
+				sales_reference: suffixedPenaltyReference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -77,7 +84,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.penalty_reference,
+				sales_reference: suffixedPenaltyReference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -111,7 +118,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.penalty_reference,
+				sales_reference: suffixedPenaltyReference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -148,7 +155,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.penalty_reference,
+				sales_reference: suffixedPenaltyReference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
@@ -183,7 +190,7 @@ export default (transactionData) => {
 				allocated_amount: transactionData.paymentObject.penalty_amount.toFixed(2),
 				tax_code: 'O',
 				tax_rate: '0',
-				sales_reference: transactionData.paymentObject.penalty_reference,
+				sales_reference: suffixedPenaltyReference,
 				product_reference: 'RoadSidePayments',
 				product_description: productDescription,
 				invoice_date: new Date(Date.now()).toISOString().split('T')[0],
