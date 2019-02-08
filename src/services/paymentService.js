@@ -35,9 +35,9 @@ const cardPayment = async (paymentObject, callback) => {
 		console.log('outside of async');
 
 		const ReceiptReference = transactionData.receipt_reference;
-		const PenaltyId = paymentObject.penalty_reference;
 		const VehicleRegistration = paymentObject.vehicle_reg;
 		const PenaltyType = paymentObject.penalty_type;
+		const PenaltyId = paymentObject.penalty_id;
 		// Send a message to the CPMS checking queue
 		if (!queueService) {
 			queueService = new QueueService(sqs, Constants.sqsUrl());
