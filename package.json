@@ -66,7 +66,7 @@
     "buffer": "5.0.8",
     "dotenv": "5.0.0",
     "expect.js": "0.3.1",
-    "rsp-validation": "^1.5.14",
+    "rsp-validation": "^1.5.16",
     "substring": "1.0.0"
   }
 }
