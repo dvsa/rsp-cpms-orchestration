@@ -167,8 +167,20 @@ const confirmPayment = async (confirmObject, callback) => {
 
 		callback(null, createResponse({ body: confirmResponse, statusCode: 200 }));
 	} catch (err) {
-		callback(createResponse(err, { body: err, statusCode: 400 }));
+		callback(createResponse({ body: err, statusCode: 400 }));
 	}
+};
+
+/**
+ * Confirm each receipt reference with CPMS and log the payment if it has been made.
+ * Delete receipt references no longer pending.
+ * @param {string} penaltyId
+ * @param {string[]} receiptReferences
+ * @param {(err: any, response: any) => void} callback Call back with either an error or
+ * an http response containing the new payment status.
+ */
+const confirmPendingTransactions = async (penaltyId, receiptReferences, callback) => {
+	callback(null, createResponse({ body: {}, statusCode: 200 }));
 };
 
 const reverseCard = async (reverseCardObject, callback) => {
@@ -193,7 +205,7 @@ const reverseCard = async (reverseCardObject, callback) => {
 		callback(null, createResponse({ body: chargebackResponse, statusCode: 200 }));
 	} catch (err) {
 		console.log(err);
-		callback(createResponse(err, { body: err, statusCode: 400 }));
+		callback(createResponse({ body: err, statusCode: 400 }));
 	}
 };
 
@@ -218,7 +230,7 @@ const reverseCheque = async (reverseChequeObject, callback) => {
 
 		callback(null, createResponse({ body: reversalResponse, statusCode: 200 }));
 	} catch (err) {
-		callback(createResponse(err, { body: err, statusCode: 400 }));
+		callback(createResponse({ body: err, statusCode: 400 }));
 	}
 };
 
@@ -229,6 +241,7 @@ export default ({
 	chequePayment,
 	postalOrderPayment,
 	confirmPayment,
+	confirmPendingTransactions,
 	reverseCard,
 	reverseCheque,
 });

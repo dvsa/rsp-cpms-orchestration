@@ -212,6 +212,23 @@ functions:
                   description: "Error message detailing why the status could not be obtained"
                 responseModels:
                   application/json: "ErrorResponse"
+  confirmPendingTransactions:
+    handler: handler.confirmPendingTransactions
+    memorySize: 128
+    events:
+      -
+        http:
+          path: confirmPendingTransactions
+          method: post
+          authorizer: aws_iam
+          cors: true
+          documentation:
+            summary: "Confirm a card payment"
+            description: "Query CPMS for card payments from a list of receipt references. Clear expired transactions."
+            requestBody:
+              description: "None"
+            requestModels:
+              application/json: "ConfirmRequest"
   listReports:
     handler: handler.listReports
     memorySize: 128

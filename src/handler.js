@@ -6,6 +6,7 @@ import cashPayment from './functions/cashPayment';
 import chequePayment from './functions/chequePayment';
 import postalOrderPayment from './functions/postalOrderPayment';
 import confirm from './functions/confirm';
+import confirmPendingTransactions from './functions/confirmPendingTransactions';
 import listReports from './functions/listReports';
 import generateReport from './functions/generateReport';
 import checkReportStatus from './functions/checkReportStatus';
@@ -34,6 +35,7 @@ const handler = {
 	chequePayment: configure(chequePayment),
 	postalOrderPayment: configure(postalOrderPayment),
 	confirm: configure(confirm),
+	confirmPendingTransactions: configure(confirmPendingTransactions),
 	listReports: configure(listReports),
 	generateReport: configure(generateReport),
 	checkReportStatus: configure(checkReportStatus),
