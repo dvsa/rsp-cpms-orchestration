@@ -13,7 +13,13 @@ import QueueService from './queueService';
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
 
+const CPMS_PAYMENT_CODE_OK = 801;
+const CPMS_PAYMENT_CODE_CANCELLED = 807;
+
 let queueService;
+
+let PaymentService;
+
 const cardPayment = async (paymentObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
@@ -150,6 +156,18 @@ const postalOrderPayment = async (paymentObject, callback) => {
 	}
 };
 
+const confirmSinglePayment = async (penaltyType, receiptReference) => {
+	const authToken = await cpmsAuth(
+		penaltyType,
+		Constants.cardHolderPresentAuthBody(),
+	);
+	if (authToken === false) {
+		console.log('Error authenticating with cpms');
+		throw new Error('Error authenticating');
+	}
+	return cpmsConfirm(receiptReference, authToken);
+};
+
 const confirmPayment = async (confirmObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
@@ -172,15 +190,55 @@ const confirmPayment = async (confirmObject, callback) => {
 };
 
 /**
- * Confirm each receipt reference with CPMS and log the payment if it has been made.
- * Delete receipt references no longer pending.
+ * Check receipt references with CPMS. Return the payment status for each one.
  * @param {string} penaltyId
  * @param {string[]} receiptReferences
  * @param {(err: any, response: any) => void} callback Call back with either an error or
  * an http response containing the new payment status.
  */
 const confirmPendingTransactions = async (penaltyId, receiptReferences, callback) => {
-	callback(null, createResponse({ body: {}, statusCode: 200 }));
+	const requests = receiptReferences.map(receiptRef => (
+		PaymentService.confirmSinglePayment(penaltyId, receiptRef).catch(err => ({ error: err }))
+	));
+
+	/** @type {{error?: Error, code?: number, auth_code: string }[]} */
+	const responses = await Promise.all(requests);
+
+	/** @type {{receiptRef: string, authCode: string }[]} */
+	const paid = [];
+	const cancelled = [];
+	const pending = [];
+
+	responses.forEach((response, index) => {
+		const receiptCode = receiptReferences[index];
+		if (response.error === undefined) {
+			const { code } = response;
+			if (code === CPMS_PAYMENT_CODE_OK) {
+				paid.push({
+					receiptRef: receiptCode,
+					authCode: response.auth_code,
+				});
+			} else if (code === CPMS_PAYMENT_CODE_CANCELLED) {
+				cancelled.push({ receiptRef: receiptCode });
+			} else {
+				pending.push({ receiptRef: receiptCode });
+			}
+		} else {
+			console.log(response.error);
+			pending.push({ receiptRef: receiptCode });
+		}
+	});
+
+	if (paid.length >= 2) {
+		console.log('Multiple payments confirmed');
+	}
+
+	const responseBody = {
+		paid,
+		cancelled,
+		pending,
+	};
+	callback(null, createResponse({ body: responseBody, statusCode: 200 }));
 };
 
 const reverseCard = async (reverseCardObject, callback) => {
@@ -234,14 +292,15 @@ const reverseCheque = async (reverseChequeObject, callback) => {
 	}
 };
 
-export default ({
+export default PaymentService = {
 	cardPayment,
 	cardNotPresentPayment,
 	cashPayment,
 	chequePayment,
 	postalOrderPayment,
 	confirmPayment,
+	confirmSinglePayment,
 	confirmPendingTransactions,
 	reverseCard,
 	reverseCheque,
-});
+};

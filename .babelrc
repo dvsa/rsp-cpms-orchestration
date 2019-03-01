@@ -9,5 +9,11 @@
 	"plugins": [
 		"add-module-exports",
 		"transform-object-rest-spread"
-	]
+	],
+	"env": {
+		"debug": {
+			"sourceMaps": "inline",
+			"retainLines": true
+		}
+	}
 }

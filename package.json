@@ -60,6 +60,7 @@
     "wait-on": "^2.0.2"
   },
   "dependencies": {
+    "@types/mocha": "^5.2.6",
     "aws-sdk": "^2.140.0",
     "axios": "0.18.0",
     "babel-polyfill": "^6.26.0",
