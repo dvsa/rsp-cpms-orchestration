@@ -7,9 +7,9 @@ const confirmPendingTransactions = (event, context, callback) => {
 		body = JSON.parse(body);
 	}
 
-	const { customerReference, receiptReferences } = body;
+	const { penaltyType, receiptReferences } = body;
 
-	PaymentService.confirmPendingTransactions(customerReference, receiptReferences, callback);
+	PaymentService.confirmPendingTransactions(penaltyType, receiptReferences, callback);
 };
 
 export default confirmPendingTransactions;

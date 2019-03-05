@@ -6,7 +6,7 @@ let callbackSpy;
 describe('Payment service', () => {
 	describe('confirmPendingTransactions single receipt', () => {
 		let confirmSinglePaymentStub;
-		const penaltyId = 'b7129a87cf';
+		const penaltyType = 'FPN';
 		const receiptReferences = ['ECMS-179271-137511'];
 
 		beforeEach(() => {
@@ -22,7 +22,7 @@ describe('Payment service', () => {
 				code: 801,
 				auth_code: '809132',
 			}));
-			await PaymentService.confirmPendingTransactions(penaltyId, receiptReferences, callbackSpy);
+			await PaymentService.confirmPendingTransactions(penaltyType, receiptReferences, callbackSpy);
 
 			sinon.assert.calledWith(callbackSpy, null, sinon.match({
 				statusCode: 200,
@@ -35,7 +35,7 @@ describe('Payment service', () => {
 				code: 807,
 				auth_code: '809132',
 			}));
-			await PaymentService.confirmPendingTransactions(penaltyId, receiptReferences, callbackSpy);
+			await PaymentService.confirmPendingTransactions(penaltyType, receiptReferences, callbackSpy);
 
 			sinon.assert.calledWith(callbackSpy, null, sinon.match({
 				statusCode: 200,
@@ -45,7 +45,7 @@ describe('Payment service', () => {
 
 		it('calls back with pending when an error occurs', async () => {
 			confirmSinglePaymentStub = sinon.stub(PaymentService, 'confirmSinglePayment').callsFake(() => Promise.reject());
-			await PaymentService.confirmPendingTransactions(penaltyId, receiptReferences, callbackSpy);
+			await PaymentService.confirmPendingTransactions(penaltyType, receiptReferences, callbackSpy);
 
 			sinon.assert.calledWith(callbackSpy, null, sinon.match({
 				statusCode: 200,
@@ -56,7 +56,7 @@ describe('Payment service', () => {
 
 	describe('confirmPendingTransactions multiple receipts', () => {
 		let confirmSinglePaymentStub;
-		const penaltyId = 'b7129a87cf';
+		const penaltyType = 'FPN';
 		const responses = {
 			'ECMS-621135-612142': {
 				code: 801,
@@ -102,7 +102,7 @@ describe('Payment service', () => {
 				});
 
 			await PaymentService.confirmPendingTransactions(
-				penaltyId,
+				penaltyType,
 				Object.keys(responses),
 				callbackSpy,
 			);

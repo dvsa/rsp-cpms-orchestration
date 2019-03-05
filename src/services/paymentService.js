@@ -191,14 +191,14 @@ const confirmPayment = async (confirmObject, callback) => {
 
 /**
  * Check receipt references with CPMS. Return the payment status for each one.
- * @param {string} customerReference
+ * @param {string} penaltyType
  * @param {string[]} receiptReferences
  * @param {(err: any, response: any) => void} callback Call back with either an error or
  * an http response containing the new payment status.
  */
-const confirmPendingTransactions = async (customerReference, receiptReferences, callback) => {
+const confirmPendingTransactions = async (penaltyType, receiptReferences, callback) => {
 	const requests = receiptReferences.map(receiptRef => (
-		PaymentService.confirmSinglePayment(customerReference, receiptRef)
+		PaymentService.confirmSinglePayment(penaltyType, receiptRef)
 			.catch(err => ({ error: err }))
 	));
 
