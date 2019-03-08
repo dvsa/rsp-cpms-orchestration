@@ -192,7 +192,7 @@ const confirmPayment = async (confirmObject, callback) => {
 /**
  * Check receipt references with CPMS. Return the payment status for each one.
  * @param {string} penaltyType
- * @param {{[key: string]: {ReceiptTimestamp: number, PenaltyType?: string}}} receiptReferences
+ * @param {{[key: string]: {ReceiptTimestamp: number, PenaltyType?: string}}} receipts
  * @param {(err: any, response: any) => void} callback Call back with either an error or
  * an http response containing the new payment status.
  */
