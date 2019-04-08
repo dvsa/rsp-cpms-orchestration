@@ -19,6 +19,7 @@ const configMetadata = {
 	immobilisationSecret: 'IMMOBILISATION_SECRET',
 	sqsUrl: 'SQS_URL',
 	userId: 'USERID',
+	cpmsSecrets: 'CPMS_SECRETS',
 };
 
 let configuration = {};
@@ -99,7 +100,7 @@ const constants = {
 	reversalAuthBody: authBodyWithScopeFn('CHEQUE_RD'),
 	sqsUrl: fromConfiguration(configMetadata.sqsUrl),
 	userId: fromConfiguration(configMetadata.userId),
-	cpmsSecrets: fromConfiguration('CPMS_SECRETS') === undefined ? {} : JSON.parse(fromConfiguration('CPMS_SECRETS')),
+	cpmsSecrets: fromConfiguration(configMetadata.cpmsSecrets),
 };
 
 export default constants;
