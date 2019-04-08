@@ -28,7 +28,8 @@ export default (penaltyType, authBody) => {
 		console.log(penaltyType);
 		console.log(Constants.cpmsSecrets()[penaltyType]);
 		console.log(Constants.cpmsSecrets().MOT2);
-		const secret = Constants.cpmsSecrets()[penaltyType];
+		console.log(JSON.parse(Constants.cpmsSecrets()));
+		const secret = JSON.parse(Constants.cpmsSecrets())[penaltyType];
 		if (!secret) {
 			console.error('No CPMS secret found');
 			console.error(Constants.cpmsSecrets());
