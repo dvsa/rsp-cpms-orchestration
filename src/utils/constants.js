@@ -101,7 +101,7 @@ const constants = {
 	reversalAuthBody: authBodyWithScopeFn('CHEQUE_RD'),
 	sqsUrl: fromConfiguration(configMetadata.sqsUrl),
 	userId: fromConfiguration(configMetadata.userId),
-	cpmsSecrets: fromConfiguration(configMetadata.cpmsSecrets),
+	cpmsSecrets: JSON.parse(fromConfiguration(configMetadata.cpmsSecrets)),
 };
 
 export default constants;
