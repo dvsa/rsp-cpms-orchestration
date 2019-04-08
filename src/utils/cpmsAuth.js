@@ -27,6 +27,7 @@ export default (penaltyType, authBody) => {
 		const secret = Constants.cpmsSecrets()[penaltyType];
 		if (!secret) {
 			console.error('No CPMS secret found');
+			console.error(Constants.cpmsSecrets());
 			return false;
 		}
 		console.log(`clientSecret: ${clientSecret}`);
