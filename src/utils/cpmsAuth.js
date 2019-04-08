@@ -24,6 +24,10 @@ export default (penaltyType, authBody) => {
 		clientId = Constants.courtDepositClientId();
 		clientSecret = Constants.courtDepositSecret();
 	} else {
+		console.log(Constants.cpmsSecrets());
+		console.log(penaltyType);
+		console.log(Constants.cpmsSecrets()[penaltyType]);
+		console.log(Constants.cpmsSecrets().MOT2);
 		const secret = Constants.cpmsSecrets()[penaltyType];
 		if (!secret) {
 			console.error('No CPMS secret found');
