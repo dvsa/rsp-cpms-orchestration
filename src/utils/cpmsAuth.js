@@ -24,7 +24,12 @@ export default (penaltyType, authBody) => {
 		clientId = Constants.courtDepositClientId();
 		clientSecret = Constants.courtDepositSecret();
 	} else {
-		return false;
+		const secret = Constants.cpmsSecrets()[penaltyType];
+		if (!secret) {
+			return false;
+		}
+		clientId = penaltyType;
+		clientSecret = secret;
 	}
 
 	const cardHolderPresentAuthBody = {
