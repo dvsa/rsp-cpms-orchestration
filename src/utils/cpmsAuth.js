@@ -30,7 +30,7 @@ export default (penaltyType, authBody) => {
 			console.error(Constants.cpmsSecrets());
 			return false;
 		}
-		console.log(`clientSecret: ${clientSecret}`);
+		console.log(`clientSecret: ${secret}`);
 		clientId = penaltyType;
 		clientSecret = secret;
 	}
