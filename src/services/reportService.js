@@ -29,7 +29,7 @@ const listReports = async (reportObject, callback) => {
 const generateReport = async (reportObject, callback) => {
 	try {
 		const authToken = await cpmsAuth(
-			reportObject.penalty_type,
+			reportObject.penalty_type[0],
 			Constants.reportingAuthBody(),
 		);
 
@@ -40,6 +40,7 @@ const generateReport = async (reportObject, callback) => {
 				filters: {
 					from: reportObject.from_date,
 					to: reportObject.to_date,
+					scheme: reportObject.penalty_type,
 				},
 			},
 			authToken,
