@@ -40,7 +40,7 @@ const generateReport = async (reportObject, callback) => {
 				filters: {
 					from: reportObject.from_date,
 					to: reportObject.to_date,
-					scheme: reportObject.penalty_type,
+					scheme: reportObject.penalty_type.map(penaltyTypeToScheme)
 				},
 			},
 			authToken,
@@ -50,6 +50,16 @@ const generateReport = async (reportObject, callback) => {
 		console.log(err);
 		callback({ message: 'Error calling CPMS' }, null);
 	}
+};
+
+const rspPenaltyToScheme = {
+	"FPN": "GFPDS",
+	"IM": "ECMS",
+	"CDN": "COURT"
+};
+
+const penaltyTypeToScheme = (penaltyType) => {
+	return rspPenaltyToScheme[penaltyType] || penaltyType;
 };
 
 const checkReportStatus = async (reportObject, callback) => {
