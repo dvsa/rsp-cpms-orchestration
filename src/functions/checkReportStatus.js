@@ -1,6 +1,6 @@
 import ReportService from '../services/reportService';
 
-export default (event, context, callback) => {
+export default (event) => {
 	console.log(JSON.stringify(event, null, 2));
 	let reportObject = event.body;
 	if (typeof reportObject.penalty_type === 'undefined') {
@@ -8,5 +8,5 @@ export default (event, context, callback) => {
 	}
 
 	console.log(reportObject);
-	ReportService.checkReportStatus(reportObject, callback);
+	return ReportService.checkReportStatus(reportObject);
 };
