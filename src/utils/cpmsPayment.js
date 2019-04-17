@@ -28,8 +28,8 @@ export default (transactionData) => {
 			})
 			.catch((error) => {
 				console.log('transaction error');
-				console.log(error.response);
-				reject(error.response);
+				console.log(error.response.data);
+				reject(error.response.data);
 			});
 	});
 };

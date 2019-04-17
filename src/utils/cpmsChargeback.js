@@ -31,7 +31,6 @@ export default (chargebackObj) => {
 			resolve(chargebackResponse.data);
 		}).catch((error) => {
 			console.log('chargeback error');
-			console.log(error.response);
 			reject(error.response);
 		});
 	});

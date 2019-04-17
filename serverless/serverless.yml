@@ -9,6 +9,7 @@ custom:
 plugins:
   - serverless-offline
   - serverless-openapi-documentation
+  - serverless-dotenv-plugin
 provider:
   name: aws
   runtime: nodejs8.10

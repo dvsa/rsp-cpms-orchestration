@@ -14,16 +14,14 @@ import reverseCheque from './functions/reverseCheque';
 import downloadReport from './functions/downloadReport';
 import groupPayment from './functions/groupPayment';
 
-require('dotenv').config();
-
 let configured = false;
 const configure = (lambdaFn) => {
-	return async (event, context, callback) => {
+	return async (event, context) => {
 		if (!configured) {
 			await Constants.bootstrap();
 			configured = true;
 		}
-		lambdaFn(event, context, callback);
+		return lambdaFn(event, context);
 	};
 };
 
