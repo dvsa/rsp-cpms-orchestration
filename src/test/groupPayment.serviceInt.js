@@ -11,7 +11,7 @@ const redirectUri = process.env.REDIRECT_URI;
 describe('Group payment service', () => {
 	context('POST /groupPayment', () => {
 		context('when a correct request is made', () => {
-			it.only('responds with a correct response', async () => {
+			it('responds with a correct response', async () => {
 				const payload = {
 					PaymentMethod: 'CARD',
 					RedirectUrl: redirectUri,
