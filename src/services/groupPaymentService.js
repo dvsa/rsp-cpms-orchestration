@@ -24,7 +24,6 @@ const groupPayment = async (paymentObject) => {
 		const paymentMethod = paymentObject.PaymentMethod || 'CARD';
 		const paymentTypeIntegrationConfig = paymentTypeIntegrationMap[paymentMethod];
 		if (paymentTypeIntegrationConfig === undefined) {
-			console.log('==================ERROR===========1');
 			return createResponse({ body: `Bad PaymentMethod ${paymentMethod}`, statusCode: 400 });
 		}
 
@@ -33,7 +32,6 @@ const groupPayment = async (paymentObject) => {
 			paymentTypeIntegrationConfig.authBodyFn(),
 		);
 		if (authToken === false) {
-			console.log('==================ERROR===========2');
 			console.log('Error authenticating with cpms');
 			return createResponse({ body: 'Error authenticating', statusCode: 400 });
 		}
