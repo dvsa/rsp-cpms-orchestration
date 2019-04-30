@@ -33,11 +33,6 @@ export default (groupTransactionData) => {
 					reject(new Error('Call to CPMS returned no data'));
 				}
 				resolve(transactionResponse.data);
-			})
-			.catch((error) => {
-				console.log('transaction error');
-				console.log(error.response);
-				reject(error.response);
 			});
 	});
 };

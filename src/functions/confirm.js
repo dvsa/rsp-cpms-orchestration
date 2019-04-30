@@ -1,6 +1,6 @@
 import PaymentService from '../services/paymentService';
 
-export default (event, context, callback) => {
+export default async (event) => {
 	console.log(JSON.stringify(event, null, 2));
 	let confirmationObject = event.body;
 	if (typeof confirmationObject.receipt_reference === 'undefined') {
@@ -10,5 +10,5 @@ export default (event, context, callback) => {
 	console.log(confirmationObject);
 
 	// extract needed info from penalty doc
-	PaymentService.confirmPayment(confirmationObject, callback);
+	return PaymentService.confirmPayment(confirmationObject);
 };

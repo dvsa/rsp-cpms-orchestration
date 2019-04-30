@@ -19,12 +19,12 @@ const paymentTypeIntegrationMap = {
 };
 
 let queueService;
-const groupPayment = async (paymentObject, callback) => {
+const groupPayment = async (paymentObject) => {
 	try {
 		const paymentMethod = paymentObject.PaymentMethod || 'CARD';
 		const paymentTypeIntegrationConfig = paymentTypeIntegrationMap[paymentMethod];
 		if (paymentTypeIntegrationConfig === undefined) {
-			return callback(null, createResponse({ body: `Bad PaymentMethod ${paymentMethod}`, statusCode: 400 }));
+			return createResponse({ body: `Bad PaymentMethod ${paymentMethod}`, statusCode: 400 });
 		}
 
 		const authToken = await cpmsAuth(
@@ -33,7 +33,7 @@ const groupPayment = async (paymentObject, callback) => {
 		);
 		if (authToken === false) {
 			console.log('Error authenticating with cpms');
-			return callback(createResponse({ body: 'Error authenticating', statusCode: 400 }));
+			return createResponse({ body: 'Error authenticating', statusCode: 400 });
 		}
 		console.log(authToken);
 
@@ -61,9 +61,9 @@ const groupPayment = async (paymentObject, callback) => {
 		});
 		console.log('send message to queue success', messageData);
 
-		return callback(null, createResponse({ body: transactionData, statusCode: 200 }));
+		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
-		return callback(err, createResponse({ body: err, statusCode: 400 }));
+		return createResponse({ body: err.message, statusCode: 400 });
 	}
 };
 

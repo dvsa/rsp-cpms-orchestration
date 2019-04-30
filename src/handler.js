@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+import '@babel/polyfill';
 import Constants from './utils/constants';
 import cardPayment from './functions/cardPayment';
 import cardNotPresentPayment from './functions/cardNotPresentPayment';
@@ -14,33 +14,43 @@ import reverseCheque from './functions/reverseCheque';
 import downloadReport from './functions/downloadReport';
 import groupPayment from './functions/groupPayment';
 
-require('dotenv').config();
-
 let configured = false;
 const configure = (lambdaFn) => {
-	return async (event, context, callback) => {
+	return async (event, context) => {
 		if (!configured) {
 			await Constants.bootstrap();
 			configured = true;
 		}
-		lambdaFn(event, context, callback);
+		return lambdaFn(event, context);
 	};
 };
 
-const handler = {
-	cardPayment: configure(cardPayment),
-	cardNotPresentPayment: configure(cardNotPresentPayment),
-	cashPayment: configure(cashPayment),
-	chequePayment: configure(chequePayment),
-	postalOrderPayment: configure(postalOrderPayment),
-	confirm: configure(confirm),
-	listReports: configure(listReports),
-	generateReport: configure(generateReport),
-	checkReportStatus: configure(checkReportStatus),
-	reverseCard: configure(reverseCard),
-	reverseCheque: configure(reverseCheque),
-	downloadReport: configure(downloadReport),
-	groupPayment: configure(groupPayment),
-};
+const configuredCardPayment = configure(cardPayment);
+const configuredCardNotPresentPayment = configure(cardNotPresentPayment);
+const configuredCashPayment = configure(cashPayment);
+const configuredChequePayment = configure(chequePayment);
+const configuredPostalOrderPayment = configure(postalOrderPayment);
+const configuredConfirm = configure(confirm);
+const configuredListReports = configure(listReports);
+const configuredGenerateReport = configure(generateReport);
+const configuredCheckReportStatus = configure(checkReportStatus);
+const configuredReverseCard = configure(reverseCard);
+const configuredReverseCheque = configure(reverseCheque);
+const configuredDownloadReport = configure(downloadReport);
+const configuredGroupPayment = configure(groupPayment);
 
-export default handler;
+export {
+	configuredCardPayment as cardPayment,
+	configuredCardNotPresentPayment as cardNotPresentPayment,
+	configuredCashPayment as cashPayment,
+	configuredChequePayment as chequePayment,
+	configuredPostalOrderPayment as postalOrderPayment,
+	configuredConfirm as confirm,
+	configuredListReports as listReports,
+	configuredGenerateReport as generateReport,
+	configuredCheckReportStatus as checkReportStatus,
+	configuredReverseCard as reverseCard,
+	configuredReverseCheque as reverseCheque,
+	configuredDownloadReport as downloadReport,
+	configuredGroupPayment as groupPayment,
+};

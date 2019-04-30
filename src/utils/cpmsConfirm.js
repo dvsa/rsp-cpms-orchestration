@@ -13,21 +13,14 @@ export default (receiptReference, auth) => {
 	});
 	console.log(confirmClient);
 	console.log('created http client');
+	console.log('putting confirm request');
 
-	return new Promise((resolve, reject) => {
-		console.log('putting confirm request');
-
-		confirmClient.put(`gateway/${receiptReference}/complete`)
-			.then((response) => {
-				console.log(response);
-				if (typeof response.data === 'undefined') {
-					reject(new Error('No confirmation data returned from CPMS'));
-				}
-				resolve(response.data);
-			})
-			.catch((error) => {
-				console.log(error);
-				reject(JSON.stringify(error));
-			});
-	});
+	return confirmClient.put(`gateway/${receiptReference}/complete`)
+		.then((response) => {
+			console.log(response);
+			if (typeof response.data === 'undefined') {
+				return Promise.reject(new Error('No confirmation data returned from CPMS'));
+			}
+			return Promise.resolve(response.data);
+		});
 };

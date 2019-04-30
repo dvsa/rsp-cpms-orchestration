@@ -1,6 +1,6 @@
 import PaymentService from '../services/paymentService';
 
-export default (event, context, callback) => {
+export default (event) => {
 	console.log(JSON.stringify(event, null, 2));
 	let paymentObject = event.body;
 	if (typeof paymentObject.penalty_type === 'undefined') {
@@ -8,5 +8,5 @@ export default (event, context, callback) => {
 	}
 
 	console.log(paymentObject);
-	PaymentService.reverseCard(paymentObject, callback);
+	return PaymentService.reverseCard(paymentObject);
 };

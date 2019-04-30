@@ -8,7 +8,7 @@ import cpmsDownloadReport from '../utils/downloadReport';
 
 import Constants from '../utils/constants';
 
-const listReports = async (reportObject, callback) => {
+const listReports = async (reportObject) => {
 	// create auth token for each type of penalty
 	try {
 		const authToken = await cpmsAuth(
@@ -17,16 +17,16 @@ const listReports = async (reportObject, callback) => {
 		);
 
 		const reportData = await cpmsListReport(authToken);
-		callback(null, createResponse({ body: reportData, statusCode: 200 }));
+		return createResponse({ body: reportData, statusCode: 200 });
 	} catch (err) {
 		console.log(err);
-		callback({ message: 'Error calling CPMS' }, null);
+		return { message: 'Error calling CPMS' };
 	}
 
 	// get results for each type of penalty
 };
 
-const generateReport = async (reportObject, callback) => {
+const generateReport = async (reportObject) => {
 	try {
 		const authToken = await cpmsAuth(
 			reportObject.penalty_type,
@@ -44,14 +44,14 @@ const generateReport = async (reportObject, callback) => {
 			},
 			authToken,
 		});
-		callback(null, createResponse({ body: generateResult, statusCode: 200 }));
+		return createResponse({ body: generateResult, statusCode: 200 });
 	} catch (err) {
 		console.log(err);
-		callback({ message: 'Error calling CPMS' }, null);
+		throw new Error(JSON.stringify({ message: 'Error calling CPMS' }));
 	}
 };
 
-const checkReportStatus = async (reportObject, callback) => {
+const checkReportStatus = async (reportObject) => {
 	try {
 		const authToken = await cpmsAuth(
 			reportObject.penalty_type,
@@ -62,14 +62,14 @@ const checkReportStatus = async (reportObject, callback) => {
 			report_ref: reportObject.report_ref,
 			authToken,
 		});
-		callback(null, createResponse({ body: reportStatus, statusCode: 200 }));
+		return createResponse({ body: reportStatus, statusCode: 200 });
 	} catch (err) {
 		console.log(err);
-		callback({ message: 'Error calling CPMS' }, null);
+		throw new Error(JSON.stringify({ message: 'Error calling CPMS' }));
 	}
 };
 
-const downloadReport = async (reportObject, callback) => {
+const downloadReport = async (reportObject) => {
 	try {
 		const authToken = await cpmsAuth(
 			reportObject.penalty_type,
@@ -80,10 +80,10 @@ const downloadReport = async (reportObject, callback) => {
 			report_ref: reportObject.report_ref,
 			authToken,
 		});
-		callback(null, createResponse({ body: reportStatus, statusCode: 200 }));
+		return createResponse({ body: reportStatus, statusCode: 200 });
 	} catch (err) {
 		console.log(err);
-		callback({ message: 'Error calling CPMS' }, null);
+		throw new Error(JSON.stringify({ message: 'Error calling CPMS' }));
 	}
 };
 
