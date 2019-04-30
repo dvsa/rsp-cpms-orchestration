@@ -162,7 +162,7 @@ const reverseCard = async (reverseCardObject) => {
 
 		return createResponse({ body: chargebackResponse, statusCode: 200 });
 	} catch (err) {
-		return createResponse(err, { body: err, statusCode: 400 });
+		return createResponse({ body: err, statusCode: 400 });
 	}
 };
 
@@ -182,7 +182,7 @@ const reverseCheque = async (reverseChequeObject) => {
 
 		return createResponse({ body: reversalResponse, statusCode: 200 });
 	} catch (err) {
-		return createResponse(err, { body: err, statusCode: 400 });
+		return createResponse({ body: err, statusCode: 400 });
 	}
 };
 
