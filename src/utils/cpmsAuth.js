@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import createResponse from './createResponse';
 
 export default (penaltyType, authBody) => {
 	console.log(Constants.cpmsBaseUrl());
@@ -38,14 +39,14 @@ export default (penaltyType, authBody) => {
 	return new Promise((resolve, reject) => {
 		tokenClient.post('token', cardHolderPresentAuthBody)
 			.then((response) => {
-				if (typeof response.data === 'undefined') {
+				if (typeof response.data === 'undefined' || response.data === false) {
 					reject(new Error('No auth token returned from CPMS'));
 				}
 				resolve(response.data);
 			})
 			.catch((error) => {
 				console.log(error);
-				reject(JSON.stringify(error));
+				reject(createResponse({ body: 'Error authenticating', statusCode: 400 }));
 			});
 	});
 };

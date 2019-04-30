@@ -32,6 +32,7 @@ async function bootstrap() {
 				if (err) {
 					console.log(err);
 					reject(err);
+					return;
 				}
 				configuration = JSON.parse(secretsManagerResponse.SecretString);
 				console.log(`Cached ${Object.keys(configuration).length} config items from secrets manager`);
