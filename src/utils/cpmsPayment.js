@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import BuildTransactionOptions from '../utils/buildTransactionOptions';
 import Constants from '../utils/constants';
+import { logAxiosError } from './logger';
 
 export default (transactionData) => {
 	return new Promise((resolve, reject) => {
@@ -27,8 +28,7 @@ export default (transactionData) => {
 				resolve(transactionResponse.data);
 			})
 			.catch((error) => {
-				console.log('transaction error');
-				console.log(error.response.data);
+				logAxiosError('CpmsPayment', 'CPMS', error);
 				reject(error.response.data);
 			});
 	});

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import { logAxiosError } from './logger';
 
 export default (generateObj) => {
 	return new Promise((resolve, reject) => {
@@ -21,7 +22,7 @@ export default (generateObj) => {
 				resolve(response.data);
 			})
 			.catch((error) => {
-				console.log(error);
+				logAxiosError('CpmsGenerateReport', 'CPMS', error);
 				reject(JSON.stringify(error));
 			});
 	});

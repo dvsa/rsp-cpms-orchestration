@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import { logAxiosError } from './logger';
 
 export default (receiptReference, auth) => {
 	console.log(receiptReference);
@@ -22,5 +23,8 @@ export default (receiptReference, auth) => {
 				return Promise.reject(new Error('No confirmation data returned from CPMS'));
 			}
 			return Promise.resolve(response.data);
+		}).catch((err) => {
+			logAxiosError('CpmsConfirm', 'CPMS', err);
+			throw err;
 		});
 };

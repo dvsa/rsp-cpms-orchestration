@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import { logAxiosError } from './logger';
 
 export default async (reportObj) => {
 	const reportStreamClient = axios.create({
@@ -23,7 +24,7 @@ export default async (reportObj) => {
 				resolve(response.data);
 			})
 			.catch((error) => {
-				console.log(error);
+				logAxiosError('CpmsDownloadReport', 'CPMS', error);
 				reject(JSON.stringify(error));
 			});
 	});

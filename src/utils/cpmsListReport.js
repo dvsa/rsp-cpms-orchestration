@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import { logAxiosError } from './logger';
 
 export default (authToken) => {
 	return new Promise((resolve, reject) => {
@@ -22,7 +23,7 @@ export default (authToken) => {
 				resolve(response.data);
 			})
 			.catch((error) => {
-				console.log(error);
+				logAxiosError('CpmsListReport', 'CPMS', error);
 				reject(JSON.stringify(error));
 			});
 	});

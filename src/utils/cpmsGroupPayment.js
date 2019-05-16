@@ -3,6 +3,7 @@ import Validation from 'rsp-validation';
 
 import buildGroupTransactionOptions from '../utils/buildGroupTransactionOptions';
 import Constants from '../utils/constants';
+import { logAxiosError } from './logger';
 
 export default (groupTransactionData) => {
 	return new Promise((resolve, reject) => {
@@ -33,6 +34,9 @@ export default (groupTransactionData) => {
 					reject(new Error('Call to CPMS returned no data'));
 				}
 				resolve(transactionResponse.data);
+			}).catch((err) => {
+				logAxiosError('CpmsGroupPayment', 'CPMS', err);
+				throw err;
 			});
 	});
 };

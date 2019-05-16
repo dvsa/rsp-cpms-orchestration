@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import { logAxiosError } from './logger';
 
 export default (reversalObj) => {
 	return new Promise((resolve, reject) => {
@@ -31,8 +32,7 @@ export default (reversalObj) => {
 			}
 			resolve(reversalResponse.data);
 		}).catch((error) => {
-			console.log('reversal error');
-			console.log(error.response);
+			logAxiosError('CpmsReversal', 'CPMS', error);
 			reject(error.response);
 		});
 	});
