@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
-import { logAxiosError } from './logger';
+import { logAxiosError, logError } from './logger';
 
 export default (reportObj) => {
 	return new Promise((resolve, reject) => {
@@ -13,16 +13,20 @@ export default (reportObj) => {
 			},
 		});
 
+		const logData = {
+			reportReference: reportObj.report_ref,
+		};
+
 		reportClient.get(`report/${reportObj.report_ref}/status`)
 			.then((response) => {
-				console.log(response);
 				if (typeof response.data === 'undefined') {
+					logError('CPMSCheckReportNoData', logData);
 					reject(new Error('No report status returned from CPMS'));
 				}
 				resolve(response.data);
 			})
 			.catch((error) => {
-				logAxiosError('CpmsCheckReport', 'CPMS', error);
+				logAxiosError('CPMSCheckReport', 'CPMS', error, logData);
 				reject(JSON.stringify(error));
 			});
 	});

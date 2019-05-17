@@ -50,7 +50,7 @@ export function logAxiosError(logName, serviceName, error, details) {
 		logLevel: 'ERROR',
 		requestErrorMessage: message,
 		serviceName,
-		logName,
+		logName: `${logName}Error`,
 	};
 
 	if (details !== undefined) {

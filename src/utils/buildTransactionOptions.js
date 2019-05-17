@@ -2,7 +2,6 @@ import Constants from './constants';
 import generateSuffixedPenaltyReference from '../utils/generateSuffixedPenaltyReference';
 
 export default (transactionData) => {
-	console.log(transactionData);
 	let productDescription = '';
 	let salesPersonReference = '';
 	const penaltyType = transactionData.paymentObject.penalty_type;

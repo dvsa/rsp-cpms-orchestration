@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
-import { logAxiosError } from './logger';
+import { logAxiosError, logInfo, logError } from './logger';
+
+const confirmNoDataMessage = 'No confirmation data returned from CPMS';
 
 export default (receiptReference, auth) => {
-	console.log(receiptReference);
 	const confirmClient = axios.create({
 		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
@@ -12,19 +13,19 @@ export default (receiptReference, auth) => {
 			Authorization: `Bearer ${auth.access_token}`,
 		},
 	});
-	console.log(confirmClient);
-	console.log('created http client');
-	console.log('putting confirm request');
+
+	const logData = { receiptReference };
 
 	return confirmClient.put(`gateway/${receiptReference}/complete`)
 		.then((response) => {
-			console.log(response);
 			if (typeof response.data === 'undefined') {
-				return Promise.reject(new Error('No confirmation data returned from CPMS'));
+				logError('CPMSConfirmNoData', { ...logData, message: confirmNoDataMessage });
+				return Promise.reject(new Error(confirmNoDataMessage));
 			}
+			logInfo('CPMSConfirmSuccess', logData);
 			return Promise.resolve(response.data);
 		}).catch((err) => {
-			logAxiosError('CpmsConfirm', 'CPMS', err);
+			logAxiosError('CPMSConfirm', 'CPMS', err, logData);
 			throw err;
 		});
 };

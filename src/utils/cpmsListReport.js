@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
-import { logAxiosError } from './logger';
+import { logAxiosError, logError } from './logger';
+
+const noDataMessage = 'No report data returned from CPMS';
 
 export default (authToken) => {
 	return new Promise((resolve, reject) => {
@@ -12,13 +14,13 @@ export default (authToken) => {
 				Authorization: `Bearer ${authToken.access_token}`,
 			},
 		});
-		console.log('created report client');
 
 		reportClient.get('report')
 			.then((response) => {
 				console.log(response);
 				if (typeof response.data === 'undefined') {
-					reject(new Error('No report data returned from CPMS'));
+					logError('CPMSListReportNoData', noDataMessage);
+					reject(new Error(noDataMessage));
 				}
 				resolve(response.data);
 			})

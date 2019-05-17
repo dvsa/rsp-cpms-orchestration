@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
-import { logAxiosError } from './logger';
+import { logAxiosError, logInfo, logError } from './logger';
 
 export default (chargebackObj) => {
 	return new Promise((resolve, reject) => {
@@ -13,25 +13,29 @@ export default (chargebackObj) => {
 				Authorization: `Bearer ${chargebackObj.auth.access_token}`,
 			},
 		});
-		console.log('created chargeback client');
 
 		const chargebackOptions = {
 			customer_reference: chargebackObj.customer_reference,
 			scope: 'CHARGE_BACK',
 		};
-		console.log(chargebackOptions);
+
+		const logData = {
+			customerReference: chargebackObj.customer_reference,
+			receiptReference: chargebackObj.receipt_reference,
+		};
+
 		chargebackClient.post(
 			`payment/${chargebackObj.receipt_reference}/chargeback`,
 			chargebackOptions,
 		).then((chargebackResponse) => {
-			console.log('chargeback response');
-			console.log(chargebackResponse);
 			if (typeof chargebackResponse.data === 'undefined') {
+				logError('CpmsChargebackNoData', logData);
 				reject(new Error('call to CPMS returned no data'));
 			}
+			logInfo('CpmsChargebackSuccess', logData);
 			resolve(chargebackResponse.data);
 		}).catch((error) => {
-			logAxiosError('CpmsChargeback', 'CPMS', error);
+			logAxiosError('CpmsChargeback', 'CPMS', error, logData);
 			reject(error.response);
 		});
 	});

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import BuildTransactionOptions from '../utils/buildTransactionOptions';
+import buildTransactionOptions from '../utils/buildTransactionOptions';
 import Constants from '../utils/constants';
-import { logAxiosError } from './logger';
+import { logAxiosError, logInfo, logError } from './logger';
 
 export default (transactionData) => {
 	return new Promise((resolve, reject) => {
@@ -14,21 +14,20 @@ export default (transactionData) => {
 				Authorization: `Bearer ${transactionData.auth.access_token}`,
 			},
 		});
-		console.log('created transaction client');
 
-		const transactionOptions = BuildTransactionOptions(transactionData);
-		console.log(JSON.stringify(transactionOptions));
+		const transactionOptions = buildTransactionOptions(transactionData);
+
 		transactionClient.post(transactionData.endpoint, transactionOptions)
 			.then((transactionResponse) => {
-				console.log('transaction response');
-				console.log(transactionResponse);
 				if (typeof transactionResponse.data === 'undefined') {
+					logError('CPMSPaymentNoData', { transactionOptions });
 					reject(new Error('Call to CPMS returned no data'));
 				}
+				logInfo('CPMSPaymentSuccess', { transactionOptions });
 				resolve(transactionResponse.data);
 			})
 			.catch((error) => {
-				logAxiosError('CpmsPayment', 'CPMS', error);
+				logAxiosError('CpmsPayment', 'CPMS', error, { transactionOptions });
 				reject(error.response.data);
 			});
 	});

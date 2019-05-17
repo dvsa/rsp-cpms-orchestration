@@ -12,19 +12,16 @@ export default async (reportObj) => {
 			Authorization: `Bearer ${reportObj.auth.access_token}`,
 		},
 	});
-	console.log(reportStreamClient);
-	console.log('created report client');
 
 	return new Promise((resolve, reject) => {
-		console.log('getting report stream');
-
 		reportStreamClient.get(`payment/report/${reportObj.report_reference}/download`)
 			.then((response) => {
-				console.log(response.data);
 				resolve(response.data);
 			})
 			.catch((error) => {
-				logAxiosError('CpmsDownloadReport', 'CPMS', error);
+				logAxiosError('CPMSDownloadReport', 'CPMS', error, {
+					reportReference: reportObj.report_reference,
+				});
 				reject(JSON.stringify(error));
 			});
 	});
