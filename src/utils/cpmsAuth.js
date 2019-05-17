@@ -5,15 +5,12 @@ import createResponse from './createResponse';
 import { logAxiosError, logError } from './logger';
 
 export default (penaltyType, authBody) => {
-	console.log(Constants.cpmsBaseUrl());
 	const tokenClient = axios.create({
 		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			Accept: 'application/json',
 		},
 	});
-	console.log('created http client');
-	console.log(penaltyType);
 	let clientId = '';
 	let clientSecret = '';
 	if (penaltyType === 'FPN') {
@@ -26,6 +23,7 @@ export default (penaltyType, authBody) => {
 		clientId = Constants.courtDepositClientId();
 		clientSecret = Constants.courtDepositSecret();
 	} else {
+		logError('CPMSAuthInvalidPenaltyType', { penaltyType });
 		return false;
 	}
 

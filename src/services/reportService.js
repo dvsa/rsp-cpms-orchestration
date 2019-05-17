@@ -19,11 +19,8 @@ const listReports = async (reportObject) => {
 		const reportData = await cpmsListReport(authToken);
 		return createResponse({ body: reportData, statusCode: 200 });
 	} catch (err) {
-		console.log(err);
 		return { message: 'Error calling CPMS' };
 	}
-
-	// get results for each type of penalty
 };
 
 const generateReport = async (reportObject) => {
@@ -46,7 +43,6 @@ const generateReport = async (reportObject) => {
 		});
 		return createResponse({ body: generateResult, statusCode: 200 });
 	} catch (err) {
-		console.log(err);
 		throw new Error(JSON.stringify({ message: 'Error calling CPMS' }));
 	}
 };
@@ -64,7 +60,6 @@ const checkReportStatus = async (reportObject) => {
 		});
 		return createResponse({ body: reportStatus, statusCode: 200 });
 	} catch (err) {
-		console.log(err);
 		throw new Error(JSON.stringify({ message: 'Error calling CPMS' }));
 	}
 };
@@ -82,7 +77,6 @@ const downloadReport = async (reportObject) => {
 		});
 		return createResponse({ body: reportStatus, statusCode: 200 });
 	} catch (err) {
-		console.log(err);
 		throw new Error(JSON.stringify({ message: 'Error calling CPMS' }));
 	}
 };

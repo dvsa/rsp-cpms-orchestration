@@ -17,7 +17,6 @@ export default (authToken) => {
 
 		reportClient.get('report')
 			.then((response) => {
-				console.log(response);
 				if (typeof response.data === 'undefined') {
 					logError('CPMSListReportNoData', noDataMessage);
 					reject(new Error(noDataMessage));

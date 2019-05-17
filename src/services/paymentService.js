@@ -9,6 +9,7 @@ import cpmsChargeback from '../utils/cpmsChargeback';
 import cpmsReversal from '../utils/cpmsReversal';
 import Constants from '../utils/constants';
 import QueueService from './queueService';
+import { logError } from '../utils/logger';
 
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
@@ -27,7 +28,6 @@ const cardPayment = async (paymentObject) => {
 			paymentObject,
 			auth: authToken,
 		});
-		console.log('outside of async');
 
 		const ReceiptReference = transactionData.receipt_reference;
 		const VehicleRegistration = paymentObject.vehicle_reg;
@@ -37,18 +37,18 @@ const cardPayment = async (paymentObject) => {
 		if (!queueService) {
 			queueService = new QueueService(sqs, Constants.sqsUrl());
 		}
-		const messageData = await queueService.sendMessage({
+		const message = {
 			ReceiptReference,
 			PenaltyId: `${PenaltyId}_${PenaltyType}`,
 			VehicleRegistration,
 			PenaltyType,
 			IsGroupPayment: false,
-		});
-		console.log('send message to queue success', messageData);
+		};
+		await queueService.sendMessage(message);
 
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
-		console.log(err);
+		logError('CardPaymentError', err.message);
 		return createResponse({ body: err, statusCode: 400 });
 	}
 };
@@ -66,10 +66,8 @@ const cardNotPresentPayment = async (paymentObject) => {
 			paymentObject,
 			auth: authToken,
 		});
-		console.log('outside of async');
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
-		console.log(err);
 		return createResponse({ body: err, statusCode: 400 });
 	}
 };
@@ -84,7 +82,6 @@ const cashPayment = async (paymentObject) => {
 			paymentObject,
 			auth: authToken,
 		});
-		console.log('outside of async');
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
 		return createResponse({ body: err, statusCode: 400 });
@@ -101,7 +98,6 @@ const chequePayment = async (paymentObject) => {
 			paymentObject,
 			auth: authToken,
 		});
-		console.log('outside of async');
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
 		return createResponse({ body: err, statusCode: 400 });
@@ -118,7 +114,6 @@ const postalOrderPayment = async (paymentObject) => {
 			paymentObject,
 			auth: authToken,
 		});
-		console.log('outside of async');
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
 		return createResponse({ body: err, statusCode: 400 });
@@ -133,11 +128,8 @@ const confirmPayment = async (confirmObject) => {
 
 	try {
 		const confirmResponse = await cpmsConfirm(confirmObject.receipt_reference, authToken);
-		console.log(confirmResponse);
-
 		return createResponse({ body: confirmResponse, statusCode: 200 });
 	} catch (err) {
-		console.error(err);
 		const body = {
 			data: err.response.data,
 			status: err.response.status,
@@ -158,7 +150,6 @@ const reverseCard = async (reverseCardObject) => {
 			customer_reference: reverseCardObject.payment_ref,
 			auth: authToken,
 		});
-		console.log(chargebackResponse);
 
 		return createResponse({ body: chargebackResponse, statusCode: 200 });
 	} catch (err) {
@@ -178,7 +169,6 @@ const reverseCheque = async (reverseChequeObject) => {
 			customer_reference: reverseChequeObject.payment_ref,
 			auth: authToken,
 		});
-		console.log(reversalResponse);
 
 		return createResponse({ body: reversalResponse, statusCode: 200 });
 	} catch (err) {
