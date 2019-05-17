@@ -5,19 +5,19 @@ export const ServiceName = {
 };
 
 export function logInfo(logName, message) {
-	console.log({
+	console.log(JSON.stringify({
 		logLevel: 'INFO',
 		message,
 		logName,
-	});
+	}, null, 2));
 }
 
 export function logError(logName, message) {
-	console.error({
+	console.error(JSON.stringify({
 		logLevel: 'ERROR',
 		message,
 		logName,
-	});
+	}, null, 2));
 }
 
 
@@ -57,5 +57,5 @@ export function logAxiosError(logName, serviceName, error, details) {
 		log.details = details;
 	}
 
-	console.error(log);
+	console.error(JSON.stringify(log, null, 2));
 }
