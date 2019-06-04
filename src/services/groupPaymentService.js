@@ -6,6 +6,7 @@ import cpmsAuth from '../utils/cpmsAuth';
 import cpmsGroupPayment from '../utils/cpmsGroupPayment';
 import Constants from '../utils/constants';
 import QueueService from './queueService';
+import { logError } from '../utils/logger';
 
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
@@ -32,10 +33,8 @@ const groupPayment = async (paymentObject) => {
 			paymentTypeIntegrationConfig.authBodyFn(),
 		);
 		if (authToken === false) {
-			console.log('Error authenticating with cpms');
 			return createResponse({ body: 'Error authenticating', statusCode: 400 });
 		}
-		console.log(authToken);
 
 		const transactionData = await cpmsGroupPayment({
 			endpoint: paymentTypeIntegrationConfig.endpoint,
@@ -43,7 +42,6 @@ const groupPayment = async (paymentObject) => {
 			paymentObject,
 			auth: authToken,
 		});
-		console.log('outside of async');
 
 		const ReceiptReference = transactionData.receipt_reference;
 		const { PenaltyGroupId, VehicleRegistration, PenaltyType } = paymentObject;
@@ -52,17 +50,19 @@ const groupPayment = async (paymentObject) => {
 		if (!queueService) {
 			queueService = new QueueService(sqs, Constants.sqsUrl());
 		}
-		const messageData = await queueService.sendMessage({
+		const message = {
 			ReceiptReference,
 			PenaltyId,
 			VehicleRegistration,
 			PenaltyType,
 			IsGroupPayment: true,
-		});
-		console.log('send message to queue success', messageData);
+		};
+
+		await queueService.sendMessage(message);
 
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
+		logError('GroupPaymentError', err.message);
 		return createResponse({ body: err.message, statusCode: 400 });
 	}
 };

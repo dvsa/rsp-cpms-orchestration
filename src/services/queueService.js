@@ -1,3 +1,5 @@
+import { logInfo } from '../utils/logger';
+
 export default class QueueService {
 
 	constructor(sqs, sqsQueueUrl) {
@@ -39,12 +41,9 @@ export default class QueueService {
 			MessageBody: 'Information about a launched payment to CPMS from the Roadside Payments service.',
 			QueueUrl: this.sqsQueueUrl,
 		};
-		console.log('sqs sendMessage params');
-		console.log(params);
-		return new Promise((resolve, reject) => {
-			this.sqs.sendMessage(params).promise()
-				.then(data => resolve(data))
-				.catch(err => reject(err));
+		return this.sqs.sendMessage(params).promise().then((data) => {
+			logInfo('CPMSCheckingQueueMessageSent', { message: params, sqsResponse: data });
+			return Promise.resolve(data);
 		});
 	}
 }
