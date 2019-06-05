@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import { logAxiosError, logInfo } from './logger';
 
 export default async (reportObj) => {
 	const reportStreamClient = axios.create({
@@ -11,17 +12,15 @@ export default async (reportObj) => {
 			Authorization: `Bearer ${reportObj.authToken.access_token}`,
 		},
 	});
-	console.log(reportStreamClient);
 
 	return new Promise((resolve, reject) => {
-		console.log(reportObj);
 		reportStreamClient.get(`/report/${reportObj.report_ref}/download`)
 			.then((response) => {
-				console.log(response.data);
+				logInfo('CPMSReportDownloadSuccess', { reportObj });
 				resolve(response.data);
 			})
 			.catch((error) => {
-				console.log(error);
+				logAxiosError('CpmsDownloadReport', 'CPMS', error, { reportObj });
 				reject(JSON.stringify(error));
 			});
 	});

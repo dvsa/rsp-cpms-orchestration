@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import Constants from '../utils/constants';
+import { logAxiosError, logError } from './logger';
 
 export default (generateObj) => {
 	return new Promise((resolve, reject) => {
@@ -12,16 +13,18 @@ export default (generateObj) => {
 			},
 		});
 
-		reportClient.post('report', generateObj.generateReportOptions)
+		const { generateReportOptions } = generateObj;
+
+		reportClient.post('report', generateReportOptions)
 			.then((response) => {
-				console.log(response);
 				if (typeof response.data === 'undefined') {
+					logError('CPMSGenerateReportNoData', { generateReportOptions });
 					reject(new Error('No generate report response returned from CPMS'));
 				}
 				resolve(response.data);
 			})
 			.catch((error) => {
-				console.log(error);
+				logAxiosError('CPMSGenerateReport', 'CPMS', error, { generateReportOptions });
 				reject(JSON.stringify(error));
 			});
 	});
