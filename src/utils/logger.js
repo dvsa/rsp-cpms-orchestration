@@ -15,37 +15,72 @@ export function logError(logName, message) {
 }
 
 
-function errorMessageFromAxiosError(error) {
-	if (error.response) {
-		// The request was made and the server responded with a status code
-		// that falls out of the range of 2xx
-		const { data, status } = error.response;
-		return {
-			errorData: data,
-			errorStatus: status,
-		};
-	}
+// function errorMessageFromAxiosError(error) {
+// 	if (error.response) {
+// 		console.error(JSON.stringify(log, null, 2));
 
-	if (error.request) {
-		return {
-			message: 'The request was made but no response was received',
-			request: error.request,
-		};
-	}
-	return {
-		errorMessage: error.message,
-	};
-}
+// 		// The request was made and the server responded with a status code
+// 		// that falls out of the range of 2xx
+// 		const { data, status } = error.response;
+// 		return {
+// 			errorData: data,
+// 			errorStatus: status,
+// 		};
+// 	}
+
+// 	if (error.request) {
+// 		console.info('ERROR REQUEST', error.request);
+// 		return {
+// 			message: 'The request was made but no response was received',
+// 			request: error.request,
+// 		};
+// 	}
+// 	return (
+// 		console.error('ERROR MESSAGE', error.message),
+// 		{ errorMessage: error.message }
+// 	);
+// }
 
 export function logAxiosError(logName, serviceName, error, details) {
-	const message = errorMessageFromAxiosError(error);
+	let log;
+	// const message = errorMessageFromAxiosError(error);
 
-	const log = {
-		logName: `${logName}Error`,
-		serviceName,
-		requestErrorMessage: message,
-		logLevel: 'ERROR',
+	if (error.response) {
+		console.error('ERROR RESPONSE', error.response);
+
+		log = {
+			logName: `${logName}Error`,
+			serviceName,
+			requestErrorMessage: {
+				errorData: error.response.data,
+				errorStatus: error.response.status,
+			},
+			logLevel: 'ERROR',
+		};
 	};
+
+	if (error.request) {
+		console.error('ERROR REQUEST', error.request);
+
+		log = {
+			logName: `${logName}Error`,
+			serviceName,
+			requestErrorMessage: {
+				message: 'The request was made but no response was received',
+				request: error.request,
+			},
+			logLevel: 'ERROR',
+		};
+	} else {
+		console.error('ERROR MESSAGE', error.message),
+
+		log = {
+			logName: `${logName}Error`,
+			serviceName,
+			requestErrorMessage: { errorMessage: error.message },
+			logLevel: 'ERROR',
+		};
+	}
 
 	if (details !== undefined) {
 		log.details = details;

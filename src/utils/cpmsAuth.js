@@ -39,6 +39,7 @@ export default (penaltyType, authBody) => {
 	delete logData.client_secret;
 
 	return new Promise((resolve, reject) => {
+		console.log('CARD HOLDER', cardHolderPresentAuthBody);
 		tokenClient.post('token', cardHolderPresentAuthBody)
 			.then((response) => {
 				if (typeof response.data === 'undefined' || response.data === false) {
@@ -48,6 +49,7 @@ export default (penaltyType, authBody) => {
 				resolve(response.data);
 			})
 			.catch((error) => {
+				console.error('AUTH ERROR', error);
 				logAxiosError('CpmsAuth', 'CPMS', error, logData);
 				reject(createResponse({ body: 'Error authenticating', statusCode: 400 }));
 			});
