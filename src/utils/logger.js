@@ -86,5 +86,5 @@ export function logAxiosError(logName, serviceName, error, details) {
 		log.details = details;
 	}
 
-	console.error(JSON.stringify(log, null, 2));
+	// console.error(JSON.stringify(log, null, 2));
 }
