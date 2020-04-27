@@ -12,11 +12,11 @@ plugins:
   - serverless-dotenv-plugin
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.18.0
   region: eu-west-1
   iamRoleStatements:
     - Effect: "Allow"
-      Action: 
+      Action:
         - "sqs:SendMessage"
         - "sqs:ReceiveMessage"
         - "sqs:DeleteMessage"
@@ -273,4 +273,4 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
-  
+
