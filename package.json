@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
-    "aws-sdk": "^2.140.0",
+    "aws-sdk": "^2.900.0",
     "axios": "0.18.0",
     "buffer": "5.0.8",
     "dotenv": "5.0.0",
