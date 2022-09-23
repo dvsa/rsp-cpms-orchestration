@@ -1,4 +1,4 @@
-import generateSuffixedPenaltyReference from '../utils/generateSuffixedPenaltyReference';
+import generateSuffixedPenaltyReference from './generateSuffixedPenaltyReference';
 
 export default (penalties, penaltyType, constants) => {
 	let productDescription = '';

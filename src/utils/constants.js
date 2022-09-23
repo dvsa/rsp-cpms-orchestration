@@ -47,7 +47,7 @@ async function bootstrap() {
 	});
 }
 
-const fromConfiguration = configKey => () => {
+const fromConfiguration = (configKey) => () => {
 	return configuration[configKey];
 };
 
@@ -69,7 +69,7 @@ const receiverAddress = () => ({
 	postcode: fromConfiguration(configMetadata.addressPostcode)(),
 });
 
-const authBodyWithScopeFn = scope => () => ({
+const authBodyWithScopeFn = (scope) => () => ({
 	scope,
 	grant_type: 'client_credentials',
 	user_id: fromConfiguration(configMetadata.userId)(),
@@ -102,4 +102,3 @@ const constants = {
 };
 
 export default constants;
-

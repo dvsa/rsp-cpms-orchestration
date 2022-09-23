@@ -1,5 +1,5 @@
 import Constants from './constants';
-import generateSuffixedPenaltyReference from '../utils/generateSuffixedPenaltyReference';
+import generateSuffixedPenaltyReference from './generateSuffixedPenaltyReference';
 
 export default (transactionData) => {
 	let productDescription = '';

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import Constants from '../utils/constants';
+import Constants from './constants';
 import createResponse from './createResponse';
 import { logAxiosError, logError } from './logger';
 
@@ -35,7 +35,7 @@ export default (penaltyType, authBody) => {
 		user_id: authBody.user_id,
 	};
 
-	const logData = Object.assign({}, cardHolderPresentAuthBody);
+	const logData = { ...cardHolderPresentAuthBody };
 	delete logData.client_secret;
 
 	return new Promise((resolve, reject) => {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import buildTransactionOptions from '../utils/buildTransactionOptions';
-import Constants from '../utils/constants';
+import buildTransactionOptions from './buildTransactionOptions';
+import Constants from './constants';
 import { logAxiosError, logInfo, logError } from './logger';
 
 export default (transactionData) => {

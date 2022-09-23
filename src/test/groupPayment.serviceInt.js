@@ -7,7 +7,6 @@ const url = 'http://localhost:3000';
 const request = supertest(url);
 const redirectUri = process.env.REDIRECT_URI;
 
-
 describe('Group payment service', () => {
 	context('POST /groupPayment', () => {
 		context('when a correct request is made', () => {
