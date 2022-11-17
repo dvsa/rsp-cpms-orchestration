@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import Constants from '../utils/constants';
+import Constants from './constants';
 import { logAxiosError, logInfo, logError } from './logger';
 
 const confirmNoDataMessage = 'No confirmation data returned from CPMS';

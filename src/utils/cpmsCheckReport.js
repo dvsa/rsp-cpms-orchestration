@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import Constants from '../utils/constants';
+import Constants from './constants';
 import { logAxiosError, logError } from './logger';
 
 export default (reportObj) => {

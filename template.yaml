@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Globals:
+  Function:
+    Runtime: nodejs16.x
+    CodeUri: src/functions
+
+Resources:
+  cardPayment:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: cardPayment.handler
+  cardNotPresentPayment:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: cardNotPresentPayment.handler
+  cashPayment:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: cashPayment.handler
+  chequePayment:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: chequePayment.handler
+  postalOrderPayment:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: postalOrderPayment.handler
+  confirm:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: confirm.handler
+  listReports:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: listReports.handler
+  generateReport:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: generateReport.handler
+  checkReportStatus:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: checkReportStatus.handler
+  reverseCard:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: reverseCard.handler
+  reverseCheque:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: reverseCheque.handler
+  downloadReport:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: downloadReport.handler
+  groupPayment:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: groupPayment.handler

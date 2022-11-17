@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Validation from 'rsp-validation';
 
-import buildGroupTransactionOptions from '../utils/buildGroupTransactionOptions';
-import Constants from '../utils/constants';
+import buildGroupTransactionOptions from './buildGroupTransactionOptions';
+import Constants from './constants';
 import { logAxiosError, logInfo, logError } from './logger';
 
 export default (groupTransactionData) => {
