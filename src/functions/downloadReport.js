@@ -1,6 +1,6 @@
 import ReportService from '../services/reportService';
 
-export default (event) => {
+export const handler = (event) => {
 	let reportObject = event.body;
 	if (typeof reportObject.penalty_type === 'undefined') {
 		reportObject = JSON.parse(event.body);
@@ -8,3 +8,5 @@ export default (event) => {
 
 	return ReportService.downloadReport(reportObject);
 };
+
+export default handler;

@@ -1,6 +1,6 @@
 import PaymentService from '../services/paymentService';
 
-export default (event) => {
+export const handler = (event) => {
 	let paymentObject = event.body;
 	if (typeof paymentObject.payment_type === 'undefined') {
 		paymentObject = JSON.parse(event.body);
@@ -8,3 +8,5 @@ export default (event) => {
 
 	return PaymentService.cashPayment(paymentObject);
 };
+
+export default handler;

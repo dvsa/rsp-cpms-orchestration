@@ -15,7 +15,9 @@
       "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
       "no-tabs": 0,
       "linebreak-style": 0,
-      "no-console": "off"
+      "no-console": "off",
+      "max-len": "off"
+
     }
 
 }

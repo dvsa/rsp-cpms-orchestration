@@ -67,7 +67,7 @@ jobs:
       environment: nonprod
       short_commit: ${{ needs.build-names.outputs.short_sha }}
       artifact: ${{ matrix.lambdaName }}.zip
-      bucket_key: cpms/${{ needs.build-names.outputs.pretty_branch_name }}.zip
+      bucket_key: cpms/${{ matrix.lambdaName }}/${{ needs.build-names.outputs.pretty_branch_name }}.zip
     permissions:
       id-token: write
     secrets:
