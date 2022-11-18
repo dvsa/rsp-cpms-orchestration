@@ -23,7 +23,7 @@ provider:
       Resource: arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:CPMS_Launched_Payments
 functions:
   cardPayment:
-    handler: cardPayment/app.handler
+    handler: cardPayment/handler.cardPayment
     memorySize: 128
     events:
       -
@@ -50,7 +50,7 @@ functions:
                   responseModels:
                   application/json: "ErrorResponse"
   groupPayment:
-    handler: groupPayment/app.handler
+    handler: groupPayment/handler.groupPayment
     memorySize: 128
     events:
       -
@@ -78,7 +78,7 @@ functions:
                   responseModels:
                   application/json: "ErrorResponse"
   cardNotPresentPayment:
-    handler: cardNotPresentPayment/app.handler
+    handler: cardNotPresentPayment/handler.cardNotPresentPayment
     memorySize: 128
     events:
       -
@@ -105,7 +105,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   cashPayment:
-    handler: cashPayment/app.handler
+    handler: cashPayment/handler.cashPayment
     memorySize: 128
     events:
       -
@@ -132,7 +132,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   chequePayment:
-    handler: chequePayment/app.handler
+    handler: chequePayment/handler.chequePayment
     memorySize: 128
     events:
       -
@@ -159,7 +159,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   postalOrderPayment:
-    handler: postalOrderPayment/app.handler
+    handler: postalOrderPayment/handler.postalOrderPayment
     memorySize: 128
     events:
       -
@@ -186,7 +186,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   confirm:
-    handler: confirm/app.handler
+    handler: confirm/handler.confirm
     memorySize: 128
     events:
       -
@@ -213,7 +213,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   listReports:
-    handler: listReports/app.handler
+    handler: listReports/handler.listReports
     memorySize: 128
     events:
       -
@@ -223,7 +223,7 @@ functions:
           authorizer: aws_iam
           cors: true
   generateReport:
-    handler: generateReport/app.handler
+    handler: generateReport/handler.generateReport
     memorySize: 128
     events:
       -
@@ -233,7 +233,7 @@ functions:
           authorizer: aws_iam
           cors: true
   checkReportStatus:
-    handler: checkReportStatus/app.handler
+    handler: checkReportStatus/handler.checkReportStatus
     memorySize: 128
     events:
       -
@@ -243,7 +243,7 @@ functions:
           authorizer: aws_iam
           cors: true
   reverseCard:
-    handler: reverseCard/app.handler
+    handler: reverseCard/handler.reverseCard
     memorySize: 128
     events:
       -
@@ -253,7 +253,7 @@ functions:
           authorizer: aws_iam
           cors: true
   reverseCheque:
-    handler: reverseCheque/app.handler
+    handler: reverseCheque/handler.reverseCheque
     memorySize: 128
     events:
       -
@@ -263,7 +263,7 @@ functions:
           authorizer: aws_iam
           cors: true
   downloadReport:
-    handler: downloadReport/app.handler
+    handler: downloadReport/handler.downloadReport
     memorySize: 128
     events:
       -

@@ -10,39 +10,39 @@ Resources:
   cardPayment:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: cardPayment.handler
+      Handler: cardPayment.cardPayment
   cardNotPresentPayment:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: cardNotPresentPayment.handler
+      Handler: cardNotPresentPayment.cardNotPresentPayment
   cashPayment:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: cashPayment.handler
+      Handler: cashPayment.cashPayment
   chequePayment:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: chequePayment.handler
+      Handler: chequePayment.chequePayment
   postalOrderPayment:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: postalOrderPayment.handler
+      Handler: postalOrderPayment.postalOrderPayment
   confirm:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: confirm.handler
+      Handler: confirm.confirm
   listReports:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: listReports.handler
+      Handler: listReports.listReports
   generateReport:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: generateReport.handler
+      Handler: generateReport.generateReport
   checkReportStatus:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: checkReportStatus.handler
+      Handler: checkReportStatus.checkReportStatus
   reverseCard:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -50,12 +50,12 @@ Resources:
   reverseCheque:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: reverseCheque.handler
+      Handler: reverseCheque.reverseCheque
   downloadReport:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: downloadReport.handler
+      Handler: downloadReport.downloadReport
   groupPayment:
     Type: "AWS::Serverless::Function"
     Properties:
-      Handler: groupPayment.handler
+      Handler: groupPayment.groupPayment

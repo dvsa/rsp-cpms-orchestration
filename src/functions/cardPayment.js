@@ -1,6 +1,6 @@
 import PaymentService from '../services/paymentService';
 
-export const handler = (event) => {
+export const cardPayment = (event) => {
 	let paymentObject = event.body;
 	if (typeof paymentObject.penalty_type === 'undefined') {
 		paymentObject = JSON.parse(event.body);
@@ -10,4 +10,4 @@ export const handler = (event) => {
 	return PaymentService.cardPayment(paymentObject);
 };
 
-export default handler;
+export default cardPayment;
