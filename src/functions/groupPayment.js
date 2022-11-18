@@ -1,6 +1,6 @@
 import GroupPaymentService from '../services/groupPaymentService';
 
-export const handler = (event) => {
+export const groupPayment = (event) => {
 	let paymentObject = event.body;
 	if (typeof paymentObject.penalty_type === 'undefined') {
 		paymentObject = JSON.parse(event.body);
@@ -10,4 +10,4 @@ export const handler = (event) => {
 	return GroupPaymentService.groupPayment(paymentObject);
 };
 
-export default handler;
+export default groupPayment;

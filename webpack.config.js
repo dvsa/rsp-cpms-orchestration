@@ -2,7 +2,7 @@ const path = require('path');
 const AwsSamPlugin = require('aws-sam-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const awsSamPlugin = new AwsSamPlugin({ vscodeDebug: false });
+const awsSamPlugin = new AwsSamPlugin({ vscodeDebug: false, outFile: 'handler' });
 
 module.exports = {
 	// Loads the entry object from the AWS::Serverless::Function resources in your

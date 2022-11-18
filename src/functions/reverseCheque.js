@@ -1,6 +1,6 @@
 import PaymentService from '../services/paymentService';
 
-export const handler = (event) => {
+export const reverseCheque = (event) => {
 	let paymentObject = event.body;
 	if (typeof paymentObject.penalty_type === 'undefined') {
 		paymentObject = JSON.parse(event.body);
@@ -9,4 +9,4 @@ export const handler = (event) => {
 	return PaymentService.reverseCheque(paymentObject);
 };
 
-export default handler;
+export default reverseCheque;

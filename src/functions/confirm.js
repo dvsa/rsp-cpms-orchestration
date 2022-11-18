@@ -1,6 +1,6 @@
 import PaymentService from '../services/paymentService';
 
-export const handler = async (event) => {
+export const confirm = async (event) => {
 	let confirmationObject = event.body;
 	if (typeof confirmationObject.receipt_reference === 'undefined') {
 		confirmationObject = JSON.parse(event.body);
@@ -10,4 +10,4 @@ export const handler = async (event) => {
 	return PaymentService.confirmPayment(confirmationObject);
 };
 
-export default handler;
+export default confirm;

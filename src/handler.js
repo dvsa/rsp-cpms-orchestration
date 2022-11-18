@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 import '@babel/polyfill';
 import Constants from './utils/constants';
 import cardPayment from './functions/cardPayment';
