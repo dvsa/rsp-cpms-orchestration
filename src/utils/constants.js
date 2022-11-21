@@ -24,6 +24,9 @@ const configMetadata = {
 
 let configuration = {};
 async function bootstrap() {
+	if (Object.keys(configuration).length !== 0) {
+		return configuration;
+	}
 	return new Promise((resolve, reject) => {
 		if (process.env.USE_SECRETS_MANAGER === 'true') {
 			const SecretId = process.env.SECRETS_MANAGER_SECRET_NAME;
