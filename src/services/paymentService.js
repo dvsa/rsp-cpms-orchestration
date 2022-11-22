@@ -1,5 +1,6 @@
 import { SQS, config } from 'aws-sdk';
 
+import { logInfo, logError } from '../utils/logger';
 import createResponse from '../utils/createResponse';
 
 import cpmsAuth from '../utils/cpmsAuth';
@@ -9,7 +10,6 @@ import cpmsChargeback from '../utils/cpmsChargeback';
 import cpmsReversal from '../utils/cpmsReversal';
 import Constants from '../utils/constants';
 import QueueService from './queueService';
-import { logError } from '../utils/logger';
 
 config.update({ region: 'eu-west-1' });
 const sqs = new SQS({ apiVersion: '2012-11-05' });
@@ -58,6 +58,7 @@ const cardNotPresentPayment = async (paymentObject) => {
 		paymentObject.penalty_type,
 		Constants.cardHolderNotPresentAuthBody(),
 	);
+	logInfo('cardNotPresentPayment', { redirectUrl: paymentObject.redirect_url });
 
 	try {
 		const transactionData = await cpmsPayment({
