@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 import Constants from './constants';
-import { logAxiosError, logInfo, logError } from './logger';
+import {
+	logAxiosError, logInfo, logError, errorMessageFromAxiosError,
+} from './logger';
 
 export default (chargebackObj) => {
 	return new Promise((resolve, reject) => {
@@ -36,7 +38,8 @@ export default (chargebackObj) => {
 			resolve(chargebackResponse.data);
 		}).catch((error) => {
 			logAxiosError('CpmsChargeback', 'CPMS', error, logData);
-			reject(error.response);
+			const axiosErrorMessage = errorMessageFromAxiosError(error);
+			reject(axiosErrorMessage);
 		});
 	});
 };
