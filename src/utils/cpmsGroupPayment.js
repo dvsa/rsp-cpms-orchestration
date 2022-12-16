@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Validation from 'rsp-validation';
+import Validation from '@dvsa/rsp-validation';
 
 import buildGroupTransactionOptions from './buildGroupTransactionOptions';
 import Constants from './constants';
