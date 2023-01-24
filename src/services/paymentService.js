@@ -69,6 +69,7 @@ const cardNotPresentPayment = async (paymentObject) => {
 		});
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
+		logError('CardNotPresentPaymentError', err.message);
 		return createResponse({ body: err, statusCode: 400 });
 	}
 };
@@ -85,6 +86,7 @@ const cashPayment = async (paymentObject) => {
 		});
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
+		logError('CashPaymentError', err.message);
 		return createResponse({ body: err, statusCode: 400 });
 	}
 };
@@ -101,6 +103,7 @@ const chequePayment = async (paymentObject) => {
 		});
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
+		logError('ChequePaymentError', err.message);
 		return createResponse({ body: err, statusCode: 400 });
 	}
 };
@@ -117,6 +120,7 @@ const postalOrderPayment = async (paymentObject) => {
 		});
 		return createResponse({ body: transactionData, statusCode: 200 });
 	} catch (err) {
+		logError('PostalPaymentError', err.message);
 		return createResponse({ body: err, statusCode: 400 });
 	}
 };
