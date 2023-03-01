@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/dvsa/rsp-cpms-orchestration/compare/v3.1.0...v3.1.1) (2023-03-01)
+
+
+### Bug Fixes
+
+* bump validation package ([#93](https://github.com/dvsa/rsp-cpms-orchestration/issues/93)) ([74f91f7](https://github.com/dvsa/rsp-cpms-orchestration/commit/74f91f70a6358ade656886e67cdd53c705adf31d))
+
 ## [3.1.0](https://github.com/dvsa/rsp-cpms-orchestration/compare/v3.0.0...v3.1.0) (2023-02-22)
 
 
