@@ -16,11 +16,11 @@ export default async (reportObj) => {
 	return new Promise((resolve, reject) => {
 		reportStreamClient.get(`/report/${reportObj.report_ref}/download`)
 			.then((response) => {
-				logInfo('CPMSReportDownloadSuccess', { reportObj });
+				logInfo('CPMSReportDownloadSuccess', { report_ref: reportObj.report_ref });
 				resolve(response.data);
 			})
 			.catch((error) => {
-				logAxiosError('CpmsDownloadReport', 'CPMS', error, { reportObj });
+				logAxiosError('CpmsDownloadReport', 'CPMS', error, { report_ref: reportObj.report_ref });
 				reject(JSON.stringify(error));
 			});
 	});
