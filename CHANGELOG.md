@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.2](https://github.com/dvsa/rsp-cpms-orchestration/compare/v3.1.1...v3.1.2) (2023-03-08)
+
+
+### Bug Fixes
+
+* corrected logging issue when downloading reports ([#95](https://github.com/dvsa/rsp-cpms-orchestration/issues/95)) ([185bf2a](https://github.com/dvsa/rsp-cpms-orchestration/commit/185bf2a343878419188bef4564945d1c6a0dcd19))
+* removed logging of reportObj in downloadReport, replaced with just report_ref ([185bf2a](https://github.com/dvsa/rsp-cpms-orchestration/commit/185bf2a343878419188bef4564945d1c6a0dcd19))
+
 ## [3.1.1](https://github.com/dvsa/rsp-cpms-orchestration/compare/v3.1.0...v3.1.1) (2023-03-01)
 
 
