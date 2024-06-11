@@ -5,6 +5,9 @@
   "repository": "github.com/dvsa/rsp-cpms-orchestration",
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build-openapi": "npm run compile && npm run copy-localfiles && cd build && sls openapi generate -f json && npm run openapireplace",
     "openapireplace": "node openapiReplace.js",
