@@ -20,14 +20,14 @@ jobs:
     outputs:
       matrix: ${{ steps.json.outputs.MATRIX }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Read in lambdas names from JSON
         id: json
         run: |
           echo "MATRIX=$(jq -c . < ./lambdas.json)" >> $GITHUB_OUTPUT
 
   update-lambda-code:
-    uses: dvsa/.github/.github/workflows/update-lambda-function.yaml@v2.2
+    uses: dvsa/.github/.github/workflows/update-lambda-function.yaml@v4.0.1
     needs: [ lambdas ]
     strategy:
       matrix:
@@ -39,6 +39,7 @@ jobs:
     permissions:
       id-token: write
     secrets:
+      AWS_ROLE_TO_ASSUME_ARN: ${{ secrets.AWS_ROLE_TO_ASSUME_ARN }}
       AWS_ACCOUNT: ${{ secrets.RSP_AWS_ACCOUNT }}
       AWS_REGION: ${{ secrets.RSP_AWS_REGION }}
       BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
