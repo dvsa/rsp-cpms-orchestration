@@ -58,7 +58,7 @@
     "@babel/polyfill": "^7.4.0",
     "@dvsa/rsp-validation": "^2.0.0",
     "aws-sdk": "^2.1256.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "buffer": "6.0.3",
     "dotenv": "16.0.3",
     "expect.js": "0.3.1",
