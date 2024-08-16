@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.0](https://github.com/dvsa/rsp-cpms-orchestration/compare/v3.1.2...v4.0.0) (2024-08-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* Node 20 Compat and CI Bumps ([#102](https://github.com/dvsa/rsp-cpms-orchestration/issues/102))
+
+### Features
+
+* added identifying header cpms calls ([#105](https://github.com/dvsa/rsp-cpms-orchestration/issues/105)) ([6a8a06f](https://github.com/dvsa/rsp-cpms-orchestration/commit/6a8a06ffadc37969f6145cd10e0da86c3675013c))
+* Node 20 Compat and CI Bumps ([#102](https://github.com/dvsa/rsp-cpms-orchestration/issues/102)) ([2a1f425](https://github.com/dvsa/rsp-cpms-orchestration/commit/2a1f425d269682f42c9281f5fa29b811126e8aef))
+
 ## [3.1.2](https://github.com/dvsa/rsp-cpms-orchestration/compare/v3.1.1...v3.1.2) (2023-03-08)
 
 
