@@ -10,6 +10,7 @@ const cpmsGroupPayment = async (groupTransactionData) => {
 		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
+			'X-CPMS-Client': 'RSP',
 			Authorization: `Bearer ${groupTransactionData.auth.access_token}`,
 		},
 	});

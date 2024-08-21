@@ -9,7 +9,7 @@ const cpmsPayment = async (transactionData) => {
 		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
-			'X-Cpms-Scheme': 'RSP',
+			'X-CPMS-Client': 'RSP',
 			Authorization: `Bearer ${transactionData.auth.access_token}`,
 		},
 	});

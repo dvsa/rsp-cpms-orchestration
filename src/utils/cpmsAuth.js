@@ -9,6 +9,7 @@ export default (penaltyType, authBody) => {
 		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			Accept: 'application/json',
+			'X-CPMS-Client': 'RSP',
 		},
 	});
 	let clientId = '';
