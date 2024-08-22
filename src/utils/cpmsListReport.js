@@ -11,6 +11,7 @@ export default (authToken) => {
 			baseURL: Constants.cpmsBaseUrl(),
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
+				'X-CPMS-Client': 'RSP',
 				Authorization: `Bearer ${authToken.access_token}`,
 			},
 		});

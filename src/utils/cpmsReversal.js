@@ -10,6 +10,7 @@ export default (reversalObj) => {
 			baseURL: Constants.cpmsBaseUrl(),
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
+				'X-CPMS-Client': 'RSP',
 				Authorization: `Bearer ${reversalObj.auth.access_token}`,
 			},
 		});

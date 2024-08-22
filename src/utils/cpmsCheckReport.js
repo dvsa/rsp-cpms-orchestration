@@ -9,6 +9,7 @@ export default (reportObj) => {
 			baseURL: Constants.cpmsBaseUrl(),
 			headers: {
 				'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
+				'X-CPMS-Client': 'RSP',
 				Authorization: `Bearer ${reportObj.authToken.access_token}`,
 			},
 		});

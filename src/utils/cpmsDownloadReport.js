@@ -8,6 +8,7 @@ export default async (reportObj) => {
 		baseURL: Constants.cpmsBaseUrl(),
 		headers: {
 			'Content-Type': 'application/vnd.dvsa-gov-uk.v2+json',
+			'X-CPMS-Client': 'RSP',
 			responseType: 'stream',
 			Authorization: `Bearer ${reportObj.auth.access_token}`,
 		},
