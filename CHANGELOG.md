@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.1.0](https://github.com/dvsa/rsp-cpms-orchestration/compare/v4.0.0...v4.1.0) (2024-08-29)
+
+
+### Features
+
+* Add CPMS header for all CPMS requests ([#108](https://github.com/dvsa/rsp-cpms-orchestration/issues/108)) ([7c6d1ee](https://github.com/dvsa/rsp-cpms-orchestration/commit/7c6d1ee2ee4e7f0798ba8f890af1301e6d4663e2))
+
+
+### Bug Fixes
+
+* amending the workflow ([#110](https://github.com/dvsa/rsp-cpms-orchestration/issues/110)) ([b5836b2](https://github.com/dvsa/rsp-cpms-orchestration/commit/b5836b23d3f41c71807b936eae5365e5a9a09fe1))
+
 ## [4.0.0](https://github.com/dvsa/rsp-cpms-orchestration/compare/v3.1.2...v4.0.0) (2024-08-16)
 
 
