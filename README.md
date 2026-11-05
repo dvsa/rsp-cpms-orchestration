@@ -55,6 +55,198 @@ Payment with a JSON-null body and asserts the expected `penalty_type` null-acces
 error inside PaymentService, before CPMS authentication or SQS access. This
 intentional handler error is a passing smoke check, not a payment request.
 
+## Manual black-box integration baseline
+
+The portable integration suite characterises all 13 exported handlers and all
+13 HTTP routes declared in `serverless/serverless.yml` under the `/dev` stage.
+It does not import handlers or services. Tests call the running loopback HTTP
+service and exercise real non-production CPMS/report endpoints; they are not
+unit tests, mocks, CI checks, or source-coverage measurements. Java and
+DynamoDB Local are not required.
+
+### Prepare a first run
+
+1. Follow the local setup above: Node 20, `npm ci`, private `.env`, AWS CLI v2
+   login and non-production CPMS configuration. Keep `.env` mode `600`.
+2. Explicitly opt into the desired non-production side effects in the private,
+   ignored `.env` (never commit these settings):
+
+   ```dotenv
+   INTEGRATION_BASE_URL=http://127.0.0.1:3000/dev
+   INTEGRATION_REDIRECT_URL=https://nonprod.pay-roadside-fine.service.gov.uk
+   INTEGRATION_REPORT_CODE=<approved code from Bruno Generate Report or listReports>
+   INTEGRATION_CONFIRM_LOCAL=yes
+   INTEGRATION_CONFIRM_NONPROD=yes
+   INTEGRATION_ALLOW_PAYMENT_MUTATIONS=yes
+   INTEGRATION_ALLOW_SQS=yes
+   INTEGRATION_ALLOW_CONFIRMATION=yes
+   INTEGRATION_ALLOW_REPORT_GENERATION=yes
+   INTEGRATION_ALLOW_REVERSALS=no
+   ```
+
+   Replace the report-code placeholder with the approved non-production code.
+   The return URL must be HTTPS on `nonprod.pay-roadside-fine.service.gov.uk`.
+   Do not put credentials, payment tokens, or these settings in source control
+   or reports.
+3. In terminal one, start `npm start` and leave it running. Refresh AWS login
+   first; the launcher exports temporary credentials once. Restart the service
+   after credentials expire.
+4. In terminal two, run:
+
+   ```sh
+   npm run test:integration:local
+   ```
+
+   The suite loads configuration and gates from `.env`; invoking-shell values
+   take precedence, including `no` and empty values. Omitted gates default off;
+   set an existing gate to `no` to disable its scenarios. Persisted `yes` values
+   authorize these operations on every run until changed: each run creates real
+   non-production transactions, confirmations, reports and SQS messages, with
+   no automatic cleanup. Only enable side effects you have permission to exercise.
+   `INTEGRATION_CONFIRM_NONPROD=yes` confirms that the running service's private
+   CPMS settings point to the intended non-production environment. Group
+   payments and card-present payment publish real messages to the configured
+   SQS queue.
+
+5. Review `integration-reports/latest.html` and
+   `integration-reports/latest.json`, or use
+   `npm run test:integration:report:open`. `npm run test:integration:report`
+   rebuilds the HTML from the last JSON result; it does not rerun tests.
+   `npm run test:integration:tooling` runs offline-only safety/report tests and
+   `npm run lint:integration` lints the integration harness.
+
+### Transaction safety and coverage
+
+The suite creates unique synthetic references per run; there is no DynamoDB
+seed/reset and no operation on Bruno or historical payments. A permission-
+restricted ignored manifest under `integration-state/` records only the
+synthetic references, attempted amounts, response receipts and status so an
+ambiguous write can be reconciled. The HTML/JSON report omits those identifiers,
+credentials, URLs, payloads and raw CPMS/AWS responses.
+
+CPMS transactions and SQS messages are external side effects. They are **not**
+deleted or rolled back by suite cleanup. The runner never retries a payment
+request, stops later mutations after an uncertain result, and requires manual
+reconciliation of the manifest against CPMS before any retry. Do not rerun
+after a timeout, SQS failure or HTTP error until checking whether CPMS already
+created the transaction. A successful response/read-back is not proof of
+settlement.
+The suite also does not consume SQS messages or claim that downstream consumers
+received them; an API response does not prove queue delivery or processing.
+Card responses expose their HTTPS return gateway in `gateway_url`. Report
+generation uses a full UTC-day timestamp range, and status polling recognizes
+CPMS's `completed`/`error` booleans for up to 120 bounded polls. The captured
+summary report exposes transaction totals rather than separate group members;
+reconciliation verifies exact customer/receipt references and total amounts.
+Group fixtures total £10 (members £4 and £6) because the existing local group
+transaction validator requires integer `total_amount` between 10 and 9999
+before calling CPMS.
+
+The confirmation scenario is limited to this run's uncompleted CNP transaction;
+the observed CPMS code 827 / `auth_code` P response is explicitly not a
+paid transaction. Reversals require both `INTEGRATION_ALLOW_REVERSALS=yes` and
+the independently verified, individually approved fixtures below. Without these
+fixtures, at most 15 of the 17 scenarios can pass; skips are incomplete coverage,
+not passes. The suite does not automate third-party card entry. Neither a reversal
+nor a card checkout is part of automatic cleanup. Report generation requires
+its own explicit gate. Report output is reconciled by exact synthetic customer
+references and independently specified transaction totals; individual group
+member references and amounts are not verified by this summary report. Unknown report
+formats fail rather than being treated as a successful read-back.
+
+Review the result counts: skipped scenarios mean incomplete coverage, and a
+dependency-unavailable result is not a pass. The local API must already be
+running. A harmless `/local-readiness` 404 confirms the loopback service before
+any scenario runs; the suite does not start or stop services. Stop the service
+you started with Ctrl+C. Offline tooling coverage is not a real CPMS run.
+
+### Preparing the two reversal fixtures
+
+Use an existing successful individual `cardPayment` or `chequePayment` entry
+from an ignored `integration-state/<run-id>.json` manifest. Do not use production,
+Bruno, historical customer payments, CNP, or group receipts. The exact receipt,
+customer reference and amount must match the recorded synthetic creation.
+The runner refuses any receipt/customer for which any retained manifest records
+a previous reversal attempt, including a failed or uncertain attempt.
+
+For CARD, an authorised person must complete that owned checkout using the
+approved sandbox flow, then independently obtain CPMS confirmation code **801**
+and a report matching the receipt, customer, amount and CARD method. A gateway
+redirect, HTTP 200, or confirmation code 827 is not payment evidence. Existing
+manifests intentionally omit gateway URLs: obtain the existing receipt's checkout
+link privately through the approved CPMS tooling/operator; do not create another
+payment simply to obtain a link. Never enter card details into this suite or
+copy gateway URLs/tokens into reports or chat.
+
+The earlier CHEQUE attempt returned downstream HTTP 400 / CPMS **218**, exposed
+locally as HTTP 502. The retained diagnostics do **not** contain CPMS's full error
+message, so the precise rejection cause is not established. The adapter sends
+the matching customer reference, scope `CHEQUE_RD` and an empty `cost_centre`;
+the service passes an Axios response object into response serialization, which
+can mask the downstream rejection. Neither a payload/auth fix nor a meaning for
+218 can be safely inferred from the numeric code alone. Obtain its full message
+from the existing CPMS logs/support, reconcile the original receipt's outcome,
+and resolve the cause before approving a different owned cheque. Do not treat
+218 as a successful reversal or retry the failed receipt.
+
+In private `.env`, add the following for each method (replace `CARD` with
+`CHEQUE` for the other fixture). No field is automatically approved:
+
+```dotenv
+INTEGRATION_ALLOW_REVERSALS=yes
+INTEGRATION_CARD_REVERSAL_APPROVED=no
+INTEGRATION_CARD_REVERSAL_MANIFEST=
+INTEGRATION_CARD_REVERSAL_RECEIPT_REFERENCE=
+INTEGRATION_CARD_REVERSAL_CUSTOMER_REFERENCE=
+INTEGRATION_CARD_REVERSAL_PENALTY_TYPE=FPN
+INTEGRATION_CARD_REVERSAL_EXPECTED_AMOUNT=
+INTEGRATION_CARD_REVERSAL_PROOF=
+```
+
+`MANIFEST` and `PROOF` are filenames inside ignored `integration-state/`, not
+paths. Create the private proof JSON only from independently verified CPMS data:
+
+```json
+{
+  "environment": "non-production",
+  "independentlyVerified": true,
+  "verifiedAt": "<ISO timestamp of actual verification>",
+  "receiptReference": "<owned receipt>",
+  "customerReference": "<owned customer>",
+  "penaltyType": "FPN",
+  "amount": 1.37,
+  "cpmsCode": 801,
+  "reportRows": [{
+    "customer reference": "<owned customer>",
+    "receipt reference": "<owned receipt>",
+    "total amount": "1.37",
+    "payment type": "CARD"
+  }]
+}
+```
+
+Use the real fixture amount, actual report rows and actual verified code, not
+the example values. For CHEQUE, use its creation success code `"000"`, payment
+type `"CHEQUE"` and add `"rejection218Resolved": true` **only after resolving the
+earlier rejection**. Keep the directory mode `700` and proof/config files `600`.
+Set the corresponding `APPROVED=yes` only after these checks and authorisation.
+The global local/non-production/payment-mutation gates still apply.
+
+With the service running, run **only** these two scenarios without creating ten
+more payments, sending SQS messages, or generating reports:
+
+```sh
+npm run test:integration:reversals
+```
+
+Missing approvals/data produce specific preflight skips without sending reversal
+requests. Valid fixtures call `/reverseCard` or `/reverseCheque` once and journal
+the receipt before the request. HTTP 200 plus the response envelope remains the
+baseline assertion; an explicit non-success CPMS code fails rather than passing
+as an object. This is not proof of final CPMS state; reconcile afterwards. Keep all
+manifests to preserve duplicate-attempt protection. The normal
+`npm run test:integration:local` also includes these guarded scenarios.
+
 ## Package for development
 - `npm run build`
 

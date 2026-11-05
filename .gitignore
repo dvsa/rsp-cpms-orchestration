@@ -19,3 +19,6 @@ npm-debug.log
 .aws-sam/
 coverage/
 .nyc_output/
+integration-reports/
+integration-state/
+.integration-local.lock
