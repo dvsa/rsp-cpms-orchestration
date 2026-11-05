@@ -61,9 +61,24 @@ intentional handler error is a passing smoke check, not a payment request.
 ## Package for production
 - `npm run build:prod`
 
-## To run unit tests
+## Isolated unit tests and coverage
 
-- `npm run test`
+Use the isolated unit suite for behavioural regression checks:
+
+- `npm test`
+- `npm run test:coverage`
+
+The coverage command instruments original source with Babel/Istanbul and checks
+statements, branches, functions and lines at a minimum of 95.01% for **each**
+production JavaScript file under `src/`. Test files and test helpers are excluded;
+the HTML and JSON reports are written to ignored `coverage/`, with raw data in
+ignored `.nyc_output/`.
+
+The unit-test setup uses synthetic configuration and AWS credentials, blocks
+HTTP/HTTPS network requests, and mocks AWS and CPMS calls. It does not load the
+private `.env` file or require AWS authentication, CPMS access, a running service
+or a queue. The service integration tests under `src/test/` are separate and are
+not part of `npm test` or the coverage gate.
 
 ## To Lint
 

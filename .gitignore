@@ -17,3 +17,5 @@ npm-debug.log
 .env
 .idea
 .aws-sam/
+coverage/
+.nyc_output/
