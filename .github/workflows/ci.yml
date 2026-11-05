@@ -10,11 +10,13 @@ jobs:
     uses: dvsa/.github/.github/workflows/nodejs-lint.yaml@v4.0.1
     with:
       node-version: 20.x
+      npm-version: '10'
 
   test:
     uses: dvsa/.github/.github/workflows/nodejs-test.yaml@v4.0.1
     with:
       node-version: 20.x
+      npm-version: '10'
 
   security:
     uses: dvsa/.github/.github/workflows/nodejs-security.yaml@v4.0.1
@@ -50,6 +52,7 @@ jobs:
     needs: [ build-names ]
     with:
       node-version: 20.x
+      npm-version: '10'
       upload-artifact: true
       build-folder: dist
       build-command: npm run build:prod
