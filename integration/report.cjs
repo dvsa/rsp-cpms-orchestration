@@ -68,18 +68,21 @@ function write(report, name = 'latest') {
 	console.log(`JSON report: ${path.join(directory, `${name}.json`)}`);
 }
 
-function open() {
-	const file = path.join(directory, 'latest.html');
+function open(options = {}) {
+	const file = options.file || path.join(directory, 'latest.html');
 	if (!fs.existsSync(file)) throw new Error('No integration report found; run npm run test:integration:local first');
-	let command = 'xdg-open';
-	let args = [file];
-	if (process.platform === 'darwin') command = 'open';
-	if (process.platform === 'win32') {
-		command = 'cmd';
-		args = ['/c', 'start', '', file];
+	const platform = options.platform || process.platform;
+	if (platform !== 'darwin') {
+		throw new Error(`Automatic report opening is supported only on macOS; open this file manually: ${file}`);
 	}
-	const child = spawn(command, args, { stdio: 'ignore', detached: true });
-	child.unref();
+	const child = (options.spawnProcess || spawn)('open', [file], { stdio: 'ignore' });
+	return new Promise((resolve, reject) => {
+		child.once('error', () => reject(new Error(`Could not open integration report; open it manually: ${file}`)));
+		child.once('close', (code) => {
+			if (code === 0) resolve();
+			else reject(new Error(`Could not open integration report; open it manually: ${file}`));
+		});
+	});
 }
 
 module.exports = {

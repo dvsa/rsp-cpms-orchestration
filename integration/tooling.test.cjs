@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { EventEmitter } = require('node:events');
 const fs = require('node:fs');
 const httpServer = require('node:http');
 const path = require('node:path');
@@ -11,7 +12,9 @@ const {
 	execute, knownDependencyFailure, request: integrationRequest, safeError,
 } = require('./run.cjs');
 const { DependencyUnavailable } = require('./errors.cjs');
-const { render, directory, write } = require('./report.cjs');
+const {
+	render, directory, open, write,
+} = require('./report.cjs');
 const reversals = require('./reversals.cjs');
 
 function routeSet(file) {
@@ -248,6 +251,49 @@ test('runner writes safe HTML and JSON even when local service is unavailable', 
 	assert.ok(!JSON.stringify(json).includes('secret'));
 	fs.unlinkSync(path.join(directory, 'tooling-preview.json'));
 	fs.unlinkSync(path.join(directory, 'tooling-preview.html'));
+});
+
+test('report opener passes the report path as data and reports launcher failures', async () => {
+	fs.mkdirSync(directory, { recursive: true });
+	const file = path.join(directory, "report $(touch pwned) & ' quote.html");
+	fs.writeFileSync(file, 'report');
+	try {
+		let invocation;
+		const child = new EventEmitter();
+		const opening = open({
+			platform: 'darwin',
+			file,
+			spawnProcess: (...args) => {
+				invocation = args;
+				process.nextTick(() => child.emit('close', 0));
+				return child;
+			},
+		});
+		await opening;
+		assert.deepEqual(invocation, ['open', [file], { stdio: 'ignore' }]);
+
+		assert.throws(
+			() => open({ platform: 'win32', file, spawnProcess: () => assert.fail('unsupported platform must not spawn') }),
+			(error) => error.message.includes('only on macOS') && error.message.includes(file),
+		);
+
+		for (const launch of [
+			(childProcess) => childProcess.emit('error', new Error('spawn failed')),
+			(childProcess) => childProcess.emit('close', 1),
+		]) {
+			const failedChild = new EventEmitter();
+			await assert.rejects(open({
+				platform: 'darwin',
+				file,
+				spawnProcess: () => {
+					process.nextTick(() => launch(failedChild));
+					return failedChild;
+				},
+			}), (error) => error.message.includes('Could not open integration report') && error.message.includes(file));
+		}
+	} finally {
+		fs.unlinkSync(file);
+	}
 });
 
 test('HTML report escapes untrusted content and errors omit raw CPMS/AWS data', () => {

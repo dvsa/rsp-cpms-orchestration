@@ -112,6 +112,8 @@ DynamoDB Local are not required.
    `integration-reports/latest.json`, or use
    `npm run test:integration:report:open`. `npm run test:integration:report`
    rebuilds the HTML from the last JSON result; it does not rerun tests.
+   Automatic report opening is supported on macOS; on other platforms, open
+   the HTML report directly from `integration-reports/`.
    `npm run test:integration:tooling` runs offline-only safety/report tests and
    `npm run lint:integration` lints the integration harness.
 

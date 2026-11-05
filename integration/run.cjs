@@ -400,8 +400,12 @@ async function execute(options = {}) {
 
 if (require.main === module) {
 	if (process.argv[2] === 'report') reports.write(JSON.parse(fs.readFileSync(path.join(reports.directory, 'latest.json'), 'utf8')));
-	else if (process.argv[2] === 'open') reports.open();
-	else {
+	else if (process.argv[2] === 'open') {
+		Promise.resolve().then(() => reports.open()).catch((error) => {
+			console.error(error.message);
+			process.exitCode = 1;
+		});
+	} else {
 		execute({
 			progress: console.log,
 			...(process.argv[2] === 'reversals' ? { tests: scenarios.filter((scenario) => scenario.reversal) } : {}),
