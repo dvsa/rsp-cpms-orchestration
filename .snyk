@@ -1,0 +1,55 @@
+version: v1.25.0
+# Advisory-specific deferrals approved for the local-only Node 20 baseline.
+# Do not deploy before remediation during the Node 24 / SDK v3 upgrade.
+ignore:
+  SNYK-JS-AXIOS-12613773: &baseline-exception
+    - '*':
+        reason: 'Maintainer-approved temporary deferral to preserve the local Node 20 regression baseline without code or dependency changes. Remediate during the Node 24 / SDK v3 upgrade before deployment.'
+        expires: '2027-07-01T00:00:00.000Z'
+  SNYK-JS-AXIOS-15252993: *baseline-exception
+  SNYK-JS-AXIOS-15965856: *baseline-exception
+  SNYK-JS-AXIOS-15969258: *baseline-exception
+  SNYK-JS-AXIOS-16298055: *baseline-exception
+  SNYK-JS-AXIOS-16298058: *baseline-exception
+  SNYK-JS-AXIOS-16298095: *baseline-exception
+  SNYK-JS-AXIOS-16298130: *baseline-exception
+  SNYK-JS-AXIOS-16298162: *baseline-exception
+  SNYK-JS-AXIOS-16299478: *baseline-exception
+  SNYK-JS-AXIOS-16299819: *baseline-exception
+  SNYK-JS-AXIOS-16299904: *baseline-exception
+  SNYK-JS-AXIOS-16299921: *baseline-exception
+  SNYK-JS-AXIOS-16299923: *baseline-exception
+  SNYK-JS-AXIOS-16299925: *baseline-exception
+  SNYK-JS-AXIOS-16417750: *baseline-exception
+  SNYK-JS-AXIOS-17111060: *baseline-exception
+  SNYK-JS-AXIOS-17111062: *baseline-exception
+  SNYK-JS-AXIOS-17111079: *baseline-exception
+  SNYK-JS-AXIOS-17111081: *baseline-exception
+  SNYK-JS-AXIOS-17172532: *baseline-exception
+  SNYK-JS-AXIOS-17172681: *baseline-exception
+  SNYK-JS-AXIOS-17172751: *baseline-exception
+  SNYK-JS-AXIOS-17172930: *baseline-exception
+  SNYK-JS-AXIOS-18060165: *baseline-exception
+  SNYK-JS-AXIOS-18060167: *baseline-exception
+  SNYK-JS-AXIOS-18060659: *baseline-exception
+  SNYK-JS-AXIOS-18060730: *baseline-exception
+  SNYK-JS-AXIOS-18065349: *baseline-exception
+  SNYK-JS-AXIOS-18065351: *baseline-exception
+  SNYK-JS-AXIOS-18065353: *baseline-exception
+  SNYK-JS-AXIOS-18065355: *baseline-exception
+  SNYK-JS-AXIOS-20244996: *baseline-exception
+  SNYK-JS-AXIOS-20245050: *baseline-exception
+  SNYK-JS-AXIOS-20245064: *baseline-exception
+  SNYK-JS-AXIOS-9292519: *baseline-exception
+  SNYK-JS-AXIOS-9403194: *baseline-exception
+  SNYK-JS-FOLLOWREDIRECTS-16032162: *baseline-exception
+  SNYK-JS-FORMDATA-10841150: *baseline-exception
+  SNYK-JS-FORMDATA-17337015: *baseline-exception
+  SNYK-JS-JOI-17317897: *baseline-exception
+  SNYK-JS-JOI-19498543: *baseline-exception
+  SNYK-JS-JOI-19498547: *baseline-exception
+  SNYK-JS-JOI-19778379: *baseline-exception
+  SNYK-JS-JOI-19883907: *baseline-exception
+  SNYK-JS-JOI-22114209: *baseline-exception
+  SNYK-JS-UUID-16133035: *baseline-exception
+patch: {}
