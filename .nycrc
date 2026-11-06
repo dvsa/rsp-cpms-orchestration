@@ -1,0 +1,17 @@
+{
+  "all": true,
+  "include": ["src/**/*.js"],
+  "exclude": [
+    "src/**/*.unit.js",
+    "src/**/*.serviceInt.js",
+    "src/test/**"
+  ],
+  "extension": [".js"],
+  "reporter": ["text", "text-summary", "html", "json-summary"],
+  "check-coverage": true,
+  "per-file": true,
+  "statements": 95.01,
+  "branches": 95.01,
+  "functions": 95.01,
+  "lines": 95.01
+}

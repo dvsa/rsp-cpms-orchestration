@@ -1,63 +1,56 @@
 const path = require('path');
-const AwsSamPlugin = require('aws-sam-webpack-plugin');
+const { BannerPlugin, Compilation, sources } = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { lambdas } = require('./lambdas.json');
 
-const awsSamPlugin = new AwsSamPlugin({ vscodeDebug: false, outFile: 'handler' });
+class LegacyEntrypointPlugin {
+	apply(compiler) {
+		compiler.hooks.thisCompilation.tap('legacy-entrypoint', (compilation) => {
+			compilation.hooks.processAssets.tap({
+				name: 'legacy-entrypoint',
+				stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+			}, () => {
+				lambdas.forEach((name) => {
+					compilation.emitAsset(`${name}/handler.js`,
+						new sources.RawSource("module.exports = require('./app.js');\n"));
+				});
+			});
+		});
+	}
+}
 
 module.exports = {
-	// Loads the entry object from the AWS::Serverless::Function resources in your
-	// SAM config. Setting this to a function will
-	entry: () => awsSamPlugin.entry(),
-
-	// Write the output to the .aws-sam/build folder
+	entry: Object.fromEntries(lambdas.map((name) => [name, `./src/functions/${name}.js`])),
 	output: {
-		filename: (/** @type {any} */ chunkData) => awsSamPlugin.filename(chunkData),
+		filename: '[name]/app.js',
 		libraryTarget: 'commonjs2',
-		path: path.resolve('.'),
+		path: path.resolve(__dirname, '.webpack'),
+		asyncChunks: false,
+		clean: true,
 	},
-
-	// Resolve .ts and .js extensions
-	resolve: {
-		extensions: ['.ts', '.js'],
-	},
-
-	// Target node
-	target: 'node',
-
+	resolve: { extensions: ['.js'] },
+	target: 'node24',
 	mode: 'development',
-
-	// AWS recommends always including the aws-sdk in your Lambda package but excluding can significantly reduce
-	// the size of your deployment package. If you want to always include it then comment out this line. It has
-	// been included conditionally because the node10.x docker image used by SAM local doesn't include it.
-	// externals: process.env.NODE_ENV === 'development' ? [] : ['aws-sdk'],
-	externals: {
-		fsevents: 'require(\'fsevents\')',
-	},
-
 	module: {
-		rules: [
-			{
-				test: /\.m?js$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: [
-							['@babel/preset-env'],
-						],
-					},
-				},
+		rules: [{
+			test: /\.m?js$/,
+			exclude: /node_modules/,
+			use: {
+				loader: 'babel-loader',
+				options: { presets: [['@babel/preset-env', { targets: { node: '24' } }]] },
 			},
-		],
+		}],
 	},
-
-	// Add the AWS SAM Webpack plugin
 	plugins: [
-		awsSamPlugin,
+		new LegacyEntrypointPlugin(),
+		// Preserve named exports and provide the uniform deployment entry point.
+		new BannerPlugin({
+			banner: ({ chunk }) => `module.exports.handler = module.exports.${chunk.name};`,
+			raw: true,
+			footer: true,
+		}),
 		new CopyWebpackPlugin({
-			patterns: [
-				{ from: 'serverless/serverless.yml', to: `${path.resolve(__dirname, '.aws-sam/build')}` },
-			],
+			patterns: [{ from: 'serverless/serverless.yml', to: 'serverless.yml' }],
 		}),
 	],
 };

@@ -1,0 +1,17 @@
+{
+  "extends": "../.eslintrc",
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "env": {
+    "node": true,
+    "es2020": true
+  },
+  "rules": {
+    "no-await-in-loop": "off",
+    "no-loop-func": "off",
+    "no-restricted-syntax": "off",
+    "no-continue": "off",
+    "max-classes-per-file": "off"
+  }
+}

@@ -1,4 +1,4 @@
-import { SQS, config } from 'aws-sdk';
+import { SQSClient } from '@aws-sdk/client-sqs';
 
 import createResponse from '../utils/createResponse';
 
@@ -8,8 +8,7 @@ import Constants from '../utils/constants';
 import QueueService from './queueService';
 import { logError } from '../utils/logger';
 
-config.update({ region: 'eu-west-1' });
-const sqs = new SQS({ apiVersion: '2012-11-05' });
+const sqs = new SQSClient({ region: 'eu-west-1' });
 
 const paymentTypeIntegrationMap = {
 	CARD: { authBodyFn: Constants.cardHolderPresentAuthBody, endpoint: '/payment/card' },
