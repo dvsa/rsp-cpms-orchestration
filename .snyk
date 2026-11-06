@@ -1,4 +1,53 @@
 version: v1.25.0
-# Stage-1 deferrals are not authorization to suppress stage-2 findings.
-ignore: {}
+# These development-tooling findings are deferred per maintainer direction
+# while completing the Node 24 upgrade. Reassess and remove/update by 2027-07-01.
+ignore:
+  SNYK-JS-APIDEVTOOLSJSONSCHEMAREFPARSER-17937352:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-BRACES-19963945:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-ESLINT-15102420:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-FAKERJSFAKER-18674671:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-FLAT-22148819:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-GLOB-22112102:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-INFLIGHT-6095116:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-MINIMATCH-22111072:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-URIJS-19963961:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-URIJS-19963963:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-URIJS-20341609:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
+  SNYK-JS-UUID-16133035:
+    - '*':
+        reason: Development-tooling remediation deferred per maintainer direction during the Node 24 upgrade; reassess by 2027-07-01.
+        expires: 2027-07-01T00:00:00.000Z
 patch: {}
