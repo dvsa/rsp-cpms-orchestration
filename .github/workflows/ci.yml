@@ -21,8 +21,7 @@ jobs:
   security:
     uses: dvsa/.github/.github/workflows/nodejs-security.yaml@v4.0.1
     with:
-      # npm ci validates the lockfile; Snyk's peer/OSLS alias resolver needs this workaround.
-      args: --all-projects --dev --ignore-policy --strict-out-of-sync=false
+      args: --all-projects
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
