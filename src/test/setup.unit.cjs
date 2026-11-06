@@ -29,6 +29,16 @@ const syntheticEnvironment = {
 };
 
 Object.assign(process.env, syntheticEnvironment);
+delete process.env.AWS_PROFILE;
+delete process.env.AWS_SESSION_TOKEN;
+
+const { SQSClient } = require('@aws-sdk/client-sqs');
+const { SecretsManagerClient } = require('@aws-sdk/client-secrets-manager');
+const rejectAws = () => {
+	throw new Error('Unexpected AWS request in isolated unit tests');
+};
+SQSClient.prototype.send = rejectAws;
+SecretsManagerClient.prototype.send = rejectAws;
 
 const rejectNetwork = () => {
 	throw new Error('Network access is disabled in isolated unit tests');

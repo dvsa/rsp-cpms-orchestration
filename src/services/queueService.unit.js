@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import expect from 'expect';
+import { SendMessageCommand, SQSServiceException } from '@aws-sdk/client-sqs';
 
 import QueueService from './queueService';
 
@@ -8,9 +9,9 @@ describe('QueueService', () => {
 
 	it('sends message attributes with offline fallback and logs the acknowledgement', async () => {
 		const response = { MessageId: 'message-123' };
-		const sendMessage = sinon.stub().returns({ promise: () => Promise.resolve(response) });
+		const send = sinon.stub().resolves(response);
 		const log = sinon.stub(console, 'log');
-		const service = new QueueService({ sendMessage }, 'https://sqs.invalid/unit');
+		const service = new QueueService({ send }, 'https://sqs.invalid/unit');
 
 		const result = await service.sendMessage({
 			ReceiptReference: 'CPMS-123',
@@ -21,8 +22,9 @@ describe('QueueService', () => {
 		});
 
 		expect(result).toBe(response);
-		expect(sendMessage.calledOnce).toBe(true);
-		expect(sendMessage.firstCall.args[0]).toEqual({
+		expect(send.calledOnce).toBe(true);
+		expect(send.firstCall.args[0]).toBeInstanceOf(SendMessageCommand);
+		expect(send.firstCall.args[0].input).toEqual({
 			MessageAttributes: {
 				ReceiptReference: { DataType: 'String', StringValue: 'CPMS-123' },
 				PenaltyId: { DataType: 'String', StringValue: 'PEN-1_FPN' },
@@ -42,17 +44,24 @@ describe('QueueService', () => {
 	});
 
 	it('propagates SQS promise failures', async () => {
-		const sendMessage = sinon.stub().returns({
-			promise: () => Promise.reject(new Error('SQS unavailable')),
+		const failure = new SQSServiceException({
+			name: 'AccessDenied',
+			$fault: 'client',
+			$metadata: { httpStatusCode: 403 },
+			message: 'SQS unavailable',
 		});
-		const service = new QueueService({ sendMessage }, 'queue');
+		const send = sinon.stub().rejects(failure);
+		const service = new QueueService({ send }, 'queue');
 
-		await expect(service.sendMessage({
+		const request = service.sendMessage({
 			ReceiptReference: 'CPMS-1',
 			PenaltyId: 'PEN-1',
 			VehicleRegistration: 'UNIT123',
 			PenaltyType: 'FPN',
 			IsGroupPayment: true,
-		})).rejects.toThrow('SQS unavailable');
+		});
+		await expect(request).rejects.toThrow('SQS unavailable');
+		await expect(request).rejects.toBe(failure);
+		expect(send.calledOnce).toBe(true);
 	});
 });

@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { expect } from 'expect';
-import AWS from 'aws-sdk';
+import { SecretsManagerClient, GetSecretValueCommand, SecretsManagerServiceException } from '@aws-sdk/client-secrets-manager';
 import { createRequire } from 'module';
 
 const requireModule = createRequire(`${process.cwd()}/src/utils/constants.unit.js`);
@@ -98,23 +98,25 @@ describe('Constants configuration', () => {
 		process.env.USE_SECRETS_MANAGER = 'true';
 		process.env.SECRETS_MANAGER_SECRET_NAME = 'unit-test-secret';
 		process.env.REGION = 'eu-west-1';
-		const send = sinon.stub(AWS.Request.prototype, 'send').callsFake(function sendSecret(callback) {
-			callback(null, { SecretString: JSON.stringify(secret) });
-			return this;
-		});
+		const send = sinon.stub(SecretsManagerClient.prototype, 'send')
+			.resolves({ SecretString: JSON.stringify(secret) });
 
 		const configuration = await constants.bootstrap();
 		expect(configuration).toEqual(secret);
 		expect(constants.cpmsBaseUrl()).toBe(secret.URL);
 		expect(await constants.bootstrap()).toBe(configuration);
 		expect(send.calledOnce).toBe(true);
+		expect(send.firstCall.args[0]).toBeInstanceOf(GetSecretValueCommand);
+		expect(send.firstCall.args[0].input).toEqual({ SecretId: 'unit-test-secret' });
 
 		const failedConstants = loadFreshConstants();
-		const failure = new Error('Secrets Manager unavailable');
-		send.callsFake(function failSecret(callback) {
-			callback(failure);
-			return this;
+		const failure = new SecretsManagerServiceException({
+			name: 'ResourceNotFoundException',
+			$fault: 'client',
+			$metadata: { httpStatusCode: 400 },
+			message: 'Secrets Manager unavailable',
 		});
+		send.rejects(failure);
 		await expect(failedConstants.bootstrap()).rejects.toBe(failure);
 	});
 
@@ -122,11 +124,18 @@ describe('Constants configuration', () => {
 		process.env.USE_SECRETS_MANAGER = 'true';
 		process.env.SECRETS_MANAGER_SECRET_NAME = 'unit-test-secret';
 		process.env.REGION = 'eu-west-1';
-		sinon.stub(AWS.Request.prototype, 'send').callsFake(function malformedSecret(callback) {
-			callback(null, { SecretString: '{invalid' });
-			return this;
-		});
+		sinon.stub(SecretsManagerClient.prototype, 'send').resolves({ SecretString: '{invalid' });
 
 		await expect(loadFreshConstants().bootstrap()).rejects.toThrow();
+	});
+
+	it('rejects missing secret content without caching failed configuration', async () => {
+		process.env.USE_SECRETS_MANAGER = 'true';
+		const send = sinon.stub(SecretsManagerClient.prototype, 'send').resolves({});
+		const constants = loadFreshConstants();
+		await expect(constants.bootstrap()).rejects.toThrow();
+		send.resolves({ SecretString: '{"USERID":"recovered-user"}' });
+		expect(await constants.bootstrap()).toEqual({ USERID: 'recovered-user' });
+		expect(send.callCount).toBe(2);
 	});
 });

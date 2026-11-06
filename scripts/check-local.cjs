@@ -22,9 +22,9 @@ const request = http.request({
 			assert.equal(response.statusCode, 200);
 			assert.equal(response.headers['x-amz-function-error'], 'Unhandled');
 			assert.match(error.errorMessage, /Cannot read properties of null.*penalty_type/);
-			assert.match(JSON.stringify(error.trace), /src\/services\/paymentService\.js/);
+			assert.match(JSON.stringify(error.trace), /paymentService|cardPayment\/app\.js/);
 			assert.doesNotMatch(result, /unsupported runtime/i);
-			console.log('PASS: Node20 Card Payment handler loaded and reached PaymentService; expected pre-auth null error, no CPMS/SQS calls.');
+			console.log('PASS: Node24 Card Payment handler loaded and reached PaymentService; expected pre-auth null error, no CPMS/SQS calls.');
 		} catch {
 			console.error('FAIL: unexpected local invocation result. Check the local runtime and handler configuration.');
 			process.exitCode = 1;

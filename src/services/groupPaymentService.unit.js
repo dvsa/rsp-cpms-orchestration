@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import expect from 'expect';
-import AWS from 'aws-sdk';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
 import GroupPaymentService from './groupPaymentService';
 import Constants from '../utils/constants';
@@ -8,7 +8,6 @@ import * as cpmsAuthModule from '../utils/cpmsAuth';
 import * as cpmsGroupPaymentModule from '../utils/cpmsGroupPayment';
 
 const responseBody = (response) => JSON.parse(response.body);
-const { SQS } = AWS;
 
 describe('GroupPaymentService', () => {
 	beforeEach(async () => {
@@ -17,9 +16,7 @@ describe('GroupPaymentService', () => {
 		await Constants.bootstrap();
 		sinon.stub(cpmsAuthModule, 'default').resolves('unit-token');
 		sinon.stub(cpmsGroupPaymentModule, 'default').resolves({ receipt_reference: 'GROUP-123' });
-		sinon.stub(SQS.prototype, 'makeRequest').callsFake((operation, params) => ({
-			promise: () => Promise.resolve({ MessageId: 'group-message', params }),
-		}));
+		sinon.stub(SQSClient.prototype, 'send').resolves({ MessageId: 'group-message' });
 	});
 
 	afterEach(() => sinon.restore());
@@ -43,7 +40,9 @@ describe('GroupPaymentService', () => {
 			paymentObject: payment,
 			auth: 'unit-token',
 		})).toBe(true);
-		expect(SQS.prototype.makeRequest.firstCall.args[1].MessageAttributes).toMatchObject({
+		expect(SQSClient.prototype.send.calledOnce).toBe(true);
+		expect(SQSClient.prototype.send.firstCall.args[0]).toBeInstanceOf(SendMessageCommand);
+		expect(SQSClient.prototype.send.firstCall.args[0].input.MessageAttributes).toMatchObject({
 			PenaltyId: { StringValue: 'GROUP-1' },
 			IsGroupPayment: { StringValue: 'true' },
 		});
@@ -96,7 +95,7 @@ describe('GroupPaymentService', () => {
 		expect(result.body).toBe('"CPMS rejected group"');
 
 		cpmsGroupPaymentModule.default.resolves({ receipt_reference: 'GROUP-456' });
-		SQS.prototype.makeRequest.throws(new Error('queue unavailable'));
+		SQSClient.prototype.send.rejects(new Error('queue unavailable'));
 		result = await GroupPaymentService.groupPayment(payment);
 		expect(result.statusCode).toBe(400);
 		expect(result.body).toBe('"queue unavailable"');

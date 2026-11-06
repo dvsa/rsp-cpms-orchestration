@@ -1,4 +1,4 @@
-import { SQS, config } from 'aws-sdk';
+import { SQSClient } from '@aws-sdk/client-sqs';
 
 import { logInfo, logError } from '../utils/logger';
 import createResponse from '../utils/createResponse';
@@ -11,8 +11,7 @@ import cpmsReversal from '../utils/cpmsReversal';
 import Constants from '../utils/constants';
 import QueueService from './queueService';
 
-config.update({ region: 'eu-west-1' });
-const sqs = new SQS({ apiVersion: '2012-11-05' });
+const sqs = new SQSClient({ region: 'eu-west-1' });
 
 let queueService;
 const cardPayment = async (paymentObject) => {

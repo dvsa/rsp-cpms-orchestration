@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import expect from 'expect';
-import AWS from 'aws-sdk';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
 import PaymentService from './paymentService';
 import Constants from '../utils/constants';
@@ -11,7 +11,6 @@ import * as cpmsChargebackModule from '../utils/cpmsChargeback';
 import * as cpmsReversalModule from '../utils/cpmsReversal';
 
 const responseBody = (response) => JSON.parse(response.body);
-const { SQS } = AWS;
 
 describe('PaymentService', () => {
 	beforeEach(async () => {
@@ -21,9 +20,7 @@ describe('PaymentService', () => {
 		sinon.stub(cpmsConfirmModule, 'default').resolves({ status: 'paid' });
 		sinon.stub(cpmsChargebackModule, 'default').resolves({ status: 'reversed' });
 		sinon.stub(cpmsReversalModule, 'default').resolves({ status: 'reversed' });
-		sinon.stub(SQS.prototype, 'makeRequest').callsFake((operation, params) => ({
-			promise: () => Promise.resolve({ MessageId: 'unit-message', params }),
-		}));
+		sinon.stub(SQSClient.prototype, 'send').resolves({ MessageId: 'unit-message' });
 		sinon.stub(console, 'log');
 		sinon.stub(console, 'error');
 	});
@@ -48,9 +45,9 @@ describe('PaymentService', () => {
 			paymentObject: payment,
 			auth: 'unit-token',
 		})).toBe(true);
-		expect(SQS.prototype.makeRequest.calledOnce).toBe(true);
-		expect(SQS.prototype.makeRequest.firstCall.args[0]).toBe('sendMessage');
-		expect(SQS.prototype.makeRequest.firstCall.args[1].MessageAttributes).toMatchObject({
+		expect(SQSClient.prototype.send.calledOnce).toBe(true);
+		expect(SQSClient.prototype.send.firstCall.args[0]).toBeInstanceOf(SendMessageCommand);
+		expect(SQSClient.prototype.send.firstCall.args[0].input.MessageAttributes).toMatchObject({
 			ReceiptReference: { StringValue: 'CPMS-123' },
 			PenaltyId: { StringValue: 'PEN-1_FPN' },
 			RegistrationNumber: { StringValue: 'UNIT123' },
@@ -59,7 +56,7 @@ describe('PaymentService', () => {
 	});
 
 	it('returns a client error when the card payment queue send fails', async () => {
-		SQS.prototype.makeRequest.throws(new Error('queue unavailable'));
+		SQSClient.prototype.send.rejects(new Error('queue unavailable'));
 
 		const result = await PaymentService.cardPayment({
 			penalty_type: 'FPN',

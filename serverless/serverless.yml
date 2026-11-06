@@ -5,13 +5,43 @@ custom:
     version: '1'
     title: 'RSP CPMS Orchestration API'
     description: 'Api to handle and orchestrate calls to CPMS from RSP'
+    models:
+      - name: CardPaymentRequest
+        contentType: application/json
+        schema: ${file(../src/models/CardPaymentRequest.json)}
+      - name: GroupCardPaymentRequest
+        contentType: application/json
+        schema:
+          type: object
+          additionalProperties: true
+          description: Group transaction; fields are validated by the existing group payment validator.
+          example: ${file(../src/models/CardGroupPaymentRequest.json)}
+      - name: CashPaymentRequest
+        contentType: application/json
+        schema: ${file(../src/models/CashPaymentRequest.json)}
+      - name: ChequePaymentRequest
+        contentType: application/json
+        schema: ${file(../src/models/ChequePaymentRequest.json)}
+      - name: PostalOrderPaymentRequest
+        contentType: application/json
+        schema: ${file(../src/models/PostalOrderPaymentRequest.json)}
+      - name: ConfirmRequest
+        contentType: application/json
+        schema: ${file(../src/models/ConfirmRequest.json)}
+      - name: PaymentResponse
+        contentType: application/json
+        schema:
+          description: CPMS response passed through unchanged; fields depend on payment method and state.
+      - name: ErrorResponse
+        contentType: application/json
+        schema:
+          description: Existing error response; may be an object or a string depending on the operation.
 plugins:
   - serverless-offline
-  - serverless-openapi-documentation
-  - serverless-dotenv-plugin
+  - serverless-openapi-documenter
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs24.x
   region: eu-west-1
   iamRoleStatements:
     - Effect: "Allow"
@@ -23,7 +53,7 @@ provider:
       Resource: arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:CPMS_Launched_Payments
 functions:
   cardPayment:
-    handler: cardPayment/handler.cardPayment
+    handler: cardPayment/app.handler
     memorySize: 128
     events:
       -
@@ -43,14 +73,15 @@ functions:
               - statusCode: 200
                 responseBody:
                   description: "Body containing Transaction ID and payment URL"
+                responseModels:
                   application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
                   description: "Error message detailing why the transaction could not be created"
-                  responseModels:
+                responseModels:
                   application/json: "ErrorResponse"
   groupPayment:
-    handler: groupPayment/handler.groupPayment
+    handler: groupPayment/app.handler
     memorySize: 128
     events:
       -
@@ -71,14 +102,15 @@ functions:
               - statusCode: 200
                 responseBody:
                   description: "Body containing Transaction ID and payment URL"
+                responseModels:
                   application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
                   description: "Error message detailing why the transaction could not be created"
-                  responseModels:
+                responseModels:
                   application/json: "ErrorResponse"
   cardNotPresentPayment:
-    handler: cardNotPresentPayment/handler.cardNotPresentPayment
+    handler: cardNotPresentPayment/app.handler
     memorySize: 128
     events:
       -
@@ -98,6 +130,7 @@ functions:
               - statusCode: 200
                 responseBody:
                   description: "Body containing TransactionID and payment URL"
+                responseModels:
                   application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
@@ -105,7 +138,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   cashPayment:
-    handler: cashPayment/handler.cashPayment
+    handler: cashPayment/app.handler
     memorySize: 128
     events:
       -
@@ -125,6 +158,7 @@ functions:
               - statusCode: 200
                 responseBody:
                   description: "Body containing TransactionID and payment status"
+                responseModels:
                   application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
@@ -132,7 +166,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   chequePayment:
-    handler: chequePayment/handler.chequePayment
+    handler: chequePayment/app.handler
     memorySize: 128
     events:
       -
@@ -148,10 +182,11 @@ functions:
               description: "None"
             requestModels:
               application/json: "ChequePaymentRequest"
-            methodResponse:
+            methodResponses:
               - statusCode: 200
                 responseBody:
                   description: "Body containing TransactionID and payment status"
+                responseModels:
                   application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
@@ -159,7 +194,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   postalOrderPayment:
-    handler: postalOrderPayment/handler.postalOrderPayment
+    handler: postalOrderPayment/app.handler
     memorySize: 128
     events:
       -
@@ -179,6 +214,7 @@ functions:
               - statusCode: 200
                 responseBody:
                   description: "Body containing TransactionID and payment URL"
+                responseModels:
                   application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
@@ -186,7 +222,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   confirm:
-    handler: confirm/handler.confirm
+    handler: confirm/app.handler
     memorySize: 128
     events:
       -
@@ -206,6 +242,7 @@ functions:
               - statusCode: 200
                 responseBody:
                   description: "Body containing the payment status"
+                responseModels:
                   application/json: "PaymentResponse"
               - statusCode: 400
                 responseBody:
@@ -213,7 +250,7 @@ functions:
                 responseModels:
                   application/json: "ErrorResponse"
   listReports:
-    handler: listReports/handler.listReports
+    handler: listReports/app.handler
     memorySize: 128
     events:
       -
@@ -222,8 +259,17 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+          documentation:
+            summary: List available CPMS reports
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: CPMS report listing
+              - statusCode: 400
+                responseBody:
+                  description: Existing CPMS error response
   generateReport:
-    handler: generateReport/handler.generateReport
+    handler: generateReport/app.handler
     memorySize: 128
     events:
       -
@@ -232,8 +278,17 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+          documentation:
+            summary: Generate a CPMS report
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: CPMS report generation response
+              - statusCode: 400
+                responseBody:
+                  description: Existing CPMS error response
   checkReportStatus:
-    handler: checkReportStatus/handler.checkReportStatus
+    handler: checkReportStatus/app.handler
     memorySize: 128
     events:
       -
@@ -242,8 +297,17 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+          documentation:
+            summary: Check CPMS report status
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: CPMS completion and error status
+              - statusCode: 400
+                responseBody:
+                  description: Existing CPMS error response
   reverseCard:
-    handler: reverseCard/handler.reverseCard
+    handler: reverseCard/app.handler
     memorySize: 128
     events:
       -
@@ -252,8 +316,17 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+          documentation:
+            summary: Reverse a card payment
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: CPMS reversal response
+              - statusCode: 400
+                responseBody:
+                  description: Existing CPMS error response
   reverseCheque:
-    handler: reverseCheque/handler.reverseCheque
+    handler: reverseCheque/app.handler
     memorySize: 128
     events:
       -
@@ -262,8 +335,17 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+          documentation:
+            summary: Reverse a cheque payment
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: CPMS reversal response
+              - statusCode: 400
+                responseBody:
+                  description: Existing CPMS error response
   downloadReport:
-    handler: downloadReport/handler.downloadReport
+    handler: downloadReport/app.handler
     memorySize: 128
     events:
       -
@@ -272,4 +354,12 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
-
+          documentation:
+            summary: Download a CPMS report
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: Existing downloaded report envelope
+              - statusCode: 400
+                responseBody:
+                  description: Existing CPMS error response

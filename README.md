@@ -1,14 +1,14 @@
 # RSP CPMS Orchestration API
 #### Pre-requisites
-Use Node.js 20 (`nvm use`) and AWS CLI v2 with an authenticated non-production
+Use Node.js 24 and npm 11 (`nvm use`) and AWS CLI v2 with an authenticated non-production
 profile, for example `rsp-dev`. A `[default]` profile is not required.
 
 #### Description
 This API will handle all requests to CPMS. This API is being put in place to deal with cold-start warm up times experienced when lambdas are contained on VPC's
 
-Running Node.js 20.
-Serverless Offline 13 is required for local `nodejs20.x` handler invocation;
-Offline 11 can start listening but fails when a route actually invokes a handler.
+Running Node.js 24 with OSLS 4.5 and Serverless Offline 14.
+The `serverless` package is an npm alias of OSLS, not the licensed framework.
+Runtime AWS operations use SDK v3 SQS and Secrets Manager clients.
 
 ## Run locally
 - `nvm use`
@@ -21,15 +21,19 @@ Offline 11 can start listening but fails when a route actually invokes a handler
   `COURT_DEPOSIT_SECRET`, `USERID`, `SQS_URL`, `COST_CENTRE`, `CUSTOMER_NAME`,
   `CUSTOMER_MANAGER_NAME`, `ADDRESS_LINE1`–`ADDRESS_LINE4`, `ADDRESS_CITY`
   and `ADDRESS_POSTCODE`. Do not commit credentials or paste them into logs.
-- Authenticate the selected profile (for an SSO profile, `aws sso login --profile rsp-dev`).
+- Authenticate the selected profile (`aws login --profile rsp-dev` for this
+  development profile; use `aws sso login` only for an SSO-configured profile).
 - `npm start`
 
-The launcher privately loads `.env` and exports the selected profile's temporary
-credentials through AWS CLI v2 for the bundled AWS SDK v2. It preserves the
-Webpack build, source watcher and Serverless Offline workflow; the local generated
-Serverless configuration skips the dotenv plugin and inherits the launcher's
-environment instead. No `.env` or credentials are copied into build artifacts.
-Restart after credentials expire. Java and DynamoDB Local are not required.
+`npm start` builds direct webpack Lambda entries, then runs the source watcher
+and Offline. Node's `--env-file=../.env` privately loads the root configuration;
+exported shell values take precedence. SDK v3 resolves `AWS_PROFILE` natively,
+including the AWS CLI login profile. The obsolete SDK v2 credential-export
+launcher and dotenv framework plugin are removed. No `.env` or credentials are
+copied into build artifacts. `npm run start:local` is a compatibility alias.
+Renew expired authentication before live tests; restart Offline after renewal
+if a worker still has stale configuration. Java and DynamoDB Local are not
+required by this service (unlike Documents).
 
 Refresh credentials before a live test run. CPMS creation can succeed while the
 later SQS send fails with an expired AWS token, especially for `/groupPayment`.
@@ -47,9 +51,9 @@ A harmless readiness probe is `curl -i http://127.0.0.1:3000/local-readiness`
 (expected HTTP 404). Payment and reporting routes are POST-only and still use
 external non-production CPMS/SQS services. Do not submit financial requests just
 to check startup. Local IAM authorization is disabled by the existing `--noAuth`
-option; this launcher does not change deployed configuration.
+option; these local options do not change deployed configuration.
 
-With the service running, `npm run check:local` verifies actual Node20 handler
+With the service running, `npm run check:local` verifies actual Node24 handler
 loading through the Lambda listener, not just HTTP readiness. It invokes Card
 Payment with a JSON-null body and asserts the expected `penalty_type` null-access
 error inside PaymentService, before CPMS authentication or SQS access. This
@@ -66,7 +70,7 @@ DynamoDB Local are not required.
 
 ### Prepare a first run
 
-1. Follow the local setup above: Node 20, `npm ci`, private `.env`, AWS CLI v2
+1. Follow the local setup above: Node 24/npm 11, `npm ci`, private `.env`, AWS CLI v2
    login and non-production CPMS configuration. Keep `.env` mode `600`.
 2. Explicitly opt into the desired non-production side effects in the private,
    ignored `.env` (never commit these settings):
@@ -89,8 +93,8 @@ DynamoDB Local are not required.
    Do not put credentials, payment tokens, or these settings in source control
    or reports.
 3. In terminal one, start `npm start` and leave it running. Refresh AWS login
-   first; the launcher exports temporary credentials once. Restart the service
-   after credentials expire.
+   first; SDK v3 resolves the profile without exporting access/session keys.
+   Renew login and restart the service if authentication expires.
 4. In terminal two, run:
 
    ```sh
@@ -253,7 +257,33 @@ manifests to preserve duplicate-attempt protection. The normal
 - `npm run build`
 
 ## Package for production
-- `npm run build:prod`
+- `npm run package` (production build plus archive/export verification)
+- `npm run build:prod` / `npm run build:ci` (production build only)
+
+`lambdas.json` drives all 13 direct webpack entries. Development and production
+bundles are `.webpack/<name>/app.js`; ZIPs retain their existing
+`dist/<name>.zip` names. Each archive contains a self-contained CommonJS bundle
+and third-party license file, plus a generated `handler.js` compatibility shim
+that re-exports its local `app.js`. Existing infrastructure using
+`handler.<name>` or `handler.handler` therefore remains compatible without an
+implicit Terraform change. SDK dynamic imports are bundled without shared
+chunks. Archive creation waits for every output stream to close.
+`scripts/verify-artifacts.cjs` tests every ZIP and loads its code without
+`node_modules` resolution or handler invocation, checking both `handler` and
+the original named export and the legacy filename shim.
+
+Serverless local handlers now map to `<name>/app.handler`. This deliberately
+corrects the old SAM `reverseCard.handler` mapping: the source actually exports
+`reverseCard`, now also aliased as `handler`. All 13 POST routes, `/dev` prefix,
+IAM authorizers and CORS remain unchanged. SAM's plugin/template and generated
+`.aws-sam` build are obsolete and removed.
+
+`npm run build-openapi` generates and validates `build/openapi.json` with
+`serverless-openapi-documenter`, then checks all 13 POST routes and 200/400
+response definitions from the package root. Model definitions, response mapping
+indentation and the cheque `methodResponses` typo are documentation corrections,
+not runtime validation changes. CPMS response schemas intentionally do not invent
+required fields for state-dependent responses.
 
 ## Isolated unit tests and coverage
 
@@ -268,8 +298,9 @@ production JavaScript file under `src/`. Test files and test helpers are exclude
 the HTML and JSON reports are written to ignored `coverage/`, with raw data in
 ignored `.nyc_output/`.
 
-The unit-test setup uses synthetic configuration and AWS credentials, blocks
-HTTP/HTTPS network requests, and mocks AWS and CPMS calls. It does not load the
+The unit-test setup uses synthetic configuration and AWS credentials, rejects
+unexpected SDK v3 client sends, blocks HTTP/HTTPS network requests, and mocks AWS
+and CPMS calls. It does not load the
 private `.env` file or require AWS authentication, CPMS access, a running service
 or a queue. The service integration tests under `src/test/` are separate and are
 not part of `npm test` or the coverage gate.
@@ -277,13 +308,155 @@ not part of `npm test` or the coverage gate.
 ## To Lint
 
 - `npm run lint`
+- `npm run lint:integration`
+- `npm run check-js-types` (TypeScript, Node 24 declarations; all production JS,
+  no `skipLibCheck`)
 
 ## To auto fix linting errors
 
 - `npm run lint:fix`
 
-## To Note
+## Upgrade validation and remaining limitations
 
-SAM is a new addition and is being used for building for running locally and for packaging for production - using the `template.yaml` file.
+The accepted pre-upgrade baseline was 107 isolated unit tests, 37 production
+files, and 100% statements/branches/functions/lines. The SDK3 upgrade retains
+those tests and adds missing-secret/retry and startup/isolation checks: 111
+unit tests with the same per-file 95.01% gates and 100% in all four metrics.
+The current source-inclusive NYC report enumerates 38 production files,
+including `src/handler.js`; the accepted handoff described 37. No production
+source was added or excluded to change coverage, and all measured files have
+executable counters. The Babel test-runner-only `--no-experimental-detect-module`
+flag prevents Node24 automatic ESM detection from bypassing the existing
+CommonJS Babel hook; Offline needs no legacy module-loading flags.
+SDK3 Secrets Manager failures reject without caching; malformed/missing JSON
+also rejects. SQS requests preserve exact attributes/body/URL and awaited
+publication semantics; async queue rejections retain existing HTTP errors.
 
-Serverless is being used for running locally from the built files. Ideally SAM will be used for packaging and running locally going forward and the serverless config can be removed.
+Security remediation updates Axios within major 1 and Joi within major 17,
+removes unused build/runtime dependencies and stage-1 `.snyk` deferrals, and
+updates supported Node24 build/test tooling. OpenAPI's scoped js-yaml, nanoid
+and YAML overrides stay within the requested majors. No new exceptions or
+incompatible transitive-major overrides are introduced.
+
+Unignored Snyk production scan: zero advisories. The development-inclusive scan
+still reports 12 unique advisory IDs across OpenAPI tooling, braces, ESLint 8,
+flat, glob/minimatch, inflight, uri-js and uuid. Several have no published fix;
+others require unsupported transitive major changes or an ESLint/Airbnb
+configuration migration. They are **not waived**, and the full tree is not clean.
+Raw safe-local scan evidence is in ignored
+`build/security/node24-snyk-{production,development}.json`.
+Snyk 1.1302.0's strict peer/alias resolver incorrectly reports missing
+`ajv@^8.12.0` despite a valid npm tree. The development scan uses
+`--dev --ignore-policy --strict-out-of-sync=false`; this relaxes manifest
+synchronisation checking, not vulnerability/policy scanning. Validate the actual
+lockfile with `npm ci` and `npm ls` separately. CI uses the same unignored
+development-inclusive scope/workaround, so unresolved findings remain visible
+and can fail security validation rather than passing under baseline exceptions.
+
+Remaining unignored development advisories (no renewed deferrals):
+
+| Dependency / installed versions | Severity | Advisory IDs | Why no compatible fix remains |
+| --- | --- | --- | --- |
+| json-schema-ref-parser 9.1.2 | Medium | SNYK-JS-APIDEVTOOLSJSONSCHEMAREFPARSER-17937352 | Latest OpenAPI documenter 0.1.7 requires `^9.1.0`; 9.1.2 is the latest major-9 release. Snyk's fix starts at 15.3.6. |
+| braces 3.0.3 | High | SNYK-JS-BRACES-19963945 | Latest published braces; no fix. Reached through nodemon/chokidar, expect/micromatch and OSLS/fast-glob. Removing one path does not remediate the others. |
+| ESLint 8.57.1 | Medium | SNYK-JS-ESLINT-15102420 | Latest major 8; fix starts at 9.26.0. Airbnb base 15.0.0 explicitly peers with ESLint `^7.32.0 || ^8.2.0`, not 9+. |
+| faker 5.5.3 | High | SNYK-JS-FAKERJSFAKER-18674671 | Latest Postman collection 5.3.1 pins exactly 5.5.3; fix starts at 10.5.0. Latest OpenAPI converter 6.4.2 still depends on that collection. |
+| flat 5.0.2 | High | SNYK-JS-FLAT-22148819 | No Snyk fix; latest webpack-merge 6.0.1 requires `^5.0.2`, the latest major-5 flat release. Also used by webpack-cli. |
+| glob 10.5.0 / 13.0.7 | Medium | SNYK-JS-GLOB-22112102 | Latest releases of those majors; fix starts at 14.0.2. Latest Mocha 12.0.3/NYC 18/test-exclude 8 require 13; Istanbul plugin 8/test-exclude 7 requires 10. |
+| inflight 1.0.6 | Medium | SNYK-JS-INFLIGHT-6095116 | Latest release; no fix. Retained by ESLint 8's file-entry-cache/flat-cache/rimraf/glob dependency chain. |
+| minimatch 3.1.5 / 5.1.9 / 9.0.9 / 10.2.6 | Medium | SNYK-JS-MINIMATCH-22111072 | Latest releases of their respective majors; fix starts at 11.0.1. ESLint/import/run-all, Redocly, glob, nodemon, Mocha, Archiver and coverage tooling retain these major constraints. |
+| uri-js 4.4.1 | Medium | SNYK-JS-URIJS-19963961, SNYK-JS-URIJS-20341609 | Latest release; no fixes. Retained by ESLint 8 / eslintrc / AJV 6. Replacing AJV with major 8 is not a compatible override. |
+| uri-js 4.4.1 | High | SNYK-JS-URIJS-19963963 | Same dependency path; no fix for this infinite-loop advisory. |
+| uuid 8.3.2 | Medium | SNYK-JS-UUID-16133035 | Latest major 8; Postman collection 5.3.1 pins it exactly. Fix starts at 11.1.1 or 14.0.0. The documenter's own uuid 11 does not remove the collection's independent uuid 8. |
+
+This is **12 unique advisories: four high and eight medium**, with no critical
+remaining development advisory. These are tool/input-processing risks, not
+proof of a deployed production exploit; development/build tools still need
+remediation and must not process untrusted inputs under a claim of a clean tree.
+
+### Security remediation performed and rechecked
+
+- Refreshed the lockfile within permitted ranges (`npm update`, then `npm
+  install` / reproducible `npm ci`); final `npm outdated` shows no pending
+  allowed-range top-level updates. Registry checks also confirmed latest
+  major-compatible versions for each vulnerable leaf and the upstream parent
+  ranges/pins above. There is no identified unattempted compatible patch for
+  these 12 remaining IDs.
+- Updated production Axios 1.7.4 to 1.21.0 and overrode Joi 17.13.3 within
+  major 17 to 17.13.9, retaining validation contracts. Production findings
+  disappeared; unignored final scan covers 61 dependencies and reports zero.
+- Removed obsolete AWS SDK2/framework/SAM/dotenv plugin dependencies and unused
+  Babel CLI, copyfiles, replace, rimraf, wait-on, fs-extra and Node24-unneeded
+  polyfills/runtime packages. This removed vulnerable wait-on/Axios 0.25 and
+  obsolete dependency paths rather than applying ignores.
+- Updated Node24-supported top-level tooling: Mocha 12.0.3,
+  copy-webpack-plugin 14.0.0, webpack-cli 7.3.1, webpack-merge 6.0.1,
+  nodemon 3.1.14, supertest 7.2.2, webpack 5.112.2, and Archiver 8.0.0.
+  Archiver's ESM migration uses `ZipArchive` via dynamic import and removes its
+  former glob-10 path; other coverage glob and minimatch paths remain.
+- Applied only same-major OpenAPI overrides for js-yaml 4.3.2, nanoid 3.3.17
+  and yaml 1.10.3, removing their advisories. Did not force parser 15, faker 10,
+  uuid 11, glob 14, minimatch 11, ESLint 9 or AJV 8 into incompatible parent
+  constraints.
+- Reran 111 units, unchanged 95.01% per-file coverage gates (all four actual
+  metrics 100%), both lints, TypeScript, 18 integration-tooling tests, strict
+  OpenAPI and all 13 archive/export verifications after dependency changes.
+  Actual integrations remain 15 pass / 0 fail / 2 guarded reversal skips;
+  final clean-install startup also passed real CPMS report-read assertions and
+  a native-profile SQS read without new financial mutations.
+- Final unignored development scan covers 1,036 dependencies and retains the
+  12 IDs above. The security follow-up did not change policy or dependencies
+  after verifying there are no permitted compatible updates. No commit/push
+  or deployment was performed.
+
+Exact migration packages are `@aws-sdk/client-sqs@3.1163.0`,
+`@aws-sdk/client-secrets-manager@3.1163.0`, `osls@4.5.0`,
+`serverless@npm:osls@4.5.0`, and `serverless-offline@14.8.4`.
+The old SAM reverseCard entry pointed at `reverseCard.handler` even though the
+source exports `reverseCard` and `default`, not `handler`. Direct bundling now
+preserves those exports and aliases `app.handler` to `app.reverseCard`; the
+generated `handler.js` re-exports `app.js`, preserving both legacy
+`handler.reverseCard` and uniform `handler.handler`. This is an explicit
+packaging/wiring correction, not a reversal business-rule change or proof
+that the unapproved card reversal was executed.
+
+Actual Node24 validation used Node 24.20.0/npm 11.19.0, OSLS 4.5.0, Offline
+14.8.4, SDK clients 3.1163.0, TypeScript 5.9.3 and Snyk 1.1302.0. `npm ci`,
+111 isolated units/coverage, both lints, JS type checking, 18 independent
+integration-tooling tests, all 13 production ZIP/load/export checks and strict
+OpenAPI generation/inventory checks passed. An intermediate tooling invocation
+failed while concurrent Snyk output was being written in the fixture-journal
+directory, whose reversal guards read every JSON file. Security outputs were
+moved to `build/security/` so they cannot interfere with those guards.
+Standalone reruns and sequential clean-install validation passed.
+
+The actual unchanged black-box suite ran against a freshly started default
+`npm start` process on IPv4 loopback 3000/3002 with inherited access/session
+keys removed: **17 scenarios, 15 passed, 0 failed, 2 skipped,
+0 dependency-unavailable, 0 not-run**. `integration-reports/latest.html` and
+`latest.json` preserve that real result. Independent transaction-total/report
+assertions were not altered. Native SDK3 profile resolution and an authorized
+read of the existing SQS queue attributes passed; the API itself then produced
+six SDK3 SQS success acknowledgements (values withheld). CPMS report reads,
+payment methods, confirmation and report reconciliation passed. This service
+has no AWS read-only API route: its read-only API proof is CPMS, while real API
+AWS proof is the already-approved SQS publication. Secrets Manager cloud reads
+were not enabled (`USE_SECRETS_MANAGER=false`); its behavior is unit-tested.
+SQS acceptance does not prove consumer delivery, and CPMS creation does not
+prove card settlement.
+
+Both reversal gaps remain: the owned card checkout is unfinished/unproved paid,
+and the earlier cheque CPMS 218 rejection is unresolved. Neither was retried
+or silently approved. No local fixture database exists; external CPMS
+transactions/reports/SQS messages are intentionally not rolled back. The suite
+released its lock and retained its private reconciliation manifest.
+Only task-owned services were stopped; no user-owned service was stopped.
+The private `.env` remains byte-identical and mode 600. The migration is
+implemented and locally validated, but **stage completion is still gated by
+the two real reversal gaps and unresolved development security findings**.
+
+Feature-branch CI can upload these ZIPs to non-production S3; the default-branch
+workflow can update Lambdas and releases can promote artifacts. Nothing in this
+local migration authorizes push, deployment or merging with unresolved security
+findings. External Terraform/live Lambda runtimes are separate and unverified;
+repository Node24 settings alone do not upgrade infrastructure.

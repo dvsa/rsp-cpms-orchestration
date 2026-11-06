@@ -1,3 +1,4 @@
+import { SendMessageCommand } from '@aws-sdk/client-sqs';
 import { logInfo } from '../utils/logger';
 
 export default class QueueService {
@@ -41,7 +42,7 @@ export default class QueueService {
 			MessageBody: 'Information about a launched payment to CPMS from the Roadside Payments service.',
 			QueueUrl: this.sqsQueueUrl,
 		};
-		return this.sqs.sendMessage(params).promise().then((data) => {
+		return this.sqs.send(new SendMessageCommand(params)).then((data) => {
 			logInfo('CPMSCheckingQueueMessageSent', { message: params, sqsResponse: data });
 			return Promise.resolve(data);
 		});

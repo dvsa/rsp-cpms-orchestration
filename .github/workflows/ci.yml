@@ -9,19 +9,20 @@ jobs:
   lint:
     uses: dvsa/.github/.github/workflows/nodejs-lint.yaml@v4.0.1
     with:
-      node-version: 20.x
-      npm-version: '10'
+      node-version: 24.x
+      npm-version: '11'
 
   test:
     uses: dvsa/.github/.github/workflows/nodejs-test.yaml@v4.0.1
     with:
-      node-version: 20.x
-      npm-version: '10'
+      node-version: 24.x
+      npm-version: '11'
 
   security:
     uses: dvsa/.github/.github/workflows/nodejs-security.yaml@v4.0.1
     with:
-      args: --all-projects
+      # npm ci validates the lockfile; Snyk's peer/OSLS alias resolver needs this workaround.
+      args: --all-projects --dev --ignore-policy --strict-out-of-sync=false
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -51,11 +52,11 @@ jobs:
     uses: dvsa/.github/.github/workflows/nodejs-build.yaml@v4.0.1
     needs: [ build-names ]
     with:
-      node-version: 20.x
-      npm-version: '10'
+      node-version: 24.x
+      npm-version: '11'
       upload-artifact: true
       build-folder: dist
-      build-command: npm run build:prod
+      build-command: npm run package
 
   upload-s3:
     if: startsWith(github.ref, 'refs/heads/feat/') || startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/fix/') || startsWith(github.ref, 'refs/heads/master')
